@@ -7,6 +7,8 @@ class EditingState {
     public updateThrottledPP3 = throttle((pp3) => {
         this.throttledPP3 = pp3;
     }, 300);
+    public isLoading = $state(false);
+    public isFaulty = $state(false);
 
     initialize(pp3: string | PP3) {
         if (typeof pp3 === "string") {

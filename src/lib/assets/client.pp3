@@ -17,3 +17,7 @@ Degree=0
 # H=0
 # FixedRatio=false
 # Ratio=1:1
+
+[Film Simulation]
+Enabled=true
+Strength=100

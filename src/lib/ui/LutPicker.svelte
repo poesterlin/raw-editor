@@ -5,6 +5,7 @@
 	import Modal from './Modal.svelte';
 
 	interface Props {
+        imageId: string;
 		luts: {
 			name: string;
 			path: string;
@@ -13,7 +14,7 @@
 		onClose: () => void;
 	}
 
-	let { luts, onClose }: Props = $props();
+	let { luts, onClose, imageId }: Props = $props();
 
 	let selectedTags = $state<string[]>([]);
 	const filteredLuts = $derived(luts.filter((lut) => selectedTags.length === 0 || selectedTags.every((tag) => lut.tags.includes(tag))));
@@ -65,7 +66,7 @@
 			{@const pp3 = JSON.parse(JSON.stringify(edits.pp3))}
 			{@const edited = setLut(pp3, lut.path)}
 			<button onclick={() => select(lut.path)} class="flex flex-col items-center">
-				<img src="/edit?preview&config={toBase64(edited)}" alt="" class="h-32" loading="lazy" />
+				<img src="/{imageId}/edit?preview&config={toBase64(edited)}" alt="" class="h-32" loading="lazy" />
 				<h2 class="truncate">{lut.name}</h2>
 			</button>
 		{/each}

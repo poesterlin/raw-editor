@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@tabler/icons-svelte": "^3.34.1",
+    "comlink": "^4.4.2",
     "drizzle-orm": "^0.40.0"
   }
 }
