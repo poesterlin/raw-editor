@@ -1,5 +1,5 @@
 
-export type PP3 = Record<string, Record<string, string | number | boolean>>;
+export type PP3<T = string | number | boolean> = Record<string, Record<string, T>>;
 
 export function parsePP3(pp3: string) {
     const lines = pp3.split('\n');
@@ -62,7 +62,14 @@ export function stringifyPP3(pp3Object: PP3) {
     for (const chapter in pp3Object) {
         result += `[${chapter}]\n`;
         for (const key in pp3Object[chapter]) {
-            result += `${key}=${pp3Object[chapter][key]}\n`;
+            const value = pp3Object[chapter][key];
+            if (typeof value === 'boolean') {
+                result += `${key}=${value ? 'true' : 'false'}\n`;
+            } else if (typeof value === 'number') {
+                result += `${key}=${Math.floor(value)}\n`;
+            } else {
+                result += `${key}=${value}\n`;
+            }
         }
         result += '\n'; // Add a newline after each chapter
     }
@@ -108,6 +115,5 @@ export function toBase64(pp3: PP3) {
 }
 
 export function fromBase64(base64: string) {
-    const pp3String = decodeURIComponent(escape(atob(base64)));
-    return parsePP3(pp3String);
+    return decodeURIComponent(escape(atob(base64)));
 }

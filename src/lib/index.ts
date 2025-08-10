@@ -9,3 +9,9 @@ export function throttle<T extends (...args: any[]) => void>(func: T, delay: num
         }
     } as T;
 }
+
+export function assert<T>(condition: T | undefined | null, message?: string): asserts condition is T {
+    if (!condition) {
+        throw new Error(message || "Assertion failed");
+    }
+}

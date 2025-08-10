@@ -6,7 +6,14 @@ Brightness=0
 Contrast=0
 Saturation=0
 
-
 [Rotation]
 Enabled=true
 Degree=0
+
+# [Crop]
+# X=0
+# Y=0
+# W=0
+# H=0
+# FixedRatio=false
+# Ratio=1:1
