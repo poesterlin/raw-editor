@@ -1,0 +1,34 @@
+services:
+#   db:
+#     image: postgres
+#     restart: always
+#     ports:
+#       - 5432:5432
+#     environment:
+#       POSTGRES_USER: root
+#       POSTGRES_PASSWORD: mysecretpassword
+#       POSTGRES_DB: local
+#     volumes:
+#       - pgdata:/var/lib/postgresql/data
+# volumes:
+#   pgdata:
+
+  editor:
+    build: .
+    env_file: 
+     - .env
+    environment:
+      - CLUT_DIR=/app/cluts
+    volumes:
+      - ./cluts:/app/cluts
+    networks:
+      - traefik_web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.editor.rule=Host(`${HOST_DOMAIN}`)"
+      - "traefik.http.services.editor.loadbalancer.server.port=3000"
+
+
+networks:
+  traefik_web:
+    external: true

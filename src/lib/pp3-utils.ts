@@ -64,7 +64,7 @@ export function stringifyPP3(pp3Object: PP3) {
             if (typeof value === 'boolean') {
                 result += `${key}=${value ? 'true' : 'false'}\n`;
             } else if (typeof value === 'number') {
-                result += `${key}=${value.toFixed(3)}\n`;
+                result += `${key}=${value.toFixed(3).replace(/\.0+$/, '')}\n`;
             } else {
                 result += `${key}=${value}\n`;
             }

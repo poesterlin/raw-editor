@@ -14,6 +14,7 @@ export interface ImageDetails {
     camera: string;
     lens: string;
     whiteBalance: string;
+    tint: number;
 }
 
 export const GET: RequestHandler = async () => {

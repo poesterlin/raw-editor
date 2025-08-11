@@ -1,12 +1,13 @@
 import { Glob } from "bun";
 import type { PageServerLoad } from "./$types";
 import { join } from "node:path";
+import { env } from "node:process";
 
 export const load: PageServerLoad = async () => {
     const glob = new Glob("**/*.png");
 
     // TODO: load from environment variable
-    const cwd = "/home/philip/git/raw-editor/HaldCLUT";
+    const cwd = env.CLUT_DIR || "/app/cluts";
     const files = await Array.fromAsync(glob.scan({ cwd }));
     const luts = files.map((f) => formatLut(f, cwd));
 

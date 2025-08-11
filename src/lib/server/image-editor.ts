@@ -1,3 +1,4 @@
+import { exiftool } from "exiftool-vendored";
 import { join } from "node:path";
 import { createTempDir, runCommand } from "./command-runner";
 import { getFileNameFromPath } from "./utils";
@@ -28,6 +29,12 @@ export async function editImage(imagePath: string, pp3: string, allowConcurrent:
     const pp3FilePath = join(tempDir, 'edit.pp3');
     await Bun.write(pp3FilePath, pp3);
 
+    // read back
+    const pp3Content = await Bun.file(pp3FilePath).text();
+    console.log(`PP3 content for ${name}:\n`, pp3Content);
+
+    console.log(`Editing image: ${pp3FilePath}`, imagePath);
+
     // Build rawtherapee-cli args according to the usage you pasted.
     // Use -p for profile, -o for output, -Y overwrite, and -c <input> last.
     const rawtherapeeBin = "/sbin/rawtherapee-cli";
@@ -43,23 +50,34 @@ export async function editImage(imagePath: string, pp3: string, allowConcurrent:
         imagePath, // input must be last; rawtherapee will resolve it relative to cwd
     ];
 
+    console.log(`Running command: ${command.join(' ')}`);
+
     // Check if the image is already being processed
-    const lastController = runningByImage.get(name);
-    if (!allowConcurrent && lastController && !lastController.signal.aborted) {
-        lastController.abort();
-        console.log(`Aborted previous editing for image: ${name}`);
-    }
+    // const lastController = runningByImage.get(name);
+    // if (!allowConcurrent && lastController && !lastController.signal.aborted) {
+    //     lastController.abort();
+    //     console.log(`Aborted previous editing for image: ${name}`);
+    // }
 
-    let signal = AbortSignal.timeout(5000);
-    if (!allowConcurrent) {
-        const controller = new AbortController();
-        runningByImage.set(name, controller);
-        signal = AbortSignal.any([controller.signal, signal]);
-    }
+    // let signal = AbortSignal.timeout(5000);
+    // if (!allowConcurrent) {
+    //     const controller = new AbortController();
+    //     runningByImage.set(name, controller);
+    //     signal = AbortSignal.any([controller.signal, signal]);
+    // }
 
-    await runCommand(command, { signal });
+    await runCommand(command, { signal: undefined });
 
     const end = performance.now();
     console.log(`Image edited in ${((end - start) / 1000).toFixed(2)} seconds`);
     return output;
+}
+
+export async function importImage(imagePath: string) {
+    const start = performance.now();
+    const tags = await exiftool.read(imagePath);
+    const end = performance.now();
+    console.log(`Image imported in ${((end - start) / 1000).toFixed(2)} seconds`);
+    console.log(tags.RedBalance, tags.BlueBalance, tags.CameraMatrix, tags.AsShotNeutral, tags.WhiteBalance
+        , tags.WhiteBalanceTemperature);
 }

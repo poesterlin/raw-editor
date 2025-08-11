@@ -28,11 +28,18 @@ export function uniqueArray<T>(array: T[]): T[] {
 let workerInstance: ImageWorker | null = null;
 
 export function getWorkerInstance(): ImageWorker {
-	if (workerInstance) {
-		return workerInstance;
-	}
+    if (workerInstance) {
+        return workerInstance;
+    }
 
-	const instance = new Worker();
-	workerInstance = wrap<ImageWorker>(instance);
-	return workerInstance;
+    const instance = new Worker();
+    workerInstance = wrap<ImageWorker>(instance);
+    return workerInstance;
+}
+
+export function clamp(v: number, lo: number, hi: number) {
+    return Math.min(hi, Math.max(lo, v));
+}
+export function map(value: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
+    return outMin + (value - inMin) * (outMax - outMin) / (inMax - inMin);
 }

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "bun run --bun bun:dev",
     "bun:dev": "vite dev",
-    "build": "vite build",
+    "build": "bun run --bun bun:build",
+    "bun:build": "vite build",
     "preview": "bun run --bun bun:preview",
     "bun:preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
@@ -45,8 +46,10 @@
     "@types/bun": "latest"
   },
   "dependencies": {
+    "@sveltejs/adapter-node": "^5.2.14",
     "@tabler/icons-svelte": "^3.34.1",
     "comlink": "^4.4.2",
-    "drizzle-orm": "^0.40.0"
+    "drizzle-orm": "^0.40.0",
+    "exiftool-vendored": "^30.3.0"
   }
 }
