@@ -5,7 +5,7 @@ import { applyPP3Diff, fromBase64, parsePP3, stringifyPP3 } from "$lib/pp3-utils
 import { editImage } from "$lib/server/image-editor";
 import { respondWithFile } from "$lib/server/utils";
 import type { RequestHandler } from "@sveltejs/kit";
-import { join } from "path";
+import { error } from "@sveltejs/kit";
 
 const ParsedBasePP3 = parsePP3(BasePP3);
 
@@ -23,9 +23,11 @@ export const GET: RequestHandler = async ({ url }) => {
 
         const output = await editImage(path, stringifyPP3(merged), isPreview);
         return respondWithFile(output);
-    } catch (error) {
-        console.error("Error editing image:", error);
+    } catch (err) {
+        console.error("Error editing image:", err);
+        error(400, {
+            message: "Failed to edit image",
+            
+        });
     }
-
-    return respondWithFile(join(process.cwd(), ExampleImg));
 };

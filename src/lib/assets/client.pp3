@@ -21,3 +21,9 @@ Degree=0
 [Film Simulation]
 Enabled=true
 Strength=100
+
+[White Balance]
+Enabled=true
+Setting=Camera
+Temperature=4708
+Green=0.667

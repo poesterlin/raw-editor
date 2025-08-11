@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { clamp } from '$lib';
+
 	interface Props {
 		label: string;
 		value: number;
@@ -9,9 +11,29 @@
 		unit?: string;
 		onchange?: (value: number) => void;
 		ignored?: boolean;
+		overlay?: string;
+		map?: (n: number) => number;
+		inverseMap?: (n: number) => number;
+		precision?: number;
+		resetValue?: number;
 	}
 
-	let { label, value = $bindable(0), min = -100, max = 100, step = 1, centered, unit = '', onchange = () => {}, ignored }: Props = $props();
+	let {
+		label,
+		value = $bindable(0),
+		min = -100,
+		max = 100,
+		step = 1,
+		centered,
+		unit = '',
+		onchange = () => {},
+		ignored,
+		overlay,
+		resetValue,
+		precision = 3,
+		map = (n) => n,
+		inverseMap = (n) => n
+	}: Props = $props();
 
 	let wrapperRef: HTMLDivElement;
 	let sliderRef: HTMLInputElement;
@@ -28,16 +50,17 @@
 	const DOUBLE_TAP_MS = 280;
 	const DOUBLE_TAP_SLOP_PX = 24;
 
-	const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+	const linearValue = $derived(inverseMap(value));
 
 	const quantize = (v: number) => {
 		const n = Math.round((v - min) / step) * step + min;
 		return Number(n.toFixed(6));
 	};
 
+	// UPDATED: Calculate percentage from the linear value for correct visuals
 	const pct = $derived.by(() => {
 		if (max === min) return 0;
-		const p = ((value - min) / (max - min)) * 100;
+		const p = ((linearValue - min) / (max - min)) * 100;
 		return Math.max(0, Math.min(100, p));
 	});
 
@@ -51,15 +74,22 @@
 
 	const handleDoubleClick = () => {
 		if (centered) {
-			value = quantize(0);
-			onchange?.(value);
+			const centerVal = (max + min) / 2;
+			value = resetValue ?? map(quantize(centerVal));
+		} else {
+			value = resetValue ?? map(quantize(min));
 		}
+
+		onchange?.(value);
 	};
 
 	const handleInput = (e: Event) => {
 		const target = e.target as HTMLInputElement;
-		let next = Number(target.value);
-		next = quantize(clamp(next, min, max));
+		let nextLinear = Number(target.value);
+		// The native input with a `step` attribute handles its own quantization,
+		// but we re-quantize for consistency.
+		nextLinear = quantize(clamp(nextLinear, min, max));
+		const next = map(nextLinear);
 		if (next !== value) {
 			value = next;
 			onchange?.(value);
@@ -77,13 +107,11 @@
 		const dist2 = dx * dx + dy * dy;
 
 		if (dt > 0 && dt < DOUBLE_TAP_MS && dist2 < DOUBLE_TAP_SLOP_PX * DOUBLE_TAP_SLOP_PX) {
-			// double-tap detected: reset and don't start drag
 			lastTapTime = 0;
 			handleDoubleClick();
 			return true;
 		}
 
-		// record tap for potential next tap
 		lastTapTime = now;
 		lastTapX = x;
 		lastTapY = y;
@@ -91,12 +119,10 @@
 	}
 
 	function handlePointerDown(e: PointerEvent) {
-		// For touch/pen, detect double-tap and bail out if it's a reset
 		if (e.pointerType !== 'mouse' && maybeHandleDoubleTap(e)) {
 			return;
 		}
 
-		// Start relative drag (track delta, independent of initial pointer)
 		isDragging = true;
 		try {
 			wrapperRef.setPointerCapture(e.pointerId);
@@ -107,15 +133,24 @@
 		lastX = e.clientX;
 	}
 
+	// UPDATED: Perform drag calculations in the linear domain
 	function handlePointerMove(e: PointerEvent) {
 		if (!isDragging) return;
 		e.preventDefault();
 		const dx = e.clientX - lastX;
 		lastX = e.clientX;
 
-		const range = max - min || 1;
-		let next = value + (dx / trackWidth) * range;
-		next = quantize(clamp(next, min, max));
+		const linearRange = max - min || 1;
+		const linearDelta = (dx / trackWidth) * linearRange;
+
+		// Convert current value to linear, add delta, then re-map
+		const currentLinear = inverseMap(value);
+		let nextLinear = currentLinear + linearDelta;
+
+		// Clamp and quantize in the linear domain
+		nextLinear = quantize(clamp(nextLinear, min, max));
+
+		const next = map(nextLinear);
 
 		if (next !== value) {
 			value = next;
@@ -146,6 +181,16 @@
 			fn(e);
 		};
 	}
+
+	function formatNumber(n: number) {
+		if (precision === 0) {
+			return Math.round(n).toString();
+		}
+
+		const abs = Math.abs(n);
+		let logPrecision = Math.max(0, Math.min(5, 2 - Math.floor(Math.log10(abs))));
+		return n.toFixed(logPrecision).replace(/\.0+$/, '');
+	}
 </script>
 
 <!-- Container -->
@@ -164,6 +209,10 @@
 		onpointercancel={handlePointerUp}
 		ondblclick={handleDoubleClick}
 	>
+		{#if overlay}
+			<div class="{overlay} absolute inset-0 z-10 touch-none rounded-md opacity-50 mix-blend-hard-light" class:saturate-0={ignored}></div>
+		{/if}
+
 		<!-- Track background + ring -->
 		<div
 			class="
@@ -178,7 +227,7 @@
 		<div
 			class="
         pointer-events-none absolute inset-0 rounded-md
-        ring-2 ring-neutral-500/60 transition-opacity
+        ring-2 ring-neutral-200/80 transition-opacity
       "
 			class:opacity-0={!isFocused && !isDragging}
 		></div>
@@ -220,17 +269,16 @@
       "
 		>
 			<span class="font-medium">{label}</span>
-			<span class="tabular-nums">{value}{unit}</span>
+			<span class="tabular-nums">{formatNumber(value)}{unit}</span>
 		</div>
 
-		<!-- Native range input for keyboard & SR -->
 		<input
 			bind:this={sliderRef}
 			type="range"
 			{min}
 			{max}
 			{step}
-			bind:value
+			value={linearValue}
 			aria-label={label}
 			oninput={handleInput}
 			onchange={() => onchange(value)}
@@ -240,3 +288,9 @@
 		/>
 	</div>
 </div>
+
+<style>
+	.saturate-0 {
+		filter: saturate(0);
+	}
+</style>

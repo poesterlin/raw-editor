@@ -39,9 +39,10 @@ export function parsePP3(pp3: string) {
         }
 
         // try to parse values as numbers or booleans
-        if (!isNaN(parseFloat(cleanValue))) {
+        const float = parseFloat(cleanValue);
+        if (!isNaN(float)) {
             // If the value is a number, convert it to a number
-            chapterObject[cleanKey] = parseFloat(cleanValue);
+            chapterObject[cleanKey] = float;
         } else if (cleanValue.toLowerCase() === 'true' || cleanValue.toLowerCase() === 'false') {
             // If the value is a boolean, convert it to a boolean
             chapterObject[cleanKey] = cleanValue.toLowerCase() === 'true';
@@ -49,9 +50,6 @@ export function parsePP3(pp3: string) {
             // Otherwise, keep it as a string
             chapterObject[cleanKey] = cleanValue;
         }
-
-        // Store the value in the object under the key
-        chapterObject[cleanKey] = cleanValue;
     }
 
     return result;
@@ -66,7 +64,7 @@ export function stringifyPP3(pp3Object: PP3) {
             if (typeof value === 'boolean') {
                 result += `${key}=${value ? 'true' : 'false'}\n`;
             } else if (typeof value === 'number') {
-                result += `${key}=${Math.floor(value)}\n`;
+                result += `${key}=${value.toFixed(3)}\n`;
             } else {
                 result += `${key}=${value}\n`;
             }
@@ -87,6 +85,33 @@ export function applyPP3Diff(pp3: PP3, diff: PP3) {
     }
 
     return pp3;
+}
+
+export function diffPP3(base: PP3, target: PP3): PP3 {
+    const diff: PP3 = {};
+    for (const chapter in target) {
+        if (!base[chapter]) {
+            diff[chapter] = target[chapter];
+            continue;
+        }
+        for (const key in target[chapter]) {
+            if (base[chapter][key] != target[chapter][key]) {
+                if (!diff[chapter]) {
+                    diff[chapter] = {};
+                }
+                diff[chapter][key] = target[chapter][key];
+            }
+        }
+    }
+    return diff;
+}
+
+export function countPP3Properties(pp3: PP3): number {
+    let count = 0;
+    for (const chapter in pp3) {
+        count += Object.keys(pp3[chapter]).length;
+    }
+    return count;
 }
 
 export function filterPP3(pp3: PP3, chapters: string[]) {
