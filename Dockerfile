@@ -1,37 +1,42 @@
-FROM oven/bun:alpine AS bun
-
-#########################################################
-
-# build the app
-FROM bun AS build
+# STAGE 1: Build the Bun application
+# This stage remains the same. It uses a debian-based image for glibc compatibility.
+FROM oven/bun:debian AS build
 
 WORKDIR /app
 
 COPY package.json bun.lock ./
-
-RUN bun install
+RUN bun install --frozen-lockfile
 
 COPY . .
 
-RUN bun run build \
-    && bun build --compile ./build/index.js --outfile executable
+# Create the JS bundle
+RUN bun run build && bun build --compile ./build/index.js --outfile executable
 
-#########################################################
+#####################################################################
 
-FROM linuxserver/rawtherapee:5.12.20250810 AS rawtherapee
+# STAGE 2: Create a minimal base with only the RawTherapee CLI
+# We use debian:bookworm-slim for the smallest possible base.
+FROM debian:bookworm-slim AS rawtherapee-base
 
-# install bun
-COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+# Install only the rawtherapee-cli package and clean up in a single layer
+RUN set -eux; \
+    apt-get update && \
+    apt-get install -y --no-install-recommends rawtherapee && \
+    # This cleanup step is crucial for a small image size
+    rm -rf /var/lib/apt/lists/*
 
-# add bun to PATH
-ENV PATH="/usr/local/bin:${PATH}"
+#####################################################################
 
-# copy node app
+# STAGE 3: Final application image
+FROM rawtherapee-base
+
 WORKDIR /app
-COPY --from=build /app/build/ build
-COPY --from=build /app/node_modules/ node_modules
-COPY --from=build /app/package.json ./
+
+# Copy the single compiled executable from the 'build' stage.
+COPY --from=build /app/executable .
 
 EXPOSE 3000
 
-CMD ["bun", "/app/build/index.js"]
+# Run your compiled application.
+# Your app can now call `rawtherapee-cli` directly as it's in the system's PATH.
+CMD ["/app/executable"]
