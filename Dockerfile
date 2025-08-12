@@ -24,7 +24,7 @@ FROM linuxserver/rawtherapee:5.12.20250810 AS rawtherapee
 COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
 
 # add bun to PATH
-RUN echo 'export PATH=$PATH:/usr/local/bin' >> /etc/profile
+ENV PATH="/usr/local/bin:${PATH}"
 
 # copy node app
 WORKDIR /app
