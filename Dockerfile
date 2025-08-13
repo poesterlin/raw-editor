@@ -31,7 +31,7 @@ RUN set -eux; \
 FROM rawtherapee-base
 
 # install bun
-COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+COPY --from=build /usr/local/bin/bun /usr/local/bin/bun
 
 ENV PATH="/usr/local/bin:${PATH}"
 
