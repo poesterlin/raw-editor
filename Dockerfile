@@ -10,7 +10,7 @@ RUN bun install --frozen-lockfile
 COPY . .
 
 # Create the JS bundle
-RUN bun run build && bun build --compile ./build/index.js --outfile executable
+RUN bun run build
 
 #####################################################################
 
@@ -30,13 +30,20 @@ RUN set -eux; \
 # STAGE 3: Final application image
 FROM rawtherapee-base
 
+# install bun
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+
+ENV PATH="/usr/local/bin:${PATH}"
+
 WORKDIR /app
 
 # Copy the single compiled executable from the 'build' stage.
-COPY --from=build /app/executable .
+COPY --from=build /app/build/ build
+COPY --from=build /app/node_modules/ node_modules
+COPY --from=build /app/package.json ./
 
 EXPOSE 3000
 
 # Run your compiled application.
 # Your app can now call `rawtherapee-cli` directly as it's in the system's PATH.
-CMD ["/app/executable"]
+CMD ["bun", "/app/build/index.js"]
