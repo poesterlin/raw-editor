@@ -19,8 +19,10 @@ services:
      - .env
     environment:
       - CLUT_DIR=/app/cluts
+      - IMG_DIR=/app/images
     volumes:
       - ./cluts:/app/cluts
+      - ./images:/app/images
     networks:
       - traefik_web
     labels:

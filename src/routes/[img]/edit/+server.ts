@@ -1,3 +1,5 @@
+import { env } from "$env/dynamic/private";
+import { assert } from "$lib";
 import BasePP3 from "$lib/assets/base.pp3?raw";
 import ClientPP3 from "$lib/assets/client.pp3?raw";
 import ExampleImg from "$lib/assets/example.jpg";
@@ -6,6 +8,7 @@ import { editImage } from "$lib/server/image-editor";
 import { respondWithFile } from "$lib/server/utils";
 import type { RequestHandler } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
+import { join } from "path";
 
 const ParsedBasePP3 = parsePP3(BasePP3);
 
@@ -15,7 +18,8 @@ export const GET: RequestHandler = async ({ url }) => {
         const isPreview = url.searchParams.has("preview");
 
         // TODO: get proper image
-        const path = "/home/philip/git/raw-editor/src/lib/assets/example.tif"; // join(process.cwd(), ExampleImg);
+        assert(env.IMG_DIR, "IMG_DIR environment variable is not set");
+        const path = join(env.IMG_DIR, "example.tif"); // join(process.cwd(), ExampleImg);
 
         const pp3String = config ? fromBase64(config) : ClientPP3;
         const pp3 = parsePP3(pp3String);

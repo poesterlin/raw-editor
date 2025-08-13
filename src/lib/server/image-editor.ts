@@ -37,9 +37,8 @@ export async function editImage(imagePath: string, pp3: string, allowConcurrent:
 
     // Build rawtherapee-cli args according to the usage you pasted.
     // Use -p for profile, -o for output, -Y overwrite, and -c <input> last.
-    const rawtherapeeBin = "/sbin/rawtherapee-cli";
     const command = [
-        rawtherapeeBin,
+        'rawtherapee-cli',
         "--no-gui",
         "-p",
         pp3FilePath,
