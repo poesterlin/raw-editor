@@ -41,9 +41,7 @@
 	<div class="editor-layout">
 		<!-- Image Preview -->
 		<div class="image-preview">
-			<!-- <div class="image-container"> -->
 			<BeforeAfter {beforeImage} afterImage={sampleImage} />
-			<!-- </div> -->
 		</div>
 
 		<!-- Controls Panel -->
@@ -76,7 +74,7 @@
 							}}
 							onchange={(value) => {
 								const isCamera = value === 'Camera';
-								if (isCamera){
+								if (isCamera) {
 									// TODO: Fetch camera white balance settings
 									edits.pp3.White_Balance.Temperature = 4708;
 									edits.pp3.White_Balance.Green = 0.667;
@@ -91,13 +89,13 @@
 							max={3000}
 							step={1}
 							centered
-							map={(n) =>  n + 4708}
+							map={(n) => n + 4708}
 							inverseMap={(n) => n - 4708}
 							ignored={edits.pp3.White_Balance.Setting !== 'Custom'}
 							onchange={() => (edits.pp3.White_Balance.Setting = 'Custom')}
 							overlay="bg-gradient-to-r from-[#0000FF] to-[#FFFF00]"
-							/>
-							<Slider
+						/>
+						<Slider
 							label="Tint"
 							overlay="bg-gradient-to-r from-[#FF00FF] to-[#00FF00]"
 							bind:value={edits.pp3.White_Balance.Green as number}

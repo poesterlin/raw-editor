@@ -148,13 +148,13 @@
 >
 	<!-- Before -->
 	<div class="pane">
-    <img src={beforeImage} alt="Before" draggable="false" style:transform={`translate(${x}px, ${y}px) scale(${scale})`} />
+		<img src={beforeImage} alt="Before" draggable="false" style:transform={`translate(${x}px, ${y}px) scale(${scale})`} />
 		<span>Before</span>
 	</div>
 
 	<!-- After (clipped) -->
 	<div class="pane after-pane">
-    <img src={afterImage} alt="After" draggable="false" style:transform={`translate(${x}px, ${y}px) scale(${scale})`} />
+		<img src={afterImage} alt="After" draggable="false" style:transform={`translate(${x}px, ${y}px) scale(${scale})`} />
 		<span>After</span>
 	</div>
 
@@ -169,10 +169,18 @@
 		onlostpointercapture={onSliderPointerUp}
 	>
 		<div class="scrubber">
-			<svg viewBox="0 0 27 20" aria-hidden="true">
-				<path class="arrow-left" d="M9.6 0L0 9.6l9.6 9.6z" />
-				<path class="arrow-right" d="M17 19.2l9.5-9.6L16.9 0z" />
-			</svg>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="50"
+				height="50"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="white"
+				opacity="0"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 8l-4 4l4 4" /><path d="M17 8l4 4l-4 4" /><path d="M3 12l18 0" /></svg
+			>
 		</div>
 	</div>
 </div>
@@ -185,8 +193,7 @@
 		overflow: hidden;
 		user-select: none;
 		touch-action: none;
-		border-radius: 8px;
-    background: black;
+		background: black;
 	}
 
 	.pane {
@@ -195,25 +202,25 @@
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
-    background: black;
+		background: black;
 
-    span{
-      /* z-index: 1; */
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      color: var(--text-1);
-      font-size: 14px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 4px 8px;
-      border-radius: 4px;
-    }
+		span {
+			/* z-index: 1; */
+			position: absolute;
+			top: 8px;
+			left: 8px;
+			color: var(--text-1);
+			font-size: 14px;
+			background: rgba(0, 0, 0, 0.5);
+			padding: 4px 8px;
+			border-radius: 4px;
+		}
 	}
 
 	.pane img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 		pointer-events: none;
 		transform-origin: 0 0;
 	}
@@ -224,7 +231,7 @@
 
 		span {
 			right: 8px;
-      left: auto;
+			left: auto;
 		}
 	}
 
@@ -246,23 +253,20 @@
 		z-index: 5;
 		/* Make sure touch gestures are captured here too */
 		touch-action: none;
-	}
 
-	.scrubber {
-		width: 44px;
-		height: 44px;
-		border-radius: 50%;
-		background: #fff;
-		border: 2px solid rgba(0, 0, 0, 0.5);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		box-shadow: inherit;
-	}
+		&::after {
+			position: absolute;
+			content: '';
+			top: 0;
+			left: var(--split);
+			transform: translateX(-50%);
+			width: 44px;
+			height: 100%;
+		}
 
-	.scrubber svg {
-		width: 27px;
-		height: 20px;
-		fill: rgba(0, 0, 0, 0.7);
+		&:hover svg {
+			opacity: 1;
+			transition: opacity 0.2s ease;
+		}
 	}
 </style>
