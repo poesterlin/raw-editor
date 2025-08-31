@@ -1,5 +1,6 @@
 import { pgTable, serial, integer, text, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
+import { preview } from 'vite';
 
 export const sessionTable = pgTable('session', {
 	id: serial('id').primaryKey(),
@@ -51,3 +52,13 @@ export const editRelations = relations(editTable, ({ one }) => ({
 		references: [imageTable.id]
 	})
 }));
+
+export const importTable = pgTable('import', {
+	id: serial('id').primaryKey(),
+	filePath: text('file_path').notNull(),
+	previewPath: text('preview_path'),
+	date: timestamp('date', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+	importedAt: timestamp('imported_at', { withTimezone: true, mode: 'date' })
+});
+
+export type Import = typeof importTable.$inferSelect;

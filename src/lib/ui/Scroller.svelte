@@ -1,16 +1,15 @@
 <script lang="ts" generics="T">
 	import { onMount, tick, type Snippet } from 'svelte';
 
-	// export let items: any[];
 	interface Props {
 		items: T[];
 		onMore: () => void;
-        footer: Snippet;
-        empty: Snippet;
-        item: Snippet<[{ item: T, i: number }]>;
+		footer?: Snippet;
+		empty: Snippet;
+		item: Snippet<[{ item: T; i: number }]>;
 	}
 
-	const { items, onMore,  footer, empty, item: itemSnippet }: Props = $props();
+	const { items, onMore, footer, empty, item: itemSnippet }: Props = $props();
 
 	export function capture() {
 		const scroll = scroller.scrollTop;
@@ -103,7 +102,6 @@
 
 <div bind:this={viewport} class="h-full w-full overflow-hidden">
 	<div bind:this={scroller} class="h-full w-full overflow-y-scroll" style="overflow-anchor: none" onscroll={handle_scroll}>
-
 		<div bind:this={content} style:padding-top="{top}px" style:padding-bottom="{bottom}px">
 			{#each items.slice(a, b) as item, i (item)}
 				<div class="flow-root" data-item-id={a + i} use:measure={a + i}>
@@ -114,6 +112,8 @@
 			{/each}
 		</div>
 
-		{@render footer()}
+		{#if footer}
+			{@render footer()}
+		{/if}
 	</div>
 </div>

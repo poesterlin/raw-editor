@@ -6,6 +6,7 @@ Uses the RawTherapie CLI to be able to remote controll the editing from a low po
 ## Editing Steps
 
 1. create an 8 Bit Tiff from the RAW input, resolution max 900x900
+2. use the default generated output pp3 file as a baseline for ui settings like white ballance
 2. Generate previews:
     1. All adjustments
     2. Original colors with rotation and transfrom adjustments

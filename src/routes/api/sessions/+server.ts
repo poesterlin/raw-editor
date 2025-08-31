@@ -1,8 +1,8 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { sessionTable } from '$lib/server/db/schema';
+import { json } from '@sveltejs/kit';
 import { desc } from 'drizzle-orm';
+import type { RequestHandler } from './$types';
 
 export type SessionsResponse = {
 	sessions: Array<{
@@ -58,3 +58,4 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	return json(response);
 };
+

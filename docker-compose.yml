@@ -20,9 +20,11 @@ services:
     environment:
       - CLUT_DIR=/app/cluts
       - IMG_DIR=/app/images
+      - IMPORT_DIR=/app/import
     volumes:
       - ./cluts:/app/cluts
       - ./images:/app/images
+      - ./import:/app/import
     networks:
       - traefik_web
     labels:

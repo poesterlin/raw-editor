@@ -25,6 +25,7 @@
 	let galleryActive = $derived(currentRoute?.startsWith('/gallery'));
 	let editorActive = $derived(currentRoute?.startsWith('/editor'));
 	let exporterActive = $derived(currentRoute?.startsWith('/exporter'));
+	let importerActive = $derived(currentRoute?.startsWith('/importer'));
 </script>
 
 <svelte:head>
@@ -34,6 +35,15 @@
 <div class="grid h-screen grid-rows-[auto_1fr] bg-neutral-950 text-neutral-200">
 	<header class="border-b border-neutral-800 p-2">
 		<nav class="flex justify-center gap-2">
+			<a
+				href="/importer"
+				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
+				class:bg-neutral-800={importerActive}
+				class:text-neutral-50={importerActive}
+				class:font-semibold={importerActive}
+			>
+				Importer
+			</a>
 			<a
 				href="/gallery"
 				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
