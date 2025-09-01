@@ -36,7 +36,7 @@
 		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
 			{#each item.images as preview}
 				<a href={`/editor/${item.id}/${preview.id}`} class="group block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700">
-					<img src="/api/images/{preview.id}/preview" alt="" loading="lazy" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+					<img src="/api/images/{preview.id}/preview?version={preview.version}" alt="" loading="lazy" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
 				</a>
 			{/each}
 		</div>

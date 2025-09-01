@@ -24,7 +24,8 @@ export const imageTable = pgTable('image', {
 	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 	sessionId: integer('session_id')
 		.notNull()
-		.references(() => sessionTable.id, { onDelete: 'cascade' })
+		.references(() => sessionTable.id, { onDelete: 'cascade' }),
+	version: integer('version').notNull().default(1)
 });
 
 export type Image = typeof imageTable.$inferSelect;

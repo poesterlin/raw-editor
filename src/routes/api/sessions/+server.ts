@@ -12,7 +12,8 @@ export type SessionsResponse = {
 		endedAt: Date | null;
 		images: Array<{
 			id: number;
-			filename: string;
+			filepath: string;
+			version: number;
 		}>;
 	}>;
 	next: number | null;
@@ -28,7 +29,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				limit: 5, // Get up to 5 preview images per session
 				columns: {
 					id: true,
-					filename: true
+					filepath: true,
+					version: true
 				}
 			}
 		},
