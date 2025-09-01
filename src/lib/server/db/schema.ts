@@ -17,7 +17,9 @@ export const sessionRelations = relations(sessionTable, ({ many }) => ({
 
 export const imageTable = pgTable('image', {
 	id: serial('id').primaryKey(),
-	filename: text('filename').notNull(),
+	filepath: text('filename').notNull(),
+	previewPath: text('preview_path'),
+	tiffPath: text('tiff_path'),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 	sessionId: integer('session_id')
