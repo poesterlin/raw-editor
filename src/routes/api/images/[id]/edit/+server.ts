@@ -10,11 +10,10 @@ import { respondWithFile } from "$lib/server/utils";
 import type { RequestHandler } from "@sveltejs/kit";
 import { error } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
-import { join } from "path";
 
 const ParsedBasePP3 = parsePP3(BasePP3);
 
-export const GET: RequestHandler = async ({params, url}) => {
+export const GET: RequestHandler = async ({ params, url }) => {
     const id = Number(params.id);
 
     const image = await db.query.imageTable.findFirst({
@@ -33,13 +32,17 @@ export const GET: RequestHandler = async ({params, url}) => {
         const pp3 = parsePP3(pp3String);
         const merged = applyPP3Diff(ParsedBasePP3, pp3);
 
-        const output = await editImage(image.filepath, stringifyPP3(merged), isPreview);
+        if (!image.previewPath || !await Bun.file(image.previewPath).exists()) {
+            error(404, "Image was not imported properly");
+        }
+
+        const output = await editImage(image.previewPath, stringifyPP3(merged), { allowConcurrent: isPreview, bitDepth: 8 });
         return respondWithFile(output);
     } catch (err) {
         console.error("Error editing image:", err);
         error(400, {
             message: "Failed to edit image",
-            
+
         });
     }
 };

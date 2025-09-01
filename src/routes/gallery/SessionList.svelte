@@ -11,6 +11,24 @@
 
 	let { sessions, next, onLoaded }: Props = $props();
 
+	let scroller = $state<Scroller<Session>>();
+	let loading = $state(false);
+	let importJobStates = $state<Record<number, 'importing'>>({});
+
+	async function importSession(sessionId: number) {
+		importJobStates[sessionId] = 'importing';
+		const response = await fetch(`/api/sessions/${sessionId}/import`, { method: 'POST' });
+
+		if (!response.ok && response.status !== 409) {
+			// Handle unexpected errors, maybe show a toast notification
+			console.error('Failed to start import job', await response.text());
+			// Reset state on failure
+			delete importJobStates[sessionId];
+		}
+		// If 409, it's already running, so we just leave the UI in the 'importing' state.
+		// A full implementation would also poll a GET endpoint to clear the state when done.
+	}
+
 	export function capture() {
 		return scroller?.capture();
 	}
@@ -22,15 +40,30 @@
 	function formatDate(date: Date) {
 		return new Date(date).toLocaleDateString();
 	}
-
-	let scroller = $state<Scroller<Session>>();
-	let loading = $state(false);
 </script>
 
 {#snippet item({ item }: { item: Session })}
 	<section>
-		<div class="mb-4 flex items-baseline justify-between">
-			<h2 class="text-xl font-semibold text-neutral-200 sm:text-2xl">{item.name}</h2>
+		<div class="mb-4 flex items-center justify-between">
+			<div class="flex items-center gap-4">
+				<h2 class="text-xl font-semibold text-neutral-200 sm:text-2xl">{item.name}</h2>
+				{#if importJobStates[item.id]}
+					<span class="inline-flex items-center text-xs font-medium text-blue-300 bg-blue-900/50 px-2.5 py-1 rounded-full">
+						<span class="w-2 h-2 me-2 bg-blue-300 rounded-full animate-pulse"></span>
+						Processing...
+					</span>
+				{:else}
+					<button 
+						onclick={() => importSession(item.id)}
+						title="Process Session Images"
+						class="text-neutral-400 hover:text-neutral-100 transition-colors"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+							<path fill-rule="evenodd" d="M2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0Zm6.39-2.908a.75.75 0 0 1 .328.53l.043.282a.75.75 0 0 1-.588.843l-3.478.39a.75.75 0 0 1-.843-.587l-.043-.282a.75.75 0 0 1 .588-.843l3.478-.39a.75.75 0 0 1 .53-.328ZM12.25 7.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+						</svg>
+					</button>
+				{/if}
+			</div>
 			<p class="ml-4 flex-shrink-0 text-neutral-400">{formatDate(item.startedAt)}</p>
 		</div>
 		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">

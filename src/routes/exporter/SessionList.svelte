@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import Scroller from '$lib/ui/Scroller.svelte';
 	import type { ExporterSessionsResponse } from '../api/exporter/sessions/+server';
 
@@ -13,6 +14,53 @@
 
 	let scroller = $state<Scroller<Session>>();
 	let loading = $state(false);
+	let jobStates = $state<Record<number, 'exporting' | 'cancelling'>>({});
+	let pollingIntervals: Record<number, ReturnType<typeof setInterval>> = {};
+
+	function pollJobStatus(sessionId: number) {
+		const intervalId = setInterval(async () => {
+			const response = await fetch(`/api/sessions/${sessionId}/export`);
+
+			console.log(`[Polling] Session ${sessionId}: status check returned ${response.status}`);
+
+			if (response.status === 404) {
+				// Job is no longer active, so it's done.
+				clearInterval(intervalId);
+				delete pollingIntervals[sessionId];
+				delete jobStates[sessionId];
+
+				const session = sessions.find((s) => s.id === sessionId);
+				if (session) {
+					session.status = 'Exported';
+				}
+			}
+		}, 2000);
+
+		pollingIntervals[sessionId] = intervalId;
+	}
+
+	async function exportSession(sessionId: number) {
+		jobStates[sessionId] = 'exporting';
+		await fetch(`/api/sessions/${sessionId}/export`, { method: 'POST' });
+		pollJobStatus(sessionId);
+	}
+
+	async function cancelExport(sessionId: number) {
+		jobStates[sessionId] = 'cancelling';
+		const intervalId = pollingIntervals[sessionId];
+		if (intervalId) {
+			clearInterval(intervalId);
+			delete pollingIntervals[sessionId];
+		}
+		await fetch(`/api/sessions/${sessionId}/export`, { method: 'DELETE' });
+		delete jobStates[sessionId];
+	}
+
+	onDestroy(() => {
+		for (const intervalId of Object.values(pollingIntervals)) {
+			clearInterval(intervalId);
+		}
+	});
 
 	function formatDate(dateString: string) {
 		if (!dateString) return '';
@@ -25,7 +73,7 @@
 </script>
 
 {#snippet item({ item }: { item: Session })}
-	<li class="p-4 flex flex-wrap justify-between items-center gap-4">
+	<li class="flex flex-wrap items-center justify-between gap-4 p-4">
 		<div>
 			<h2 class="text-lg font-semibold text-neutral-200">{item.name}</h2>
 			<p class="text-sm text-neutral-400">
@@ -33,20 +81,37 @@
 			</p>
 		</div>
 		<div class="flex items-center gap-4">
-			{#if item.status === 'Updated'}
-				<span class="inline-flex items-center text-xs font-medium text-yellow-300 bg-yellow-900/50 px-2.5 py-1 rounded-full">
-					<span class="w-2 h-2 me-2 bg-yellow-300 rounded-full"></span>
+			{#if jobStates[item.id] === 'exporting'}
+				<span class="inline-flex items-center rounded-full bg-blue-900/50 px-2.5 py-1 text-xs font-medium text-blue-300">
+					<span class="me-2 h-2 w-2 animate-pulse rounded-full bg-blue-300"></span>
+					Exporting...
+				</span>
+				<button
+					onclick={() => cancelExport(item.id)}
+					class="rounded-md border border-transparent bg-neutral-800 px-4 py-2 text-sm font-semibold text-neutral-300 transition-colors hover:border-neutral-700 hover:bg-neutral-700"
+				>
+					Cancel
+				</button>
+			{:else if item.status === 'Updated'}
+				<span class="inline-flex items-center rounded-full bg-yellow-900/50 px-2.5 py-1 text-xs font-medium text-yellow-300">
+					<span class="me-2 h-2 w-2 rounded-full bg-yellow-300"></span>
 					Updated
 				</span>
-				<button class="px-4 py-2 bg-neutral-50 text-neutral-950 font-semibold rounded-md hover:bg-neutral-200 transition-colors text-sm shadow-sm">
+				<button
+					onclick={() => exportSession(item.id)}
+					class="rounded-md bg-neutral-50 px-4 py-2 text-sm font-semibold text-neutral-950 shadow-sm transition-colors hover:bg-neutral-200"
+				>
 					Export
 				</button>
 			{:else}
-				<span class="inline-flex items-center text-xs font-medium text-neutral-400 bg-neutral-800 px-2.5 py-1 rounded-full">
-					<span class="w-2 h-2 me-2 bg-neutral-500 rounded-full"></span>
+				<span class="inline-flex items-center rounded-full bg-neutral-800 px-2.5 py-1 text-xs font-medium text-neutral-400">
+					<span class="me-2 h-2 w-2 rounded-full bg-neutral-500"></span>
 					Exported
 				</span>
-				<button class="px-4 py-2 bg-neutral-800 text-neutral-300 font-semibold rounded-md hover:bg-neutral-700 transition-colors text-sm border border-transparent hover:border-neutral-700">
+				<button
+					onclick={() => exportSession(item.id)}
+					class="rounded-md border border-transparent bg-neutral-800 px-4 py-2 text-sm font-semibold text-neutral-300 transition-colors hover:border-neutral-700 hover:bg-neutral-700"
+				>
 					Re-export
 				</button>
 			{/if}
@@ -55,14 +120,16 @@
 {/snippet}
 
 {#snippet empty()}
-	<div class="flex flex-col items-center justify-center p-8 text-center h-full">
-		<svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-6 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-			<path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3v11.25" />
+	<div class="flex h-full flex-col items-center justify-center p-8 text-center">
+		<svg xmlns="http://www.w3.org/2000/svg" class="mb-6 h-20 w-20 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+			<path
+				stroke-linecap="round"
+				stroke-linejoin="round"
+				d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3v11.25"
+			/>
 		</svg>
 		<h2 class="mb-2 text-2xl font-bold text-neutral-200">Nothing to Export</h2>
-		<p class="max-w-md text-neutral-400">
-			There are no sessions ready for export. Once you make edits in the gallery, they will appear here.
-		</p>
+		<p class="max-w-md text-neutral-400">There are no sessions ready for export. Once you make edits in the gallery, they will appear here.</p>
 	</div>
 {/snippet}
 
@@ -74,23 +141,23 @@
 	{/if}
 {/snippet}
 
-<div class="bg-neutral-900 rounded-lg border border-neutral-800">
-    <Scroller
-        bind:this={scroller}
-        items={sessions}
-        {item}
-        {empty}
-        {footer}
-        onMore={async () => {
-            if (loading || !next) return;
-            loading = true;
+<div class="rounded-lg border border-neutral-800 bg-neutral-900">
+	<Scroller
+		bind:this={scroller}
+		items={sessions}
+		{item}
+		{empty}
+		{footer}
+		onMore={async () => {
+			if (loading || !next) return;
+			loading = true;
 
-            const response = await fetch(`/api/exporter/sessions?cursor=${next}`);
-            const result = await response.json() as ExporterSessionsResponse;
+			const response = await fetch(`/api/exporter/sessions?cursor=${next}`);
+			const result = (await response.json()) as ExporterSessionsResponse;
 
-            onLoaded(result);
+			onLoaded(result);
 
-            loading = false;
-        }}
-    ></Scroller>
+			loading = false;
+		}}
+	></Scroller>
 </div>

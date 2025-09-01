@@ -12,7 +12,7 @@ export type ExporterSessionsResponse = {
 		endedAt: string | null;
 		images: Array<{
 			id: number;
-			filename: string;
+			filepath: string;
 		}>;
 		status: 'Updated' | 'Exported'; // Add status for exporter
 	}>;
@@ -26,7 +26,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const sessions = await db.query.sessionTable.findMany({
 		with: {
 			images: {
-				columns: { id: true, filename: true }
+				columns: { id: true, filepath: true }
 			}
 		},
 		orderBy: [desc(sessionTable.startedAt)],

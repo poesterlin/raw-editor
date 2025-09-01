@@ -1,3 +1,6 @@
+
+import { jobManager } from '$lib/server/jobs/manager';
+import { JobType } from '$lib/server/jobs/types';
 import { db } from '$lib/server/db';
 import { imageTable, importTable, sessionTable, type Import } from '$lib/server/db/schema';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
@@ -38,6 +41,9 @@ export const POST: RequestHandler = async ({ request }) => {
         error(400, 'Missing name or importIds');
     }
 
+    let sessionId: number | null = null;
+    const filePaths: string[] = [];
+
     await db.transaction(async (tx) => {
         const [session] = await tx
             .insert(sessionTable)
@@ -49,16 +55,21 @@ export const POST: RequestHandler = async ({ request }) => {
             return;
         }
 
-        const importsToProcess = await tx.query.importTable.findMany({
+        sessionId = session.id;
+
+        const imports = await tx.query.importTable.findMany({
             where: inArray(importTable.id, importIds)
         });
 
-        if (importsToProcess.length !== importIds.length) {
+        if (imports.length !== importIds.length) {
             tx.rollback();
             return;
         }
 
-        const newImages = importsToProcess.map((imp) => ({
+        // Collect file paths for the job
+        imports.forEach(i => filePaths.push(i.filePath));
+
+        const newImages = imports.map((imp) => ({
             createdAt: new Date(),
             updatedAt: new Date(),
             filepath: imp.filePath,
@@ -68,13 +79,12 @@ export const POST: RequestHandler = async ({ request }) => {
         await tx.insert(imageTable).values(newImages);
 
         await tx.update(importTable).set({ importedAt: new Date() }).where(inArray(importTable.id, importIds));
-
-        return session;
     });
 
-    // TODO: start import job, convert to tiffs
-    // import ImportPP3 from "$lib/assets/import.pp3?raw";
-    // const output = await editImage(path, ImportPP3, true, 16);
+    if (sessionId) {
+        console.log(`[API] Submitting import job for session ${sessionId}.`);
+        jobManager.submit(JobType.IMPORT, { sessionId });
+    }
 
-    return new Response();
+    return new Response(null, { status: 202 });
 };
