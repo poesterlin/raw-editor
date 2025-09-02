@@ -56,7 +56,7 @@
 			{@const pp3 = JSON.parse(JSON.stringify(edits.pp3))}
 			{@const edited = setLut(pp3, lut.path)}
 			<button onclick={() => select(lut.path)} class="flex flex-col items-center">
-				<img src="/{imageId}/edit?preview&config={toBase64(edited)}" alt="" class="h-32" loading="lazy" />
+				<img src="/api/images/{imageId}/edit?preview&config={toBase64(edited)}" alt="" class="h-32" loading="lazy" />
 				<h2 class="truncate">{lut.name}</h2>
 			</button>
 		{/each}

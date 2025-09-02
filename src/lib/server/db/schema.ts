@@ -1,6 +1,5 @@
-import { pgTable, serial, integer, text, timestamp } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { preview } from 'vite';
+import { integer, pgTable, real, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const sessionTable = pgTable('session', {
 	id: serial('id').primaryKey(),
@@ -19,7 +18,7 @@ export const imageTable = pgTable('image', {
 	id: serial('id').primaryKey(),
 	filepath: text('filename').notNull(),
 	previewPath: text('preview_path'),
-	tiffPath: text('tiff_path'),
+	tifPath: text('tiff_path'),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 	updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 	sessionId: integer('session_id')
@@ -27,6 +26,18 @@ export const imageTable = pgTable('image', {
 		.references(() => sessionTable.id, { onDelete: 'cascade' }),
 	version: integer('version').notNull().default(1),
 	recordedAt: timestamp('recorded_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
+	name: text('name').notNull(),
+	resolutionX: integer('resolution_x').notNull(),
+	resolutionY: integer('resolution_y').notNull(),
+	rating: integer('rating').notNull().default(0),
+	iso: integer('iso'),
+	aperture: real('aperture'),
+	exposure: text('exposure'),
+	focalLength: text('focal_length'),
+	camera: text('camera'),
+	lens: text('lens'),
+	whiteBalance: real('white_balance'),
+	tint: real('tint'),
 });
 
 export type Image = typeof imageTable.$inferSelect;

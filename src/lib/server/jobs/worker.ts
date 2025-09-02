@@ -1,13 +1,13 @@
 import * as Comlink from 'comlink';
 import { db } from '$lib/server/db';
-import { editImage } from '$lib/server/image-editor';
+import { editImage, generateImportTif } from '$lib/server/image-editor';
 import ImportPP3 from '$lib/assets/import.pp3?raw';
 import ExportPP3 from '$lib/assets/export.pp3?raw';
 import type { ExportPayload, ImportPayload, JobId, JobResult, WorkerAPI } from './types';
 import { desc, eq } from 'drizzle-orm';
 import { editTable, imageTable, sessionTable, type Image, type Session } from '../db/schema';
 import { applyPP3Diff, parsePP3, stringifyPP3 } from '$lib/pp3-utils';
-import { join } from 'path';
+import { dirname, join } from 'path';
 
 const activeJobControllers = new Map<JobId, AbortController>();
 
@@ -25,8 +25,13 @@ const workerApi: WorkerAPI = {
 		try {
 			for (const image of images) {
 				console.log(`[Worker] Processing ${image.filepath}`);
-				const output = await editImage(image.filepath, ImportPP3, { signal: controller.signal, allowConcurrent: true, bitDepth: 16 });
-				await db.update(imageTable).set({ previewPath: output }).where(eq(imageTable.id, image.id));
+				const { pp3, tif } = await generateImportTif(image.filepath);
+
+				await db.update(imageTable).set({
+					tifPath: tif,
+					whiteBalance: pp3.White_Balance?.Temperature as number,
+					tint: pp3.White_Balance?.Green as number
+				}).where(eq(imageTable.id, image.id));
 			}
 			console.log(`[Worker] Finished import for session: ${sessionId}.`);
 			return { status: 'success' };

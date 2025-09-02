@@ -4,18 +4,23 @@ import { join } from "node:path";
 import { env } from "node:process";
 import { error } from "@sveltejs/kit";
 import { db } from "$lib/server/db";
-import { eq } from "drizzle-orm";
-import { imageTable } from "$lib/server/db/schema";
+import { and, eq } from "drizzle-orm";
+import { imageTable, sessionTable } from "$lib/server/db/schema";
 
 export const load: PageServerLoad = async ({ params }) => {
     const { session, img } = params;
 
-    const image = await db.query.imageTable.findFirst({
-        where: eq(imageTable.id, Number(img))
-    });
+    const [image, sessionData] = await Promise.all([
+        db.query.imageTable.findFirst({
+            where: and(eq(imageTable.id, Number(img)), eq(imageTable.sessionId, Number(session)))
+        }),
+        db.query.sessionTable.findFirst({
+            where: eq(sessionTable.id, Number(session))
+        })
+    ]);
 
-    if (!image) {
-        error(404, { message: "Image not found" });
+    if (!image || !sessionData) {
+        error(404, { message: "Image or session not found" });
     }
 
     // load luts
@@ -28,7 +33,7 @@ export const load: PageServerLoad = async ({ params }) => {
     const files = await Array.fromAsync(glob.scan({ cwd }));
     const luts = files.map((f) => formatLut(f, cwd));
 
-    return { luts, image };
+    return { luts, image, session: sessionData };
 };
 
 function formatLut(path: string, cwd: string) {

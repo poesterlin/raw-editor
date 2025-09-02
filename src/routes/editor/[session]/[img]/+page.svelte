@@ -7,12 +7,13 @@
 	import Section from '$lib/ui/Section.svelte';
 	import Slider from '$lib/ui/Slider.svelte';
 	import LutPicker from '$lib/ui/LutPicker.svelte';
-	import { getWorkerInstance } from '$lib';
+	import { getWorkerInstance, map } from '$lib';
 	import { page } from '$app/state';
 	import { IconFidgetSpinner } from '@tabler/icons-svelte';
 	import { fade } from 'svelte/transition';
 	import Select from '$lib/ui/Select.svelte';
 	import Button from '$lib/ui/Button.svelte';
+	import { onMount } from 'svelte';
 
 	let { data } = $props();
 	let showLutPicker = $state(false);
@@ -20,6 +21,14 @@
 	let sampleImage = $state('');
 	let apiPath = $derived(`/api/images/${data.image.id}`);
 	let beforeImage = $derived(apiPath + `/edit?preview&config=${toBase64(filterPP3(edits.throttledPP3, ['Crop', 'Rotation']))}`);
+
+	onMount(() => {
+		const img = data.image;
+		if (img.whiteBalance && img.tint) {
+			edits.pp3.White_Balance.Temperature = img.whiteBalance;
+			edits.pp3.White_Balance.Green = img.tint;
+		}
+	});
 
 	$effect(() => {
 		const worker = getWorkerInstance();
@@ -81,41 +90,45 @@
 							}}
 							onchange={(value) => {
 								const isCamera = value === 'Camera';
-								if (isCamera) {
-									// TODO: Fetch camera white balance settings
-									edits.pp3.White_Balance.Temperature = 4708;
-									edits.pp3.White_Balance.Green = 0.667;
+								const img = data.image;
+								if (isCamera && img.whiteBalance && img.tint) {
+									edits.pp3.White_Balance.Temperature = img.whiteBalance;
+									edits.pp3.White_Balance.Green = img.tint;
 								}
 							}}
 							bind:value={edits.pp3.White_Balance.Setting as string}
 						/>
-						<Slider
-							label="Temperature"
-							bind:value={edits.pp3.White_Balance.Temperature as number}
-							min={-3000}
-							max={3000}
-							step={1}
-							centered
-							map={(n) => n + 4708}
-							inverseMap={(n) => n - 4708}
-							ignored={edits.pp3.White_Balance.Setting !== 'Custom'}
-							onchange={() => (edits.pp3.White_Balance.Setting = 'Custom')}
-							overlay="bg-gradient-to-r from-[#0000FF] to-[#FFFF00]"
-						/>
-						<Slider
-							label="Tint"
-							overlay="bg-gradient-to-r from-[#FF00FF] to-[#00FF00]"
-							bind:value={edits.pp3.White_Balance.Green as number}
-							min={Math.log10(0.001)}
-							max={Math.log10(100)}
-							resetValue={0.667}
-							ignored={edits.pp3.White_Balance.Setting !== 'Custom'}
-							onchange={() => (edits.pp3.White_Balance.Setting = 'Custom')}
-							step={0.001}
-							precision={3}
-							map={(x) => Math.pow(10, x)}
-							inverseMap={(y) => Math.log10(y)}
-						/>
+						{#if edits.pp3.White_Balance.Temperature && edits.pp3.White_Balance.Green}
+							<Slider
+								label="Temperature"
+								bind:value={edits.pp3.White_Balance.Temperature as number}
+								min={-3000}
+								max={3000}
+								step={1}
+								centered
+								resetValue={data.image.whiteBalance!}
+								ignored={edits.pp3.White_Balance.Setting !== 'Custom'}
+								onchange={() => (edits.pp3.White_Balance.Setting = 'Custom')}
+								overlay="bg-gradient-to-r from-[#0000FF] to-[#FFFF00]"
+								map={(x) => map(x, -3000, 3000, data.image.whiteBalance! - 3000, data.image.whiteBalance! + 3000)}
+								inverseMap={(y) => map(y, data.image.whiteBalance! - 3000, data.image.whiteBalance! + 3000, -3000, 3000)}
+							/>
+							<Slider
+								label="Tint"
+								overlay="bg-gradient-to-r from-[#FF00FF] to-[#00FF00]"
+								bind:value={edits.pp3.White_Balance.Green as number}
+								min={-100}
+								max={100}
+								resetValue={data.image.tint ?? 1}
+								ignored={edits.pp3.White_Balance.Setting !== 'Custom'}
+								onchange={() => (edits.pp3.White_Balance.Setting = 'Custom')}
+								step={0.001}
+								centered
+								precision={3}
+								map={(x) => map(x, -100, 100, 0.5, 1.5)}
+								inverseMap={(y) => map(y, 0.5, 1.5, -100, 100)}
+							/>
+						{/if}
 					</Section>
 					<Section title="Exposure" section="Exposure">
 						<Checkbox label="Auto Exposure" bind:checked={edits.pp3.Exposure.Auto as boolean} />

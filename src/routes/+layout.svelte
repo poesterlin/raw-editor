@@ -1,26 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import BasePP3 from '$lib/assets/client.pp3?raw';
 	import favicon from '$lib/assets/favicon.svg';
 	import { app } from '$lib/state/app.svelte';
-	import { edits } from '$lib/state/editing.svelte';
 	import '../app.css';
 
 	let { children } = $props();
-
-	edits.initialize(BasePP3);
-
-	$effect(() => {
-		const newPP3 = $state.snapshot(edits.pp3);
-		// edits.store();
-		edits.updateThrottledPP3(newPP3);
-	});
-
-	$effect(() => {
-		if (edits.throttledPP3) {
-			edits.isLoading = true;
-		}
-	});
 
 	let currentRoute = $derived(page.route.id);
 	let galleryActive = $derived(currentRoute?.startsWith('/gallery'));

@@ -52,6 +52,7 @@
     "@tabler/icons-svelte": "^3.34.1",
     "comlink": "^4.4.2",
     "drizzle-orm": "^0.40.0",
-    "exiftool-vendored": "^30.3.0"
+    "exiftool-vendored": "^30.3.0",
+    "p-limit": "^7.1.1"
   }
 }

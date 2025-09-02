@@ -32,17 +32,16 @@ export const GET: RequestHandler = async ({ params, url }) => {
         const pp3 = parsePP3(pp3String);
         const merged = applyPP3Diff(ParsedBasePP3, pp3);
 
-        if (!image.previewPath || !await Bun.file(image.previewPath).exists()) {
+        if (!image.tifPath || !(await Bun.file(image.tifPath).exists())) {
             error(404, "Image was not imported properly");
         }
 
-        const output = await editImage(image.previewPath, stringifyPP3(merged), { allowConcurrent: isPreview, bitDepth: 8 });
+        const output = await editImage(image.tifPath, stringifyPP3(merged), { allowConcurrent: isPreview });
         return respondWithFile(output);
     } catch (err) {
         console.error("Error editing image:", err);
         error(400, {
             message: "Failed to edit image",
-
         });
     }
 };
