@@ -10,7 +10,7 @@ import { getFileNameFromPath } from "./utils";
  * @param options 
  * @returns 
 */
-export async function editImage(imagePath: string, pp3: string, options: { allowConcurrent?: boolean, bitDepth?: number, signal?: AbortSignal } = {}): Promise<string> {
+export async function editImage(imagePath: string, pp3: string, options: { allowConcurrent?: boolean, bitDepth?: number, signal?: AbortSignal, outputPath?: string } = {}): Promise<string> {
     const start = performance.now();
     
     let name = getFileNameFromPath(imagePath);
@@ -22,7 +22,7 @@ export async function editImage(imagePath: string, pp3: string, options: { allow
     const tempDir = await createTempDir(name);
 
     options.bitDepth ??= 8;
-    const output = join(tempDir, options.bitDepth === 8 ? 'edited.jpg' : `edited.tiff`);
+    const output = options.outputPath ?? join(tempDir, options.bitDepth === 8 ? 'edited.jpg' : `edited.tiff`);
 
     // Write the pp3 file to the temp directory
     const pp3FilePath = join(tempDir, 'edit.pp3');

@@ -1,10 +1,13 @@
 import * as Comlink from 'comlink';
-import { db } from '../db';
+import { db } from '$lib/server/db';
 import { editImage } from '$lib/server/image-editor';
 import ImportPP3 from '$lib/assets/import.pp3?raw';
+import ExportPP3 from '$lib/assets/export.pp3?raw';
 import type { ExportPayload, ImportPayload, JobId, JobResult, WorkerAPI } from './types';
 import { desc, eq } from 'drizzle-orm';
-import { editTable, imageTable } from '../db/schema';
+import { editTable, imageTable, sessionTable, type Image, type Session } from '../db/schema';
+import { applyPP3Diff, parsePP3, stringifyPP3 } from '$lib/pp3-utils';
+import { join } from 'path';
 
 const activeJobControllers = new Map<JobId, AbortController>();
 
@@ -40,25 +43,33 @@ const workerApi: WorkerAPI = {
 		const controller = new AbortController();
 		activeJobControllers.set(sessionId, controller);
 
+		const session = await db.query.sessionTable.findFirst({ where: eq(sessionTable.id, sessionId) });
+
+		if (!session) {
+			console.error(`[Worker] Session not found for export: ${sessionId}`);
+			return { status: 'error', message: 'Session not found' };
+		}
+
 		console.log(`[Worker] Starting export for session: ${sessionId}`);
 		try {
 			const images = await db.query.imageTable.findMany({
 				where: eq(imageTable.sessionId, sessionId)
 			});
 
-			for (const image of images) {
+			for (let i = 0; i < images.length; i++) {
+				const image = images[i];
 				const edit = await db.query.editTable.findFirst({
 					where: eq(editTable.id, image.id),
 					orderBy: desc(editTable.createdAt)
 				});
 
-				if (!edit) {
-					console.warn(`[Worker] No edit found for image ${image.id}`);
-					continue;
-				}
+				const pp3 = parsePP3(edit?.pp3 ?? "");
+				const merged = applyPP3Diff(pp3, parsePP3(ExportPP3));
 
 				console.log(`[Worker] Processing ${image.filepath}`);
-				await editImage(image.filepath, edit.pp3, { signal: controller.signal });
+				const outputPath = makeOutputPath(image, session, images.length);
+				await mkdirPath(outputPath);
+				await editImage(image.filepath, stringifyPP3(merged), { signal: controller.signal, outputPath });
 			}
 			console.log(`[Worker] Finished export for session: ${sessionId}`);
 			return { status: 'success' };
@@ -81,3 +92,23 @@ const workerApi: WorkerAPI = {
 };
 
 Comlink.expose(workerApi);
+
+function makeOutputPath(image: Image, session: Session, totalImages: number): string {
+	const digits = Math.max(2, Math.ceil(Math.log10(totalImages + 1)));
+
+	const year = image.recordedAt.getFullYear();
+	const month = (image.recordedAt.getMonth() + 1).toString().padStart(2, '0');
+	const day = image.recordedAt.getDate().toString().padStart(2, '0');
+
+	const exportDir = process.env.EXPORT_DIR || "/exports";
+	return join(
+		exportDir,
+		year.toString(),
+		`${year}-${month}-${day}_${session.name}`,
+		`${image.id.toString().padStart(digits, '0')}_${session.name}.jpg`
+	);
+}
+
+async function mkdirPath(path: string) {
+	await Bun.file(path).write("");
+}
