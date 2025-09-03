@@ -1,16 +1,30 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import favicon from '$lib/assets/favicon.svg';
+	import { onNavigate } from '$app/navigation';
 	import { app } from '$lib/state/app.svelte';
 	import '../app.css';
 
 	let { children } = $props();
 
-	let currentRoute = $derived(page.route.id);
+	let currentRoute = $derived(page.route?.id);
 	let galleryActive = $derived(currentRoute?.startsWith('/gallery'));
 	let editorActive = $derived(currentRoute?.startsWith('/editor'));
 	let exporterActive = $derived(currentRoute?.startsWith('/exporter'));
 	let importerActive = $derived(currentRoute?.startsWith('/importer'));
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) {
+			return;
+		}
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 </script>
 
 <svelte:head>
@@ -79,4 +93,24 @@
 	{/each}
 </div>
 
-<style></style>
+<style>
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes fade-out {
+		to {
+			opacity: 0;
+		}
+	}
+
+	::view-transition-old(root) {
+		animation: 90ms cubic-bezier(0.4, 0, 1, 1) both fade-out;
+	}
+
+	::view-transition-new(root) {
+		animation: 210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in;
+	}
+</style>
