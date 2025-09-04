@@ -7,7 +7,7 @@
 	import BeforeAfter from '$lib/ui/BeforeAfter.svelte';
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
 	import LutPicker from '$lib/ui/LutPicker.svelte';
-	import { IconFidgetSpinner } from '@tabler/icons-svelte';
+	import { IconFidgetSpinner } from '$lib/ui/icons';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Adjustments from './Adjustments.svelte';
@@ -19,7 +19,7 @@
 	let sampleImage = $state('');
 	let apiPath = $derived(`/api/images/${data.image.id}`);
 	let beforeImage = $derived(apiPath + `/edit?preview&config=${toBase64(filterPP3(edits.throttledPP3, ['Crop', 'Rotation']))}`);
-	
+
 	onMount(() => {
 		const latestSnapshot = data.snapshots[0];
 		console.log('Latest snapshot:', latestSnapshot);
@@ -53,7 +53,7 @@
 		<!-- Image Preview -->
 		<div class="image-preview">
 			<BeforeAfter {beforeImage} afterImage={sampleImage} />
-			<EditModeNav img={page.params.img!} showCrop showUndoRedo showSnapshots showReset />
+			<EditModeNav img={page.params.img!} showCrop showUndoRedo showSnapshots showReset showClipboard />
 		</div>
 
 		<!-- Controls Panel -->

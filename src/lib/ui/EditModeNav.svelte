@@ -1,9 +1,21 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
-	import { stringifyPP3 } from '$lib/pp3-utils';
+	import { stringifyPP3, parsePP3 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
-	import { IconAdjustmentsHorizontal, IconArrowBackUp, IconArrowForwardUp, IconCameraFilled, IconCameraPlus, IconCheck, IconCrop, IconRestore } from '@tabler/icons-svelte';
+	import {
+		IconAdjustmentsHorizontal,
+		IconArrowBackUp,
+		IconArrowForwardUp,
+		IconCameraFilled,
+		IconCameraPlus,
+		IconCheck,
+		IconClipboard,
+		IconCopy,
+		IconCrop,
+		IconRestore
+	} from '$lib/ui/icons';
 
 	interface Props {
 		img: string;
@@ -12,11 +24,77 @@
 		showUndoRedo?: boolean;
 		showReset?: boolean;
 		showEdit?: boolean;
+		showClipboard?: boolean;
 	}
 
-	let { img, showSnapshots, showCrop, showUndoRedo, showReset, showEdit }: Props = $props();
+	let { img, showSnapshots, showCrop, showUndoRedo, showReset, showEdit, showClipboard }: Props = $props();
 
 	let savedSnapshot = $state(false);
+	let copiedConfig = $state(false);
+	let pastedConfig = $state(false);
+	let hasClipboardContent = $state(false);
+
+	async function getClipboardPermissionState() {
+		if (!browser) return 'unsupported';
+		if (typeof navigator === 'undefined' || !navigator.permissions) return 'unsupported';
+		try {
+			const status = await navigator.permissions.query({
+				// @ts-expect-error - not in the spec yet
+				name: 'clipboard-read'
+			});
+			console.log(status);
+			return status.state; // 'granted' | 'denied' | 'prompt'
+		} catch {
+			// Browser may not support this descriptor
+			return 'unsupported';
+		}
+	}
+
+	async function checkClipboard() {
+		let pp3Text: string | null = null;
+
+		// TODO: if the permission is not jet set, dont request it
+		const hasPermission = await getClipboardPermissionState();
+		if (hasPermission !== 'granted') {
+			return;
+		}
+
+		// try clipboard readText
+		if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.readText) {
+			try {
+				const txt = await navigator.clipboard.readText();
+				if (txt && txt.trim().length > 0) {
+					pp3Text = txt;
+				}
+			} catch {
+				// ignore and try localStorage
+			}
+		}
+
+		// fallback to localStorage
+		if (!pp3Text) {
+			try {
+				const stored = localStorage.getItem('raw-editor_pp3_clipboard');
+				if (stored && stored.trim().length > 0) {
+					pp3Text = stored;
+				}
+			} catch {
+				// ignore
+			}
+		}
+
+		if (pp3Text) {
+			try {
+				// just check if it's parsable
+				parsePP3(pp3Text);
+				hasClipboardContent = true;
+			} catch {
+				hasClipboardContent = false;
+			}
+		} else {
+			hasClipboardContent = false;
+		}
+	}
 
 	async function saveSnapshot() {
 		const res = await fetch(`/api/images/${page.params.img}/snapshots`, {
@@ -33,41 +111,131 @@
 			savedSnapshot = false;
 		}, 2000);
 	}
+
+	// Copy current PP3 to clipboard and localStorage as fallback
+	async function copyConfig() {
+		const pp3String = stringifyPP3(edits.pp3);
+		let success = false;
+
+		// try writing to clipboard first
+		if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+			try {
+				await navigator.clipboard.writeText(pp3String);
+				success = true;
+			} catch {
+				// ignore, fallback to localStorage below
+				success = false;
+			}
+		}
+
+		// save to localStorage as fallback/persistent copy
+		try {
+			localStorage.setItem('raw-editor_pp3_clipboard', pp3String);
+			success = true;
+		} catch {
+			// ignore localStorage errors
+		}
+
+		copiedConfig = success;
+		if (success) {
+			hasClipboardContent = true;
+		}
+		setTimeout(() => (copiedConfig = false), 2000);
+	}
+
+	// Paste PP3 from clipboard or localStorage and apply to current edits
+	async function pasteConfig() {
+		let pp3Text: string | null = null;
+
+		// try clipboard readText
+		if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.readText) {
+			try {
+				const txt = await navigator.clipboard.readText();
+				if (txt && txt.trim().length > 0) {
+					pp3Text = txt;
+				}
+			} catch {
+				// ignore and try localStorage
+			}
+		}
+
+		// fallback to localStorage
+		if (!pp3Text) {
+			try {
+				const stored = localStorage.getItem('raw-editor_pp3_clipboard');
+				if (stored && stored.trim().length > 0) {
+					pp3Text = stored;
+				}
+			} catch {
+				// ignore
+			}
+		}
+
+		if (!pp3Text) {
+			// nothing to paste
+			pastedConfig = false;
+			return;
+		}
+
+		// try to parse PP3 text and apply
+		try {
+			const parsed = parsePP3(pp3Text);
+
+			// Deep clone parsed to avoid accidental shared references
+			const newPp3 = JSON.parse(JSON.stringify(parsed));
+
+			// Replace edits.pp3 with the new config and push to history
+			edits.pp3 = newPp3;
+			edits.update(newPp3);
+			edits.updateThrottledPP3(newPp3);
+
+			// invalidate so previews refresh
+			await invalidateAll();
+
+			pastedConfig = true;
+			setTimeout(() => (pastedConfig = false), 2000);
+		} catch {
+			// parse failed; leave pastedConfig false
+			pastedConfig = false;
+		}
+	}
 </script>
+
+<svelte:window onfocus={() => checkClipboard()} />
 
 <nav>
 	{#if showUndoRedo}
-		<button disabled={!edits.canRedo} onclick={edits.redo}>
+		<button disabled={!edits.canRedo} onclick={edits.redo} aria-label="Redo">
 			<IconArrowBackUp />
 		</button>
-		<button disabled={!edits.canUndo} onclick={edits.undo}>
+		<button disabled={!edits.canUndo} onclick={edits.undo} aria-label="Undo">
 			<IconArrowForwardUp />
 		</button>
 	{/if}
 	{#if showReset && edits.canUndo}
-		<button class="reset-btn" onclick={() => {}}>
-			<IconRestore>
-				<span class="sr-only">Reset All</span>
-			</IconRestore>
+		<button class="reset-btn" onclick={() => {}} aria-label="Reset All">
+			<IconRestore />
 		</button>
 	{/if}
+
+	<!-- navigation -->
 	{#if showCrop}
-		<a href="/editor/{img}/crop">
+		<a href="/editor/{img}/crop" aria-label="Crop">
 			<IconCrop />
 		</a>
 	{/if}
 	{#if showEdit}
-		<a href="/editor/{img}">
+		<a href="/editor/{img}" aria-label="Edit">
 			<IconAdjustmentsHorizontal />
 		</a>
 	{/if}
+
+	<!-- version snapshots -->
 	{#if showSnapshots}
-		<a href="?snapshot">
-			<IconCameraFilled>
-				<span class="sr-only">Snapshots</span>
-			</IconCameraFilled>
+		<a href="?snapshot" aria-label="Snapshots">
+			<IconCameraFilled />
 		</a>
-		<button onclick={saveSnapshot}>
+		<button onclick={saveSnapshot} aria-label="Save Snapshot">
 			{#if savedSnapshot}
 				<IconCheck />
 			{:else}
@@ -76,6 +244,26 @@
 				</IconCameraPlus>
 			{/if}
 		</button>
+	{/if}
+
+	<!-- Copy / Paste config buttons -->
+	{#if showClipboard}
+		<button onclick={copyConfig} aria-label="Copy edit config">
+			{#if copiedConfig}
+				<IconCheck />
+			{:else}
+				<IconCopy />
+			{/if}
+		</button>
+		{#if hasClipboardContent}
+			<button onclick={pasteConfig} aria-label="Paste edit config">
+				{#if pastedConfig}
+					<IconCheck />
+				{:else}
+					<IconClipboard />
+				{/if}
+			</button>
+		{/if}
 	{/if}
 </nav>
 
@@ -104,6 +292,9 @@
 		padding: 0.5rem;
 		border-radius: 4px;
 		color: rgb(196, 196, 196);
+		font-size: 0.9rem;
+		min-width: 2.7rem;
+		text-align: center;
 
 		& > :global(svg) {
 			width: 2rem;

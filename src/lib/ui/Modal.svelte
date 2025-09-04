@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { IconX } from '@tabler/icons-svelte';
+	import { IconX } from '$lib/ui/icons';
 	import { onMount, type Snippet } from 'svelte';
 	import { fade } from 'svelte/transition';
 
@@ -10,13 +10,11 @@
 	}
 
 	let dialog: HTMLDialogElement;
-	let hasBackdrop = $state(true);
 
 	let { children, onClose, ...rest }: Props = $props();
 
 	onMount(() => {
 		dialog.showModal();
-		hasBackdrop = true;
 	});
 
 	function handleOutsideClick(event: MouseEvent) {
@@ -26,7 +24,6 @@
 	}
 
 	function handleClose() {
-		hasBackdrop = false;
 		onClose();
 	}
 
@@ -49,11 +46,11 @@
 
 <dialog
 	in:fade={{ duration: 200 }}
-	class="glass relative relative m-auto transform overflow-auto w-xl rounded-xl !bg-neutral-900 text-left shadow-xl transition-all {rest.class}"
+	class="glass relative m-auto w-xl transform overflow-auto rounded-xl !bg-neutral-900 text-left shadow-xl transition-all {rest.class}"
 	bind:this={dialog}
 	onclick={handleOutsideClick}
 	onkeydown={trapFocus}
-    onclose={handleClose}
+	onclose={handleClose}
 >
 	<button
 		autofocus

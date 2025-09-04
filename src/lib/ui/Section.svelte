@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import Checkbox from './Checkbox.svelte';
 	import { edits } from '$lib/state/editing.svelte';
-	import { IconChevronRight } from '@tabler/icons-svelte';
+	import { IconChevronRight } from '$lib/ui/icons';
 
 	interface Props {
 		title: string;
