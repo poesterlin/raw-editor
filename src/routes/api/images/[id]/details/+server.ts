@@ -1,23 +1,25 @@
-import type { RequestHandler } from "./$types";
+import { db } from '$lib/server/db';
+import { imageTable } from '$lib/server/db/schema';
+import { json, type RequestHandler } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 
-export interface ImageDetails {
-    id: number;
-    name: string;
-    resolutionX: string;
-    resolutionY: string;
-    rating: number;
-    date: string;
-    iso: number;
-    aperture: number;
-    exposure: number;
-    focalLength: number;
-    camera: string;
-    lens: string;
-    whiteBalance: string;
-    tint: number;
-}
+export const GET: RequestHandler = async ({ params }) => {
+	const imageId = Number(params.id);
+	const image = await db.query.imageTable.findFirst({
+		where: eq(imageTable.id, imageId)
+	});
+	return json(image);
+};
 
-export const GET: RequestHandler = async () => {
+export const PUT: RequestHandler = async ({ request, params }) => {
+	const imageId = Number(params.id);
+	const { rating, isArchived } = await request.json();
 
-    return new Response();
+	const [updatedImage] = await db
+		.update(imageTable)
+		.set({ rating, isArchived })
+		.where(eq(imageTable.id, imageId))
+		.returning();
+
+	return json(updatedImage);
 };

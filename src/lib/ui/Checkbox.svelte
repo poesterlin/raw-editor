@@ -5,9 +5,10 @@
 		label?: string;
 		id?: string;
 		small?: boolean;
+		onchange?: (value: boolean) => void;
 	}
 
-	let { checked = $bindable(false), disabled = false, label = 'Toggle', id = `toggle-${Math.random().toString(36).slice(2, 9)}`, small }: Props = $props();
+	let { checked = $bindable(false), disabled = false, label = 'Toggle', id = `toggle-${Math.random().toString(36).slice(2, 9)}`, small, onchange }: Props = $props();
 
 	function toggle(e: Event) {
 		if (disabled) return;
@@ -65,7 +66,7 @@
 		></div>
 
 		<!-- Native checkbox for keyboard + screen readers -->
-		<input {id} type="checkbox" class="pointer-events-none absolute inset-0 hidden opacity-0" {disabled} bind:checked />
+		<input {id} type="checkbox" class="pointer-events-none absolute inset-0 hidden opacity-0" {disabled} bind:checked onchange={(e) => onchange?.((e.target as HTMLInputElement).checked)} />
 	</div>
 </div>
 

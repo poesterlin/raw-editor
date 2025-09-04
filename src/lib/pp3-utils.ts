@@ -134,8 +134,8 @@ export function excludePP3(pp3: PP3, chapters: string[]) {
     return filtered;
 }
 
-export function toBase64(pp3: PP3) {
-    const pp3String = stringifyPP3(pp3);
+export function toBase64(pp3: PP3 | string) {
+    const pp3String = typeof pp3 === 'string' ? pp3 : stringifyPP3(pp3);
     return btoa(unescape(encodeURIComponent(pp3String)));
 }
 

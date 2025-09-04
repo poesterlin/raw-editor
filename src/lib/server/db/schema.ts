@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, real, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, real, serial, text, timestamp } from 'drizzle-orm/pg-core';
 
 export const sessionTable = pgTable('session', {
 	id: serial('id').primaryKey(),
@@ -38,6 +38,7 @@ export const imageTable = pgTable('image', {
 	lens: text('lens'),
 	whiteBalance: real('white_balance'),
 	tint: real('tint'),
+	isArchived: boolean('is_archived').notNull().default(false)
 });
 
 export type Image = typeof imageTable.$inferSelect;
@@ -47,23 +48,24 @@ export const imageRelations = relations(imageTable, ({ one, many }) => ({
 		fields: [imageTable.sessionId],
 		references: [sessionTable.id]
 	}),
-	edits: many(editTable)
+	snapshots: many(snapshotTable)
 }));
 
-export const editTable = pgTable('edit', {
+export const snapshotTable = pgTable('snapshot', {
 	id: serial('id').primaryKey(),
-	pp3: text('pp3').notNull(), // This stores the RawTherapee profile string
+	pp3: text('pp3').notNull(),
 	createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 	imageId: integer('image_id')
 		.notNull()
-		.references(() => imageTable.id, { onDelete: 'cascade' })
+		.references(() => imageTable.id, { onDelete: 'cascade' }),
+	isMarkedForExport: boolean('is_marked_for_export').notNull().default(false)
 });
 
-export type Edit = typeof editTable.$inferSelect;
+export type Snapshot = typeof snapshotTable.$inferSelect;
 
-export const editRelations = relations(editTable, ({ one }) => ({
+export const snapshotRelations = relations(snapshotTable, ({ one }) => ({
 	image: one(imageTable, {
-		fields: [editTable.imageId],
+		fields: [snapshotTable.imageId],
 		references: [imageTable.id]
 	})
 }));

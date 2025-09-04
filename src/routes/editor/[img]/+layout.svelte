@@ -12,6 +12,11 @@
 	});
 
 	$effect(() => {
+		// const pp3 = $state.snapshot(edits.throttledPP3);
+		// edits.update(pp3);
+	});
+
+	$effect(() => {
 		if (edits.throttledPP3) {
 			edits.isLoading = true;
 		}
@@ -19,5 +24,3 @@
 </script>
 
 {@render children?.()}
-
-<style></style>

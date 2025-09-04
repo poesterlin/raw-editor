@@ -243,6 +243,7 @@
 		width: 4px;
 		height: 100%;
 		background: #fff;
+		opacity: 0.6;
 		cursor: ew-resize;
 		display: flex;
 		align-items: center;
@@ -253,6 +254,7 @@
 		z-index: 5;
 		/* Make sure touch gestures are captured here too */
 		touch-action: none;
+		transition: opacity 0.2s ease;
 
 		&::after {
 			position: absolute;
@@ -267,6 +269,9 @@
 		&:hover svg {
 			opacity: 1;
 			transition: opacity 0.2s ease;
+		}
+		&:hover {
+			opacity: 1;
 		}
 	}
 </style>

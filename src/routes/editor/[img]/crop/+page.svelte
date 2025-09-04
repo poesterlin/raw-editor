@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { assert } from '$lib';
 	import { checkHandleCollision, drawCropGrid, moveHandle } from '$lib/canvas/grid';
 	import { excludePP3, toBase64, type PP3 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
+	import EditModeNav from '$lib/ui/EditModeNav.svelte';
 
 	let canvasEl = $state<HTMLCanvasElement>();
 	let imgEl = $state<HTMLImageElement>();
@@ -55,7 +57,7 @@
 			return;
 		}
 
-        const rect = canvasEl.getBoundingClientRect();
+		const rect = canvasEl.getBoundingClientRect();
 		const x = event.clientX - padding - rect.left;
 		const y = event.clientY - padding - rect.top;
 		const dx = x - lastX;
@@ -79,7 +81,7 @@
 	}
 
 	function startMove(event: PointerEvent) {
-        const rect = canvasEl!.getBoundingClientRect();
+		const rect = canvasEl!.getBoundingClientRect();
 		const x = event.clientX - padding - rect.left;
 		const y = event.clientY - padding - rect.top;
 		lastX = x;
@@ -87,7 +89,7 @@
 
 		if (!edits.pp3.Crop) {
 			edits.pp3.Crop = {
-                Enabled: true,
+				Enabled: true,
 				X: x,
 				Y: y,
 				W: 24,
@@ -126,8 +128,9 @@
 
 <svelte:window onpointerup={endMove} />
 
-<img src="/edit?config={toBase64(excludePP3(edits.pp3, ['Crop']))}" alt="" class="hidden" bind:this={imgEl} onload={draw} />
+<img src="/api/images/{page.params.img}/edit?config={toBase64(excludePP3(edits.pp3, ['Crop']))}" alt="" class="hidden" bind:this={imgEl} onload={draw} />
 
-<div class="flex h-full w-full items-center justify-center">
-    <canvas bind:this={canvasEl} onpointerdown={startMove} onpointermove={move} class:cursor-move={moveCursor} class="m-auto"></canvas>
+<div class="relative flex h-full w-full items-center justify-center">
+	<canvas bind:this={canvasEl} onpointerdown={startMove} onpointermove={move} class:cursor-move={moveCursor} class="m-auto"></canvas>
+	<EditModeNav showEdit img={page.params.img!} />
 </div>

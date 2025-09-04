@@ -22,6 +22,10 @@ Degree=0
 Enabled=true
 Strength=100
 
+[Film simulation]
+Enabled=true
+Strength=100
+
 [White Balance]
 Enabled=true
 Setting=Camera

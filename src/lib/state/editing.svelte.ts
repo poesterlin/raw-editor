@@ -1,49 +1,53 @@
-import { throttle } from "$lib";
-import { parsePP3, stringifyPP3, type PP3 } from "$lib/pp3-utils";
+import { throttle } from '$lib';
+import { parsePP3, type PP3 } from '$lib/pp3-utils';
 
 class EditingState {
-    public pp3 = $state<PP3>({});
-    public throttledPP3 = $state<PP3>({});
-    public updateThrottledPP3 = throttle((pp3) => (this.throttledPP3 = pp3), 300);
-    public isLoading = $state(false);
-    public isFaulty = $state(false);
+	public pp3 = $state<PP3>() as PP3;
+	public throttledPP3 = $state<PP3>({});
+	public updateThrottledPP3 = throttle((pp3) => (this.throttledPP3 = pp3), 300);
+	public isLoading = $state(false);
+	public isFaulty = $state(false);
 
-    private undoStack: string[] = $state([]);
-    private redoStack: string[] = $state([]);
+	private history = $state<PP3[]>([]);
+	private historyIndex = $state(0);
 
-    public canUndo = $derived(this.undoStack.length > 0);
-    public canRedo = $derived(this.redoStack.length > 0);
+	initialize(pp3: string | PP3) {
+		const newPp3 = typeof pp3 === 'string' ? parsePP3(pp3) : pp3;
+		this.pp3 = newPp3;
+		this.throttledPP3 = newPp3;
+		this.history = [newPp3];
+		this.historyIndex = 0;
+	}
 
-    initialize(pp3: string | PP3) {
-        if (typeof pp3 === "string") {
-            this.pp3 = parsePP3(pp3);
-        } else {
-            this.pp3 = pp3;
-        }
+	update(newPp3: PP3) {
+		// If we undo and then make a change, we want to clear the future history
+		const newHistory = this.history.slice(0, this.historyIndex + 1);
+		newHistory.push(newPp3);
+		this.history = newHistory;
+		this.historyIndex = this.history.length - 1;
+	}
 
-        this.throttledPP3 = $state.snapshot(this.pp3);
-    }
+	undo() {
+		if (this.canUndo) {
+			this.historyIndex--;
+			this.pp3 = this.history[this.historyIndex];
+		}
+	}
 
-    store() {
-        const snapshot = $state.snapshot(this.pp3);
-        const stringified = stringifyPP3(snapshot);
-        console.log("stored state")
-    }
+	redo() {
+		if (this.canRedo) {
+			this.historyIndex++;
+			this.pp3 = this.history[this.historyIndex];
+		}
+	}
 
-    undo() {
-        if (!this.canUndo) {
-            return;
-        }
+	get canUndo() {
+		return this.historyIndex > 0;
+	}
 
-    }
-
-    redo() {
-        if (!this.canRedo) {
-            return;
-        }
-
-    }
-
+	get canRedo() {
+		return this.historyIndex < this.history.length - 1;
+	}
 }
 
 export const edits = new EditingState();

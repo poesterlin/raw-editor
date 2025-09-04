@@ -79,7 +79,7 @@
 		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
 			{#each item.images as preview}
 				<a
-					href={`/editor/${item.id}/${preview.id}`}
+					href={`/editor/${preview.id}`}
 					class="group block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700"
 				>
 					<img
