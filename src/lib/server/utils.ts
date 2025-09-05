@@ -1,7 +1,12 @@
 
 
-export function respondWithFile(filePath: string) {
+export async function respondWithFile(filePath: string) {
     const file = Bun.file(filePath);
+    const exists = await file.exists();
+    if (!exists) {
+        return new Response('File not found', { status: 404 });
+    }
+
     return new Response(file, {
         headers: {
             'Content-Type': file.type,
