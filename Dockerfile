@@ -2,6 +2,9 @@
 # This stage remains the same. It uses a debian-based image for glibc compatibility.
 FROM oven/bun:debian AS build
 
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+
 WORKDIR /app
 
 COPY package.json bun.lock ./
@@ -29,6 +32,7 @@ RUN set -eux; \
 
 # STAGE 3: Final application image
 FROM rawtherapee-base
+
 
 # install bun
 COPY --from=build /usr/local/bin/bun /usr/local/bin/bun
