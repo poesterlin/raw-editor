@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { env } from 'node:process';
 import { error } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
-import { desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, lt } from 'drizzle-orm';
 import { imageTable, snapshotTable } from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -35,7 +35,23 @@ export const load: PageServerLoad = async ({ params }) => {
 	const files = await Array.fromAsync(glob.scan({ cwd }));
 	const luts = files.map((f) => formatLut(f, cwd));
 
-	return { luts, image, snapshots };
+	// find next image in line
+	const [nextImage] = await db
+		.select({ id: imageTable.id })
+		.from(imageTable)
+		.where(and(gt(imageTable.id, Number(img)), eq(imageTable.sessionId, image.sessionId)))
+		.orderBy(asc(imageTable.id))
+		.limit(1);
+
+	// find previous image in line
+	const [previousImage] = await db
+		.select({ id: imageTable.id })
+		.from(imageTable)
+		.where(and(lt(imageTable.id, Number(img)), eq(imageTable.sessionId, image.sessionId)))
+		.orderBy(desc(imageTable.id))
+		.limit(1);
+
+	return { luts, image, snapshots, nextImage: nextImage?.id, previousImage: previousImage?.id };
 };
 
 function formatLut(path: string, cwd: string) {

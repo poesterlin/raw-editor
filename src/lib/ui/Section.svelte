@@ -24,7 +24,7 @@
 	}
 </script>
 
-<details class="border-b border-neutral-700/50">
+<details class="">
 	<summary class="mb-1 flex cursor-pointer items-center rounded-lg bg-neutral-800 px-4 py-2 select-none">
 		<IconChevronRight class="mr-2 shrink-0" />
 		<Checkbox label={title} checked={enabled} onchange={(e) => setEnabled(e)} small></Checkbox>

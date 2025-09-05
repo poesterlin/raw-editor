@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import Scroller from '$lib/ui/Scroller.svelte';
 	import type { SessionsResponse } from '../api/sessions/+server';
+	import { IconArchive, IconTransferIn } from '$lib/ui/icons';
 
 	type Session = SessionsResponse['sessions'][number];
 	interface Props {
@@ -25,8 +27,16 @@
 			// Reset state on failure
 			delete importJobStates[sessionId];
 		}
-		// If 409, it's already running, so we just leave the UI in the 'importing' state.
-		// A full implementation would also poll a GET endpoint to clear the state when done.
+
+		const interval = setInterval(async () => {
+			const statusResponse = await fetch(`/api/sessions/${sessionId}/import`);
+			if (!statusResponse.ok) {
+				console.error('Failed to fetch import job status', await statusResponse.text());
+				clearInterval(interval);
+				delete importJobStates[sessionId];
+				return;
+			}
+		}, 2000);
 	}
 
 	export function capture() {
@@ -35,6 +45,19 @@
 
 	export function restore(values: any) {
 		scroller?.restore(values);
+	}
+
+	async function archiveSession(sessionId: number) {
+		if (!confirm('Are you sure you want to archive this session? This will hide all its images from the gallery.')) {
+			return;
+		}
+		const res = await fetch(`/api/sessions/${sessionId}/archive`, { method: 'POST' });
+		if (res.ok) {
+			sessions = sessions.filter((s) => s.id !== sessionId);
+			await invalidateAll();
+		} else {
+			alert('Failed to archive session.');
+		}
 	}
 
 	const intl = new Intl.DateTimeFormat('de-DE', {
@@ -48,8 +71,8 @@
 </script>
 
 {#snippet item({ item }: { item: Session })}
-	<section>
-		<div class="mb-4 flex items-center justify-between">
+	<section class="mt-6">
+		<div class="mb-2 flex items-center justify-between">
 			<div class="flex items-center gap-4">
 				<h2 class="text-xl font-semibold text-neutral-200 sm:text-2xl">{item.name}</h2>
 				{#if importJobStates[item.id]}
@@ -64,24 +87,18 @@
 						title="Process Session Images"
 						class="text-neutral-400 transition-colors hover:text-neutral-100"
 					>
-						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
-							<path
-								fill-rule="evenodd"
-								d="M2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0Zm6.39-2.908a.75.75 0 0 1 .328.53l.043.282a.75.75 0 0 1-.588.843l-3.478.39a.75.75 0 0 1-.843-.587l-.043-.282a.75.75 0 0 1 .588-.843l3.478-.39a.75.75 0 0 1 .53-.328ZM12.25 7.5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5a.75.75 0 0 1 .75-.75Z"
-								clip-rule="evenodd"
-							/>
-						</svg>
+						<IconTransferIn></IconTransferIn>
 					</button>
 				{/if}
+				<button onclick={() => archiveSession(item.id)} aria-label="Archive Session" title="Archive Session" class="text-neutral-400 transition-colors hover:text-neutral-100">
+					<IconArchive></IconArchive>
+				</button>
 			</div>
 			<p class="ml-4 flex-shrink-0 text-neutral-400">{formatDate(item.startedAt)}</p>
 		</div>
 		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
 			{#each item.images as preview}
-				<a
-					href={`/editor/${preview.id}`}
-					class="group block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700"
-				>
+				<a href={`/editor/${preview.id}`} class="group block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700">
 					<img
 						src="/api/images/{preview.id}/preview?version={preview.version}"
 						alt=""
@@ -89,6 +106,10 @@
 						class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
 					/>
 				</a>
+			{:else}
+				<div class="flex aspect-[3/2] items-center justify-center rounded-lg bg-neutral-900 text-neutral-500">
+					<span class="text-sm">No Images</span>
+				</div>
 			{/each}
 		</div>
 	</section>

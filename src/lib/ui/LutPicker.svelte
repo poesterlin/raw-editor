@@ -36,7 +36,7 @@
 	}
 </script>
 
-<Modal {onClose} class="w-4xl">
+<Modal {onClose} class="w-4xl text-neutral-200">
 	<div class="sticky top-0 z-10 mb-4 rounded-tl-lg bg-gray-100 p-4">
 		<h1 class="text-lg font-semibold text-black">Select a Lut</h1>
 		<div class="flex flex-wrap gap-2">

@@ -1,13 +1,15 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { getWorkerInstance } from '$lib';
 	import BasePP3 from '$lib/assets/client.pp3?raw';
 	import { filterPP3, toBase64 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
 	import BeforeAfter from '$lib/ui/BeforeAfter.svelte';
+	import Button from '$lib/ui/Button.svelte';
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
 	import LutPicker from '$lib/ui/LutPicker.svelte';
-	import { IconFidgetSpinner } from '$lib/ui/icons';
+	import { IconArchive, IconCheck, IconChevronLeft, IconChevronRight, IconDeviceFloppy, IconFidgetSpinner, IconRestore } from '$lib/ui/icons';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Adjustments from './Adjustments.svelte';
@@ -18,11 +20,54 @@
 
 	let sampleImage = $state('');
 	let apiPath = $derived(`/api/images/${data.image.id}`);
+	let snapshotSaved = $state(false);
 	let beforeImage = $derived(apiPath + `/edit?preview&config=${toBase64(filterPP3(edits.throttledPP3, ['Crop', 'Rotation']))}`);
+
+	async function archiveImage() {
+		const res = await fetch(`/api/images/${page.params.img}/archive`, {
+			method: 'POST'
+		});
+		if (res.ok) {
+			await invalidateAll();
+		} else {
+			// Handle error (optional)
+			alert('Failed to archive image.');
+		}
+	}
+
+	async function restoreImage() {
+		const res = await fetch(`/api/images/${page.params.img}/archive`, {
+			method: 'DELETE'
+		});
+		if (res.ok) {
+			await invalidateAll();
+		} else {
+			// Handle error (optional)
+			alert('Failed to restore image.');
+		}
+	}
+
+	async function snapshot() {
+		const res = await fetch(`/api/images/${page.params.img}/snapshots`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ pp3: edits.pp3 })
+		});
+		if (res.ok) {
+			snapshotSaved = true;
+			await invalidateAll();
+		} else {
+			// Handle error (optional)
+			alert('Failed to save snapshot.');
+		}
+
+		setTimeout(() => {
+			snapshotSaved = false;
+		}, 2000);
+	}
 
 	onMount(() => {
 		const latestSnapshot = data.snapshots[0];
-		console.log('Latest snapshot:', latestSnapshot);
 		if (latestSnapshot) {
 			edits.initialize(latestSnapshot.pp3);
 		} else {
@@ -71,6 +116,48 @@
 				{#if edits.pp3}
 					<Adjustments {data} bind:showLutPicker />
 				{/if}
+			</div>
+
+			<div class="flex flex-col justify-between gap-2 border-t border-neutral-800 p-4">
+				{#if data.image.isArchived}
+					<Button aria-label="Restore Image" onclick={restoreImage}>
+						<span>Restore Image</span>
+						<IconRestore />
+					</Button>
+				{:else}
+					<Button onclick={archiveImage} aria-label="Archive Image">
+						<span>Archive Image</span>
+						<IconArchive />
+					</Button>
+				{/if}
+				<Button onclick={snapshot}>
+					<span>Save Edits</span>
+					{#if snapshotSaved}
+						<IconCheck />
+					{:else}
+						<IconDeviceFloppy />
+					{/if}
+				</Button>
+				<div class="mt-2 flex flex-row justify-between gap-2">
+					{#if data.previousImage}
+						<a href={`/editor/${data.previousImage}`} class="p-4" title="Previous Image">
+							<IconChevronLeft />
+						</a>
+					{:else}
+						<span class="opacity-50 cursor-not-allowed p-4">
+							<IconChevronLeft />
+						</span>
+					{/if}
+					{#if data.nextImage}
+						<a href={`/editor/${data.nextImage}`} class="p-4" title="Next Image">
+							<IconChevronRight />
+						</a>
+					{:else}
+						<span class="opacity-50 cursor-not-allowed p-4">
+							<IconChevronRight />
+						</span>
+					{/if}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -125,6 +212,7 @@
 		justify-content: center;
 		position: relative;
 		overflow: hidden;
+		view-transition-name: 'image-preview';
 	}
 
 	/* Controls Panel */
@@ -134,6 +222,7 @@
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
+		view-transition-name: 'adjustment-panel';
 	}
 
 	.panel-header {

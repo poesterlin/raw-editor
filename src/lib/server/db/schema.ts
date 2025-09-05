@@ -5,7 +5,8 @@ export const sessionTable = pgTable('session', {
 	id: serial('id').primaryKey(),
 	name: text('name').notNull(),
 	startedAt: timestamp('started_at', { withTimezone: true, mode: 'date' }).notNull(),
-	endedAt: timestamp('ended_at', { withTimezone: true, mode: 'date' })
+	endedAt: timestamp('ended_at', { withTimezone: true, mode: 'date' }),
+	isArchived: boolean('is_archived').notNull().default(false)
 });
 
 export type Session = typeof sessionTable.$inferSelect;

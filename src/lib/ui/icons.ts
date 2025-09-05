@@ -1,29 +1,28 @@
 import IconAdjustmentsHorizontal from '@tabler/icons-svelte/icons/adjustments-horizontal';
+import IconArchive from '@tabler/icons-svelte/icons/archive';
 import IconArrowBackUp from '@tabler/icons-svelte/icons/arrow-back-up';
 import IconArrowForwardUp from '@tabler/icons-svelte/icons/arrow-forward-up';
 import IconCameraFilled from '@tabler/icons-svelte/icons/camera-filled';
 import IconCameraPlus from '@tabler/icons-svelte/icons/camera-plus';
 import IconCheck from '@tabler/icons-svelte/icons/check';
+import IconChevronLeft from '@tabler/icons-svelte/icons/chevron-left';
+import IconChevronRight from '@tabler/icons-svelte/icons/chevron-right';
 import IconClipboard from '@tabler/icons-svelte/icons/clipboard';
 import IconCopy from '@tabler/icons-svelte/icons/copy';
 import IconCrop from '@tabler/icons-svelte/icons/crop';
-import IconRestore from '@tabler/icons-svelte/icons/restore';
-import IconChevronRight from '@tabler/icons-svelte/icons/chevron-right';
-import IconX from '@tabler/icons-svelte/icons/x';
+import IconDeviceFloppy from '@tabler/icons-svelte/icons/device-floppy';
 import IconFidgetSpinner from '@tabler/icons-svelte/icons/fidget-spinner';
+import IconRestore from '@tabler/icons-svelte/icons/restore';
+import IconTransferIn from '@tabler/icons-svelte/icons/transfer-in';
+import IconX from '@tabler/icons-svelte/icons/x';
 
 export {
-	IconAdjustmentsHorizontal,
-	IconArrowBackUp,
+	IconAdjustmentsHorizontal, IconArchive, IconArrowBackUp,
 	IconArrowForwardUp,
 	IconCameraFilled,
 	IconCameraPlus,
-	IconCheck,
-	IconClipboard,
+	IconCheck, IconChevronLeft, IconChevronRight, IconClipboard,
 	IconCopy,
-	IconCrop,
-	IconRestore,
-	IconChevronRight,
-	IconX,
-	IconFidgetSpinner
+	IconCrop, IconDeviceFloppy, IconFidgetSpinner, IconRestore, IconTransferIn, IconX
 };
+

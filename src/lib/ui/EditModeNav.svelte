@@ -2,14 +2,13 @@
 	import { browser } from '$app/environment';
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
-	import { stringifyPP3, parsePP3 } from '$lib/pp3-utils';
+	import { parsePP3, stringifyPP3 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
 	import {
 		IconAdjustmentsHorizontal,
 		IconArrowBackUp,
 		IconArrowForwardUp,
 		IconCameraFilled,
-		IconCameraPlus,
 		IconCheck,
 		IconClipboard,
 		IconCopy,
@@ -94,22 +93,6 @@
 		} else {
 			hasClipboardContent = false;
 		}
-	}
-
-	async function saveSnapshot() {
-		const res = await fetch(`/api/images/${page.params.img}/snapshots`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ pp3: stringifyPP3(edits.pp3) })
-		});
-		savedSnapshot = res.ok;
-		await invalidateAll();
-
-		setTimeout(() => {
-			savedSnapshot = false;
-		}, 2000);
 	}
 
 	// Copy current PP3 to clipboard and localStorage as fallback
@@ -235,15 +218,6 @@
 		<a href="?snapshot" aria-label="Snapshots">
 			<IconCameraFilled />
 		</a>
-		<button onclick={saveSnapshot} aria-label="Save Snapshot">
-			{#if savedSnapshot}
-				<IconCheck />
-			{:else}
-				<IconCameraPlus>
-					<span class="sr-only">Save Snapshot</span>
-				</IconCameraPlus>
-			{/if}
-		</button>
 	{/if}
 
 	<!-- Copy / Paste config buttons -->

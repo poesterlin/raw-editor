@@ -1,7 +1,7 @@
 import { db } from '$lib/server/db';
 import { sessionTable } from '$lib/server/db/schema';
 import { json } from '@sveltejs/kit';
-import { desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 
 export type SessionsResponse = {
@@ -31,9 +31,11 @@ export const GET: RequestHandler = async ({ url }) => {
 					id: true,
 					filepath: true,
 					version: true
-				}
+				},
+				where: (images, { eq }) => eq(images.isArchived, false)
 			}
 		},
+		where: eq(sessionTable.isArchived, false),
 		orderBy: [desc(sessionTable.startedAt)],
 		limit: limit + 1, // Fetch one extra to check if there's a next page
 		offset: cursor
