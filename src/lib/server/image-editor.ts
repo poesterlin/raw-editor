@@ -43,6 +43,8 @@ export async function editImage(imagePath: string, pp3: string, options: { allow
         "-q",
         "-o",
         output,
+        "-j65", // JPEG quality TODO: make configurable
+        "-js1", // JPEG subsampling TODO: make configurable
         "-Y",
         "-c",
         imagePath, // input must be last; rawtherapee will resolve it relative to cwd
