@@ -378,8 +378,4 @@
 		grid-template-columns: repeat(auto-fill, 160px);
 		gap: 0.75rem;
 	}
-
-	.contents {
-		display: contents;
-	}
 </style>
