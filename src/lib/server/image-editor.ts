@@ -65,8 +65,8 @@ export async function editImage(imagePath: string, pp3: string, options: { allow
 export async function generateImportTif(imagePath: string, options: { signal?: AbortSignal } = {}) {
     const start = performance.now();
 
-    const tmpPrefix = join(tmpdir(), "rt-pp3-");
-    const outDir = await mkdtemp(tmpPrefix);
+    const name = getFileNameFromPath(imagePath) + '-tiff';
+    const outDir = await createTempDir(name);
 
     const pp3FilePath = join(outDir, 'edit.pp3');
     await Bun.write(pp3FilePath, ImportPP3);

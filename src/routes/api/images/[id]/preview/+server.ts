@@ -5,6 +5,8 @@ import type { RequestHandler } from "../$types";
 import { error, redirect } from "@sveltejs/kit";
 import { respondWithFile } from "$lib/server/utils";
 import { exiftool } from "exiftool-vendored";
+import { createTempDir } from "$lib/server/command-runner";
+import { join } from "path";
 
 export const GET: RequestHandler = async ({params}) => {
     const id = Number(params.id);
@@ -21,7 +23,9 @@ export const GET: RequestHandler = async ({params}) => {
         return respondWithFile(image.previewPath);
     }
 
-    const tempFile = "/tmp/" + image.id + "_preview.jpg";
+    const path = await createTempDir("thumbnails");
+    const tempFile = join(path, image.id + "_preview.jpg");
+    
     try {
         const startTime = performance.now();
         await exiftool.extractThumbnail(image.filepath, tempFile, { ignoreMinorErrors: true, forceWrite: true });

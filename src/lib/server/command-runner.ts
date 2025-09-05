@@ -6,8 +6,11 @@ import { env } from '$env/dynamic/private';
 
 export async function createTempDir(prefix: string) {
     const TMP_DIR = env.TMP_DIR || tmpdir();
-    const rand = Math.random().toString(36).substring(2, 8);
-    const path = await mkdir(join(TMP_DIR, `${prefix}-${rand}`), { recursive: true });
+    const path = join(TMP_DIR, `${prefix}`);
+    
+    try {
+        await mkdir(path, { recursive: true });
+    } catch { /* ignore */ }
 
     return path;
 }
