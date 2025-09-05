@@ -24,8 +24,4 @@ export interface JobResult {
 	message?: string;
 }
 
-export interface WorkerAPI {
-	runImport: (payload: ImportPayload) => Promise<JobResult>;
-	runExport: (payload: ExportPayload) => Promise<JobResult>;
-	cancel: (jobId: JobId) => Promise<void>;
-}
+
