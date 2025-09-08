@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Modal from '$lib/ui/Modal.svelte';
-	import { preventDefault } from 'svelte/legacy';
 	import type { Import } from '$lib/server/db/schema';
 	import { app } from '$lib/state/app.svelte.js';
 	import { invalidateAll } from '$app/navigation';
@@ -225,11 +224,7 @@
 </script>
 
 <div class="p-4 text-right">
-	<button
-		onclick={handleRefresh}
-		class="rounded-md bg-neutral-700 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:bg-neutral-600"
-		disabled={isRefreshing}
-	>
+	<button onclick={handleRefresh} class="rounded-md bg-neutral-700 px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:bg-neutral-600" disabled={isRefreshing}>
 		{#if isRefreshing}Refreshing...{:else}Refresh{/if}
 	</button>
 </div>
@@ -259,7 +254,6 @@
 	{#if selectedIds.size !== 0}
 		<button onclick={clearSelection} class="rounded-full p-2 px-4 text-sm transition-colors hover:bg-neutral-700"> Clear </button>
 	{/if}
-	
 </div>
 
 {#if showModal}
@@ -269,22 +263,24 @@
 			<p class="text-sm text-neutral-400">Import {selectedIds.size} images into a session.</p>
 		</div>
 		<form onsubmit={importImages} class="flex flex-col gap-6 p-4">
-			<SegmentedControl
-				bind:value={importMode}
-				options={[
-					{ label: 'New Session', value: 'new' },
-					{ label: 'Existing Session', value: 'existing' }
-				]}
-			/>
+			{#if data.sessions.length > 0}
+				<SegmentedControl
+					bind:value={importMode}
+					options={[
+						{ label: 'New Session', value: 'new' },
+						{ label: 'Existing Session', value: 'existing' }
+					]}
+				/>
+			{/if}
 
-			{#if importMode === 'new'}
+			{#if importMode === 'new' || data.sessions.length === 0}
 				<div transition:slide|local>
 					<label for="session-name" class="mb-1 block text-sm font-medium text-neutral-300">Name</label>
 					<input
 						id="session-name"
 						type="text"
 						bind:value={sessionName}
-						class="w-full rounded-md border-neutral-400 bg-neutral-900 p-2.5 text-neutral-200 focus:ring-blue-500 border-1"
+						class="w-full rounded-md border-1 border-neutral-400 bg-neutral-900 p-2.5 text-neutral-200 focus:ring-blue-500"
 						required
 					/>
 				</div>

@@ -13,27 +13,41 @@
 
 	let { sessions, next, onLoaded }: Props = $props();
 
+	let initialImports = $derived(sessions.filter((s) => s.isImporting).map((s) => s.id));
+
 	let scroller = $state<Scroller<Session>>();
 	let loading = $state(false);
-	let importJobStates = $state<Record<number, 'importing'>>({});
+	let importJobStates = $state<Set<number>>(new Set(initialImports));
+
+	$effect(() => {
+		for (const session of initialImports) {
+			checkForCompletedJob(session);
+		}
+	});
 
 	async function importSession(sessionId: number) {
-		importJobStates[sessionId] = 'importing';
+		importJobStates.add(sessionId);
 		const response = await fetch(`/api/sessions/${sessionId}/import`, { method: 'POST' });
 
 		if (!response.ok && response.status !== 409) {
 			// Handle unexpected errors, maybe show a toast notification
 			console.error('Failed to start import job', await response.text());
 			// Reset state on failure
-			delete importJobStates[sessionId];
+			importJobStates.delete(sessionId);
+			await invalidateAll();
 		}
 
+		checkForCompletedJob(sessionId);
+	}
+
+	function checkForCompletedJob(sessionId: number) {
 		const interval = setInterval(async () => {
 			const statusResponse = await fetch(`/api/sessions/${sessionId}/import`);
 			if (!statusResponse.ok) {
 				console.error('Failed to fetch import job status', await statusResponse.text());
 				clearInterval(interval);
-				delete importJobStates[sessionId];
+				await invalidateAll();
+				importJobStates.delete(sessionId);
 				return;
 			}
 		}, 2000);
@@ -75,7 +89,7 @@
 		<div class="mb-2 flex items-center justify-between">
 			<div class="flex items-center gap-4">
 				<h2 class="text-xl font-semibold text-neutral-200 sm:text-2xl">{item.name}</h2>
-				{#if importJobStates[item.id]}
+				{#if importJobStates.has(item.id)}
 					<span class="inline-flex items-center rounded-full bg-blue-900/50 px-2.5 py-1 text-xs font-medium text-blue-300">
 						<span class="me-2 h-2 w-2 animate-pulse rounded-full bg-blue-300"></span>
 						Processing...
@@ -98,7 +112,10 @@
 		</div>
 		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
 			{#each item.images as preview}
-				<a href={`/editor/${preview.id}`} class="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700">
+				<a
+					href={`/editor/${preview.id}`}
+					class="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700"
+				>
 					<img
 						src="/api/images/{preview.id}/preview?version={preview.version}"
 						alt=""
@@ -106,7 +123,7 @@
 						class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
 					/>
 					{#if preview.isStackBase}
-						<div class="absolute right-2 top-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
+						<div class="absolute top-2 right-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
 							{preview.stackChildren.length + 1}
 						</div>
 					{/if}

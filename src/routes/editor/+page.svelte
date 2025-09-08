@@ -3,10 +3,10 @@
 </script>
 
 <div class="p-4 sm:p-6 md:p-8">
-	<h1 class="mb-4 text-2xl font-bold text-neutral-50 sm:mb-6 sm:text-3xl">Flagged Images</h1>
+	<h1 class="mb-4 text-2xl font-bold text-neutral-50 sm:mb-6 sm:text-3xl">Tagged Images</h1>
 
 	{#if data.tags.length === 0}
-		<p class="text-neutral-400">No flagged images found.</p>
+		<p class="text-neutral-400">No tagged images found.</p>
 	{:else}
 		<div class="flex flex-col gap-8">
 			{#each data.tags as tag}

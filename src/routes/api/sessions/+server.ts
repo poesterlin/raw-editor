@@ -3,6 +3,7 @@ import { sessionTable } from '$lib/server/db/schema';
 import { json } from '@sveltejs/kit';
 import { and, desc, eq, isNull } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
+import { jobManager } from '$lib/server/jobs/manager';
 
 export type SessionsResponse = {
 	sessions: Array<{
@@ -10,6 +11,7 @@ export type SessionsResponse = {
 		name: string;
 		startedAt: Date;
 		endedAt: Date | null;
+		isImporting: boolean;
 		images: Array<{
 			id: number;
 			filepath: string;
@@ -70,7 +72,8 @@ export const GET: RequestHandler = async ({ url }) => {
 		...s,
 		startedAt: s.startedAt.toISOString(),
 		endedAt: s.endedAt ? s.endedAt.toISOString() : null,
-		images: s.images
+		images: s.images,
+		isImporting: jobManager.getActiveJobs().some((job) => job === s.id)
 	}));
 
 	const response = {

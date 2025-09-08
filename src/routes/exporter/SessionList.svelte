@@ -74,11 +74,16 @@
 
 {#snippet item({ item }: { item: Session })}
 	<li class="flex flex-wrap items-center justify-between gap-4 p-4">
-		<div>
-			<h2 class="text-lg font-semibold text-neutral-200">{item.name}</h2>
-			<p class="text-sm text-neutral-400">
-				{item.images.length} images • {formatDate(item.startedAt)}
-			</p>
+		<div class="flex items-start gap-4">
+			{#if item.images.length > 0}
+				<img src="/api/images/{item.images[0].id}/preview" alt={`${item.name} thumbnail`} class="h-16 w-16 rounded object-cover" />
+			{/if}
+			<div>
+				<h2 class="text-lg font-semibold text-neutral-200">{item.name}</h2>
+				<p class="text-sm text-neutral-400">
+					{item.images.length} images • {formatDate(item.startedAt)}
+				</p>
+			</div>
 		</div>
 		<div class="flex items-center gap-4">
 			{#if jobStates[item.id] === 'exporting'}
