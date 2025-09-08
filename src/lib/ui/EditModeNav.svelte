@@ -46,7 +46,6 @@
 				// @ts-expect-error - not in the spec yet
 				name: 'clipboard-read'
 			});
-			console.log(status);
 			return status.state; // 'granted' | 'denied' | 'prompt'
 		} catch {
 			// Browser may not support this descriptor

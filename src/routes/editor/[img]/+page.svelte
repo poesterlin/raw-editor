@@ -3,14 +3,13 @@
 	import { page } from '$app/state';
 	import { getWorkerInstance } from '$lib';
 	import BasePP3 from '$lib/assets/client.pp3?raw';
-	import { filterPP3, stringifyPP3, toBase64 } from '$lib/pp3-utils';
+	import { filterPP3, parsePP3, stringifyPP3, toBase64 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
 	import BeforeAfter from '$lib/ui/BeforeAfter.svelte';
 	import Button from '$lib/ui/Button.svelte';
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
 	import LutPicker from '$lib/ui/LutPicker.svelte';
 	import { IconArchive, IconCheck, IconChevronLeft, IconChevronRight, IconDeviceFloppy, IconFidgetSpinner, IconRestore } from '$lib/ui/icons';
-	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Adjustments from './Adjustments.svelte';
 	import Snapshots from './Snapshots.svelte';
@@ -67,13 +66,15 @@
 		}, 2000);
 	}
 
-	onMount(() => {
+	$effect(() => {
 		const latestSnapshot = data.snapshots[0];
 		if (latestSnapshot) {
-			console.log('Loading latest snapshot PP3', latestSnapshot.pp3);
 			edits.initialize(latestSnapshot.pp3);
 		} else {
-			edits.initialize(BasePP3);
+			const pp3 = parsePP3(BasePP3);
+			pp3.White_Balance.Setting = 'Camera';
+			pp3.White_Balance.Temperature = data.image.whiteBalance;
+			pp3.White_Balance.Tint = data.image.tint;
 		}
 	});
 
@@ -151,7 +152,7 @@
 							<IconChevronLeft />
 						</a>
 					{:else}
-						<span class="opacity-50 cursor-not-allowed p-4">
+						<span class="cursor-not-allowed p-4 opacity-50">
 							<IconChevronLeft />
 						</span>
 					{/if}
@@ -160,7 +161,7 @@
 							<IconChevronRight />
 						</a>
 					{:else}
-						<span class="opacity-50 cursor-not-allowed p-4">
+						<span class="cursor-not-allowed p-4 opacity-50">
 							<IconChevronRight />
 						</span>
 					{/if}

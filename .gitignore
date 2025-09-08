@@ -31,3 +31,7 @@ HaldCLUT/
 exports/
 
 import/
+
+cluts/
+
+tmp/

@@ -12,7 +12,7 @@ import type { ExportPayload, ImportPayload, JobResult } from './types';
 
 import { exiftool } from 'exiftool-vendored';
 
-const SIMILARITY_THRESHOLD = 25; // Hamming distance threshold for considering images similar
+const SIMILARITY_THRESHOLD = 45; // Hamming distance threshold for considering images similar
 
 function hammingDistance(hex1: string, hex2: string): number {
   if (hex1.length !== hex2.length) {

@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { imageTable, imageToTagTable, snapshotTable } from '$lib/server/db/schema';
+import { imageTable, imageToTagTable, snapshotTable, type Image } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
 import { Glob } from 'bun';
 import { and, asc, desc, eq, gt, lt } from 'drizzle-orm';
@@ -35,13 +35,13 @@ export const load: PageServerLoad = async ({ params }) => {
 	// load luts
 	const glob = new Glob('**/*.png');
 	const cwd = env.CLUT_DIR;
-	if (!cwd) {
-		error(500, { message: 'CLUT_DIR environment variable is not set' });
+	let luts: ReturnType<typeof formatLut>[] = [];
+
+	if (cwd) {
+		const files = await Array.fromAsync(glob.scan({ cwd }));
+		luts = files.map((f) => formatLut(f, cwd));
 	}
-
-	const files = await Array.fromAsync(glob.scan({ cwd }));
-	const luts = files.map((f) => formatLut(f, cwd));
-
+	console.log(luts);
 	// find next image in line
 	const [nextImage] = await db
 		.select({ id: imageTable.id })
@@ -60,7 +60,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	return {
 		luts,
-		image,
+		image: image as Image,
 		imageTags: imageTags.map((it) => it.tag) as { id: number; name: string }[],
 		tags,
 		snapshots,
