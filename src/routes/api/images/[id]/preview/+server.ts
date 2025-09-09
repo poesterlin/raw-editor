@@ -9,7 +9,14 @@ import { createTempDir } from "$lib/server/command-runner";
 import { join } from "path";
 import sharp from "sharp";
 
-export const GET: RequestHandler = async ({params}) => {
+const rotations: Record<number, number> = {
+    1: 0,
+    3: 180,
+    6: 90,
+    8: 270
+};
+
+export const GET: RequestHandler = async ({ params }) => {
     const id = Number(params.id);
 
     const image = await db.query.imageTable.findFirst({
@@ -27,13 +34,17 @@ export const GET: RequestHandler = async ({params}) => {
     const path = await createTempDir("thumbnails");
     const tempFile = join(path, image.id + "_preview.jpg");
     const compressedFile = join(path, image.id + "_preview_compressed.webp");
-    
+
     try {
+        const tags = await exiftool.read(image.filepath);
+        const rotation = tags.Orientation ?? 1;
+
         const startTime = performance.now();
         await exiftool.extractThumbnail(image.filepath, tempFile, { ignoreMinorErrors: true, forceWrite: true });
 
         await sharp(tempFile)
-            .resize({ width: 350 })
+            .resize({ width: 400, height: 300, fit: "contain" })
+            .rotate(rotations[rotation])
             .webp({ quality: 80 })
             .toFile(compressedFile);
 
