@@ -72,7 +72,7 @@
 			</a>
 		</nav>
 	</header>
-	<main class="overflow-y-auto">
+	<main class="overflow-hidden">
 		{@render children?.()}
 	</main>
 </div>
