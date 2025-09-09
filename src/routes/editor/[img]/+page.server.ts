@@ -41,7 +41,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		const files = await Array.fromAsync(glob.scan({ cwd }));
 		luts = files.map((f) => formatLut(f, cwd));
 	}
-	console.log(luts);
+
 	// find next image in line
 	const [nextImage] = await db
 		.select({ id: imageTable.id })

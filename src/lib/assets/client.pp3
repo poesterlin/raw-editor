@@ -6,7 +6,7 @@ Brightness=0
 Contrast=0
 Saturation=0
 HighlightCompr=0
-ShadowCompr=50
+ShadowCompr=0
 Black=0
 
 [Rotation]
@@ -34,7 +34,7 @@ Setting=Camera
 [Sharpening]
 Enabled=true
 Radius=0.5
-Amount=200
+Amount=0
 
 [FattalToneMapping]
 Enabled=false

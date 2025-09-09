@@ -8,11 +8,9 @@ import { and, desc, gt, inArray, isNull } from 'drizzle-orm';
 import { ExifDateTime, exiftool } from 'exiftool-vendored';
 import pLimit from 'p-limit';
 import { cpus } from 'os';
-import { generateImportTif } from '$lib/server/image-editor';
 
 const limit = pLimit(cpus().length);
 
-const PAGE_SIZE = 20;
 
 export interface ImportResponse {
     items: Import[];
@@ -23,20 +21,11 @@ export const GET: RequestHandler = async ({ url }) => {
     const cursor = Number(url.searchParams.get('cursor')) || 0;
 
     const items = await db.query.importTable.findMany({
-        limit: PAGE_SIZE,
         where: and(gt(importTable.id, cursor), isNull(importTable.importedAt)),
-        orderBy: desc(importTable.id)
+        orderBy: desc(importTable.date)
     });
 
-    let next: number | null = null;
-    if (items.length === PAGE_SIZE) {
-        const lastItem = items[items.length - 1];
-        if (lastItem) {
-            next = lastItem.id;
-        }
-    }
-
-    return json({ items, next });
+    return json({ items });
 }
 
 

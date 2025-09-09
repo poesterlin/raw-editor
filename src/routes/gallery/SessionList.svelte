@@ -50,7 +50,7 @@
 				importJobStates.delete(sessionId);
 				return;
 			}
-		}, 2000);
+		}, 8000);
 	}
 
 	export function capture() {

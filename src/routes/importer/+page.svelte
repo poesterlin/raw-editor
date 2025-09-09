@@ -199,7 +199,7 @@
 	async function handleRefresh() {
 		isRefreshing = true;
 		try {
-			const response = await fetch('/api/importer/run-import', {
+			const response = await fetch('/api/imports/run-import', {
 				method: 'POST'
 			});
 			if (!response.ok) throw new Error('Failed to refresh imports');
