@@ -1,9 +1,10 @@
 import { db } from '$lib/server/db';
-import { sessionTable } from '$lib/server/db/schema';
+import { imageTable, sessionTable } from '$lib/server/db/schema';
 import { json } from '@sveltejs/kit';
-import { and, desc, eq, isNull } from 'drizzle-orm';
+import { and, count, desc, eq, isNull } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 import { jobManager } from '$lib/server/jobs/manager';
+import { buildJSONColumn } from '$lib/server/utils';
 
 export type SessionsResponse = {
 	sessions: Array<{
@@ -12,16 +13,10 @@ export type SessionsResponse = {
 		startedAt: Date;
 		endedAt: Date | null;
 		isImporting: boolean;
+		imageCount: number;
 		images: Array<{
 			id: number;
-			filepath: string;
 			version: number;
-			isStackBase: boolean;
-			stackChildren: Array<{
-				id: number;
-				filepath: string;
-				version: number;
-			}>;
 		}>;
 	}>;
 	next: number | null;
@@ -31,35 +26,31 @@ export const GET: RequestHandler = async ({ url }) => {
 	const limit = 20;
 	const cursor = Number(url.searchParams.get('cursor')) || 0;
 
-	const sessions = await db.query.sessionTable.findMany({
-		with: {
-			images: {
-				limit: 5, // Get up to 5 preview images per session
-				columns: {
-					id: true,
-					filepath: true,
-					version: true,
-					isStackBase: true
-				},
-				with: {
-					stackChildren: {
-						columns: {
-							id: true,
-							filepath: true,
-							version: true
-						}
-					}
-				},
-				where: (images, { eq, and, isNull }) =>
-					and(eq(images.isArchived, false), isNull(images.stackId)),
-				orderBy: (images, { desc }) => [desc(images.recordedAt)]
-			}
-		},
-		where: eq(sessionTable.isArchived, false),
-		orderBy: [desc(sessionTable.startedAt)],
-		limit: limit + 1, // Fetch one extra to check if there's a next page
-		offset: cursor
-	});
+	const sessions = await db
+		.select({
+			id: sessionTable.id,
+			name: sessionTable.name,
+			startedAt: sessionTable.startedAt,
+			endedAt: sessionTable.endedAt,
+			imageCount: count(imageTable.id).as('imageCount'),
+			images: buildJSONColumn({
+				id: imageTable.id,
+				version: imageTable.version,
+			})
+		})
+		.from(sessionTable)
+		.leftJoin(
+			imageTable,
+			and(
+				eq(imageTable.sessionId, sessionTable.id),
+				eq(imageTable.isArchived, false)
+			)
+		)
+		.where(eq(sessionTable.isArchived, false))
+		.groupBy(sessionTable.id)
+		.orderBy(desc(sessionTable.startedAt))
+		.limit(limit + 1) // Fetch one extra to check if there's a next page
+		.offset(cursor);
 
 	let nextCursor: number | null = null;
 	if (sessions.length > limit) {
@@ -70,9 +61,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	// The dates from the DB are Date objects, need to stringify them.
 	const sessionsWithStringDates = sessions.map((s) => ({
 		...s,
-		startedAt: s.startedAt.toISOString(),
-		endedAt: s.endedAt ? s.endedAt.toISOString() : null,
-		images: s.images,
 		isImporting: jobManager.getActiveJobs().some((job) => job === s.id)
 	}));
 

@@ -1,5 +1,6 @@
 import { relations } from 'drizzle-orm';
-import { boolean, integer, pgTable, primaryKey, real, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { foreignKey } from 'drizzle-orm/gel-core';
+import { boolean, integer, pgTable, primaryKey, real, serial, text, timestamp, type AnyPgColumn } from 'drizzle-orm/pg-core';
 
 export const sessionTable = pgTable('session', {
 	id: serial('id').primaryKey(),
@@ -15,7 +16,7 @@ export const sessionRelations = relations(sessionTable, ({ many }) => ({
 	images: many(imageTable)
 }));
 
-export const imageTable: any = pgTable('image', {
+export const imageTable = pgTable('image', {
 	id: serial('id').primaryKey(),
 	filepath: text('filename').notNull(),
 	previewPath: text('preview_path'),
@@ -41,7 +42,7 @@ export const imageTable: any = pgTable('image', {
 	tint: real('tint'),
 	isArchived: boolean('is_archived').notNull().default(false),
 	phash: text('phash'),
-	stackId: integer('stack_id').references(() => imageTable.id, { onDelete: 'set null' }),
+	stackId: integer('stack_id').references((): AnyPgColumn => imageTable.id),
 	isStackBase: boolean('is_stack_base').notNull().default(false),
 });
 

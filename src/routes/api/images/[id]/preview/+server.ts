@@ -1,12 +1,13 @@
 import { db } from "$lib/server/db";
-import { imageTable, importTable } from "$lib/server/db/schema";
+import { imageTable } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
-import type { RequestHandler } from "../$types";
+import type { RequestHandler } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
 import { respondWithFile } from "$lib/server/utils";
 import { exiftool } from "exiftool-vendored";
 import { createTempDir } from "$lib/server/command-runner";
 import { join } from "path";
+import sharp from "sharp";
 
 export const GET: RequestHandler = async ({params}) => {
     const id = Number(params.id);
@@ -25,17 +26,23 @@ export const GET: RequestHandler = async ({params}) => {
 
     const path = await createTempDir("thumbnails");
     const tempFile = join(path, image.id + "_preview.jpg");
+    const compressedFile = join(path, image.id + "_preview_compressed.webp");
     
     try {
         const startTime = performance.now();
         await exiftool.extractThumbnail(image.filepath, tempFile, { ignoreMinorErrors: true, forceWrite: true });
 
-        await db.update(importTable).set({ previewPath: tempFile }).where(eq(importTable.id, image.id));
+        await sharp(tempFile)
+            .resize({ width: 350 })
+            .webp({ quality: 80 })
+            .toFile(compressedFile);
+
+        await db.update(imageTable).set({ previewPath: compressedFile }).where(eq(imageTable.id, image.id));
 
         const endTime = performance.now();
-        console.log(`Thumbnail extracted in ${endTime - startTime}ms`);
+        console.log(`Thumbnail extracted and compressed in ${endTime - startTime}ms`);
 
-        return respondWithFile(tempFile);
+        return respondWithFile(compressedFile);
     } catch (err) {
         console.error("Error extracting thumbnail:", err);
     }
