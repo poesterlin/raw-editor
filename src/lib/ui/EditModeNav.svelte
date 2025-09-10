@@ -2,7 +2,7 @@
 	import { browser } from '$app/environment';
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
-	import { parsePP3, stringifyPP3 } from '$lib/pp3-utils';
+	import { countPP3Properties, diffPP3, parsePP3, stringifyPP3 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
 	import FlagModal from './FlagModal.svelte';
 	import {
@@ -15,6 +15,7 @@
 		IconCopy,
 		IconCrop,
 		IconFlag,
+		IconHistory,
 		IconRestore
 	} from '$lib/ui/icons';
 	import { IconFlagFilled } from '@tabler/icons-svelte';
@@ -28,10 +29,11 @@
 		showEdit?: boolean;
 		showClipboard?: boolean;
 		showFlag?: boolean;
+		showLast?: boolean;
 		isFlagged?: boolean;
 	}
 
-	let { img, showSnapshots, showCrop, showUndoRedo, showReset, showEdit, showClipboard, showFlag, isFlagged }: Props = $props();
+	let { img, showSnapshots, showCrop, showUndoRedo, showReset, showEdit, showClipboard, showFlag, isFlagged, showLast }: Props = $props();
 
 	let showFlagModal = $state(false);
 	let copiedConfig = $state(false);
@@ -212,6 +214,13 @@
 			{:else}
 				<IconFlag />
 			{/if}
+		</button>
+	{/if}
+
+	<!-- last version -->
+	{#if showLast && edits.lastSavedPP3 && countPP3Properties(diffPP3(edits.lastSavedPP3, edits.pp3)) > 0}
+		<button onclick={() => edits.initialize(edits.lastSavedPP3, page.data.image)} aria-label="Load Last Version">
+			<IconHistory />
 		</button>
 	{/if}
 

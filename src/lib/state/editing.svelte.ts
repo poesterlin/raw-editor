@@ -6,6 +6,7 @@ class EditingState {
 	public pp3 = $state<PP3>() as PP3;
 	public throttledPP3 = $state<PP3>({});
 	public updateThrottledPP3 = throttle((pp3) => (this.throttledPP3 = pp3), 300);
+	public lastSavedPP3 = $state<PP3>() as PP3;
 	public isLoading = $state(false);
 	public isFaulty = $state(false);
 

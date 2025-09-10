@@ -17,6 +17,7 @@ import IconRestore from '@tabler/icons-svelte/icons/restore';
 import IconTransferIn from '@tabler/icons-svelte/icons/transfer-in';
 import IconX from '@tabler/icons-svelte/icons/x';
 import IconTrash from '@tabler/icons-svelte/icons/trash';
+import IconHistory from '@tabler/icons-svelte/icons/history';
 
 export {
 	IconAdjustmentsHorizontal,
@@ -38,4 +39,5 @@ export {
 	IconTransferIn,
 	IconX,
 	IconTrash,
+	IconHistory,
 };

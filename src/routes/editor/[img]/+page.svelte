@@ -48,11 +48,14 @@
 	}
 
 	async function snapshot() {
+		edits.lastSavedPP3 = structuredClone($state.snapshot(edits.pp3));
+
 		const res = await fetch(`/api/images/${page.params.img}/snapshots`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ pp3: stringifyPP3($state.snapshot(edits.pp3)) })
 		});
+
 		if (res.ok) {
 			snapshotSaved = true;
 			await invalidateAll();
@@ -105,7 +108,7 @@
 		<!-- Image Preview -->
 		<div class="image-preview">
 			<BeforeAfter {beforeImage} afterImage={sampleImage} />
-			<EditModeNav img={page.params.img!} showCrop showSnapshots showReset showClipboard showFlag />
+			<EditModeNav img={page.params.img!} showCrop showSnapshots showReset showClipboard showFlag showLast />
 		</div>
 
 		<!-- Controls Panel -->
