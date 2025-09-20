@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { db } from '$lib/server/db';
 import { sessionTable, snapshotTable } from '$lib/server/db/schema';
-import { desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 
 export type ExporterSessionsResponse = {
 	sessions: Array<{
@@ -53,6 +53,7 @@ export const GET: RequestHandler = async ({ url }) => {
 			}
 		},
 		orderBy: [desc(sessionTable.startedAt)],
+		where: eq(sessionTable.isArchived, false),
 		limit: limit + 1,
 		offset: cursor
 	});

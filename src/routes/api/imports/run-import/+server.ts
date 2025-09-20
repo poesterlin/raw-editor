@@ -79,6 +79,16 @@ export async function POST() {
 	const files = fs.readdirSync(absoluteImportDir);
 	const importPromises = files.map(file => importFile(path.join(absoluteImportDir, file)));
 
+	const existingImports = await db.query.importTable.findMany();
+	for (const imp of existingImports) {
+		const exists = await Bun.file(imp.filePath).exists();
+		if (!exists) {
+			console.log(`[REMOVE] File no longer exists, removing from import queue: ${imp.filePath}`);
+			await db.delete(importTable).where(eq(importTable.id, imp.id));
+		}
+	}
+
+
 	await Promise.all(importPromises);
 
 	return json({ message: 'Import process initiated.', success: true });
