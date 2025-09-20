@@ -15,7 +15,7 @@ export const load: PageServerLoad = async () => {
 		.groupBy(tagTable.id)
 		.orderBy(desc(tagTable.name));
 
-	return { tags };
+	return { tags: tags.filter((tag) => tag.images.length > 0) };
 };
 
 

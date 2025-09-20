@@ -121,7 +121,7 @@
 			<p class="ml-4 flex-shrink-0 text-neutral-400">{formatDate(item.startedAt)}</p>
 		</div>
 		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-			{#each item.images as preview}
+			{#each item.images.filter((img) => !img.isArchived) as preview}
 				<a
 					href={`/${basePath}/${preview.id}`}
 					class="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700"
@@ -135,11 +135,7 @@
 					<!-- <div class="absolute top-2 right-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
 						{preview.stackChildren.length + 1}
 					</div> -->
-					{#if preview.isArchived}
-						<div class="absolute top-2 right-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
-							<IconArchive />
-						</div>
-					{:else if preview.hasSnapshot}
+					{#if preview.hasSnapshot}
 						<div class="absolute top-2 right-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
 							<IconAdjustmentsFilled />
 						</div>
