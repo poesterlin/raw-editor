@@ -12,6 +12,7 @@
 	let editorActive = $derived(currentRoute?.startsWith('/editor'));
 	let exporterActive = $derived(currentRoute?.startsWith('/exporter'));
 	let importerActive = $derived(currentRoute?.startsWith('/importer'));
+	let triageActive = $derived(currentRoute?.startsWith('/triage'));
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) {
@@ -51,6 +52,15 @@
 				class:font-semibold={galleryActive}
 			>
 				Gallery
+			</a>
+			<a
+				href="/triage"
+				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
+				class:bg-neutral-800={triageActive}
+				class:text-neutral-50={triageActive}
+				class:font-semibold={triageActive}
+			>
+				Triage
 			</a>
 			<a
 				href="/editor"

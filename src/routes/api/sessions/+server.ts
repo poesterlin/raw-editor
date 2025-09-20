@@ -59,8 +59,6 @@ export const GET: RequestHandler = async ({ url }) => {
 		nextCursor = cursor + limit;
 	}
 
-	console.log(JSON.stringify(sessions, null, 2));
-
 	// The dates from the DB are Date objects, need to stringify them.
 	const sessionsWithStringDates = sessions.map((s) => ({
 		...s,

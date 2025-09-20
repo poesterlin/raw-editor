@@ -1,18 +1,19 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import Scroller from '$lib/ui/Scroller.svelte';
-	import type { SessionsResponse } from '../api/sessions/+server';
-	import { IconAdjustmentsFilled, IconArchive, IconTransferIn } from '$lib/ui/icons';
+	import { IconAdjustmentsFilled, IconArchive, IconLayoutGrid, IconTransferIn } from '$lib/ui/icons';
 	import { app } from '$lib/state/app.svelte';
+	import type { SessionsResponse } from '../../routes/api/sessions/+server';
 
 	type Session = SessionsResponse['sessions'][number];
 	interface Props {
 		sessions: SessionsResponse['sessions'];
 		next: number | null;
 		onLoaded: (data: SessionsResponse) => void;
+        basePath?: 'editor' | 'triage';
 	}
 
-	let { sessions, next, onLoaded }: Props = $props();
+	let { sessions, next, onLoaded, basePath = 'editor' }: Props = $props();
 
 	let initialImports = $derived(sessions.filter((s) => s.isImporting).map((s) => s.id));
 
@@ -111,13 +112,18 @@
 				<button onclick={() => archiveSession(item.id)} aria-label="Archive Session" title="Archive Session" class="text-neutral-400 transition-colors hover:text-neutral-100">
 					<IconArchive></IconArchive>
 				</button>
+                {#if basePath !== 'triage' && item.images.length > 0}
+                    <a href={`/triage/${item.images[0].id}`} aria-label="Triage Session" title="Triage Session" class="text-neutral-400 transition-colors hover:text-neutral-100">
+                        <IconLayoutGrid />
+                    </a>
+                {/if}
 			</div>
 			<p class="ml-4 flex-shrink-0 text-neutral-400">{formatDate(item.startedAt)}</p>
 		</div>
 		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
 			{#each item.images as preview}
 				<a
-					href={`/editor/${preview.id}`}
+					href={`/${basePath}/${preview.id}`}
 					class="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700"
 				>
 					<img

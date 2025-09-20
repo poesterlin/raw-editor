@@ -118,7 +118,7 @@ export function setWhiteBalance(pp3: PP3, temperature: number | null, green: num
 		return pp3;
 	}
 
-	if (pp3.White_Balance.Setting !== 'Custom') {
+	if (pp3.White_Balance?.Setting !== 'Custom') {
 		return pp3;
 	}
 
