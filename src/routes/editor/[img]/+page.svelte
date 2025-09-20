@@ -142,7 +142,7 @@
 		<!-- Image Preview -->
 		<div class="image-preview">
 			<BeforeAfter {beforeImage} afterImage={sampleImage}  />
-			<EditModeNav img={page.params.img!} showCrop showSnapshots showReset showClipboard showFlag showLast />
+			<EditModeNav img={page.params.img!} showCrop showSnapshots showReset showClipboard showFlag showLast showFilter />
 		</div>
 
 		<!-- Controls Panel -->
@@ -184,7 +184,7 @@
 				</Button>
 				<div class="mt-2 flex flex-row justify-between gap-2">
 					{#if data.previousImage}
-						<a href={`/editor/${data.previousImage}`} class="p-4" title="Previous Image">
+						<a href={`/editor/${data.previousImage}?filter=${page.url.searchParams.get('filter')}`} class="p-4" title="Previous Image">
 							<IconChevronLeft />
 						</a>
 					{:else}
@@ -193,7 +193,7 @@
 						</span>
 					{/if}
 					{#if data.nextImage}
-						<a href={`/editor/${data.nextImage}`} class="p-4" title="Next Image">
+						<a href={`/editor/${data.nextImage}?filter=${page.url.searchParams.get('filter')}`} class="p-4" title="Next Image">
 							<IconChevronRight />
 						</a>
 					{:else}

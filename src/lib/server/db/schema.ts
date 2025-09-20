@@ -1,6 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { foreignKey } from 'drizzle-orm/gel-core';
-import { boolean, integer, jsonb, pgTable, primaryKey, real, serial, text, timestamp, type AnyPgColumn } from 'drizzle-orm/pg-core';
+import { boolean, index, integer, jsonb, pgTable, primaryKey, real, serial, text, timestamp, type AnyPgColumn, uniqueIndex } from 'drizzle-orm/pg-core';
 
 export const sessionTable = pgTable('session', {
 	id: serial('id').primaryKey(),
@@ -8,7 +8,10 @@ export const sessionTable = pgTable('session', {
 	startedAt: timestamp('started_at', { withTimezone: true, mode: 'date' }).notNull(),
 	endedAt: timestamp('ended_at', { withTimezone: true, mode: 'date' }),
 	isArchived: boolean('is_archived').notNull().default(false)
-});
+}, (table) => [
+	index('session_is_archived_idx').on(table.isArchived),
+	index('session_started_at_idx').on(table.startedAt),
+]);
 
 export type Session = typeof sessionTable.$inferSelect;
 
@@ -46,7 +49,12 @@ export const imageTable = pgTable('image', {
 	stackId: integer('stack_id').references((): AnyPgColumn => imageTable.id),
 	isStackBase: boolean('is_stack_base').notNull().default(false),
 	lastExportedAt: timestamp('last_exported_at', { withTimezone: true, mode: 'date' }),
-});
+}, (table) => [
+	index('recorded_at_idx').on(table.recordedAt),
+	index('image_is_archived_idx').on(table.isArchived),
+	index('image_phash_idx').on(table.phash),
+	index('image_rating_idx').on(table.rating),
+]);
 
 export type Image = typeof imageTable.$inferSelect;
 
@@ -75,7 +83,9 @@ export const snapshotTable = pgTable('snapshot', {
 		.notNull()
 		.references(() => imageTable.id, { onDelete: 'cascade' }),
 	isMarkedForExport: boolean('is_marked_for_export').notNull().default(false)
-});
+}, (table) => [
+	index('snapshot_created_at_idx').on(table.createdAt),
+]);
 
 export type Snapshot = typeof snapshotTable.$inferSelect;
 
@@ -92,14 +102,20 @@ export const importTable = pgTable('import', {
 	previewPath: text('preview_path'),
 	date: timestamp('date', { withTimezone: true, mode: 'date' }).defaultNow().notNull(),
 	importedAt: timestamp('imported_at', { withTimezone: true, mode: 'date' })
-});
+}, (table) => [
+	index('import_imported_at_idx').on(table.importedAt),
+	index('import_date_idx').on(table.date),
+	uniqueIndex('import_file_path_idx').on(table.filePath),
+]);
 
 export type Import = typeof importTable.$inferSelect;
 
 export const tagTable = pgTable('tag', {
 	id: serial('id').primaryKey(),
 	name: text('name').notNull()
-});
+}, (table) => [
+	uniqueIndex('tag_name_idx').on(table.name),
+]);
 
 export type Tag = typeof tagTable.$inferSelect;
 
@@ -142,7 +158,9 @@ export const albumTable = pgTable('album', {
 	url: text('url'),
 	sessionId: integer('session_id')
 		.references(() => sessionTable.id, { onDelete: 'cascade' }),
-});
+}, (table) => [
+	index('album_integration_external_id_idx').on(table.integration, table.externalId),
+]);
 
 export const albumRelations = relations(albumTable, ({ one, many }) => ({
 	media: many(mediaTable),
@@ -164,7 +182,9 @@ export const mediaTable = pgTable('media', {
 		.references(() => albumTable.id, { onDelete: 'cascade' }),
 	externalId: text('external_id').notNull(),
 	integration: text('integration').notNull(),
-});
+}, (table) => [
+	index('media_integration_external_id_idx').on(table.integration, table.externalId),
+]);
 
 export const mediaRelations = relations(mediaTable, ({ one }) => ({
 	image: one(imageTable, {

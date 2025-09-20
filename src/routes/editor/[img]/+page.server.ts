@@ -2,12 +2,33 @@ import { db } from '$lib/server/db';
 import { imageTable, imageToTagTable, snapshotTable, type Image, profileTable } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
 import { Glob } from 'bun';
-import { and, asc, desc, eq, gt, lt } from 'drizzle-orm';
+import { and, asc, desc, eq, exists, gt, isNotNull, isNull, lt, notExists, or, SQL } from 'drizzle-orm';
 import { join } from 'node:path';
 import { env } from 'node:process';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params }) => {
+// [
+// 		{ name: 'All Images', value: 'none' },
+// 		{ name: 'Changed since last export', value: 'changed' },
+// 		{ name: 'No Archived', value: 'archived' },
+// 		{ name: 'Only Archived', value: 'no-archived' },
+// 		{ name: 'Only Unedited', value: 'unedited' },
+// 		{ name: 'Only Edited', value: 'edited' },
+// 	];
+
+const filterMap: Record<string, SQL[]> = {
+	none: [],
+	changed: [or(
+		lt(imageTable.lastExportedAt, imageTable.updatedAt),
+		isNull(imageTable.lastExportedAt)
+	)!],
+	archived: [eq(imageTable.isArchived, true)],
+	'no-archived': [eq(imageTable.isArchived, false)],
+	unedited: [notExists(db.select().from(snapshotTable).where(eq(snapshotTable.imageId, imageTable.id))), eq(imageTable.isArchived, false)],
+	edited: [exists(db.select().from(snapshotTable).where(eq(snapshotTable.imageId, imageTable.id)))]
+};
+
+export const load: PageServerLoad = async ({ params, url }) => {
 	const { img } = params;
 	const imageId = Number(img);
 
@@ -45,11 +66,14 @@ export const load: PageServerLoad = async ({ params }) => {
 		luts = files.map((f) => formatLut(f, cwd));
 	}
 
+	const filters = [eq(imageTable.sessionId, image.sessionId)];
+	filters.push(...(filterMap[url.searchParams.get('filter') ?? 'none'] ?? []));
+
 	// find next image in line
 	const [nextImage] = await db
 		.select({ id: imageTable.id })
 		.from(imageTable)
-		.where(and(gt(imageTable.recordedAt, image.recordedAt), eq(imageTable.sessionId, image.sessionId), eq(imageTable.isArchived, false)))
+		.where(and(gt(imageTable.recordedAt, image.recordedAt), ...filters))
 		.orderBy(asc(imageTable.recordedAt))
 		.limit(1);
 
@@ -57,13 +81,13 @@ export const load: PageServerLoad = async ({ params }) => {
 	const [previousImage] = await db
 		.select({ id: imageTable.id })
 		.from(imageTable)
-		.where(and(lt(imageTable.recordedAt, image.recordedAt), eq(imageTable.sessionId, image.sessionId), eq(imageTable.isArchived, false)))
+		.where(and(lt(imageTable.recordedAt, image.recordedAt), ...filters))
 		.orderBy(desc(imageTable.recordedAt))
 		.limit(1);
 
 	return {
 		luts,
-		image: image as Image,
+		image,
 		imageTags: imageTags.map((it) => it.tag) as { id: number; name: string }[],
 		tags,
 		snapshots,

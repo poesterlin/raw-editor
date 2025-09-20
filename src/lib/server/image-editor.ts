@@ -14,7 +14,7 @@ import ImportPP3 from '$lib/assets/import.pp3?raw';
  * @param options 
  * @returns 
 */
-export async function editImage(imagePath: string, pp3: string, options: { allowConcurrent?: boolean, signal?: AbortSignal, outputPath?: string, recordedAt?: Date } = {}): Promise<string> {
+export async function editImage(imagePath: string, pp3: string, options: { allowConcurrent?: boolean, signal?: AbortSignal, outputPath?: string, recordedAt?: Date, quality?: number } = {}): Promise<string> {
     const start = performance.now();
 
     let name = getFileNameFromPath(imagePath);
@@ -43,7 +43,7 @@ export async function editImage(imagePath: string, pp3: string, options: { allow
         "-q",
         "-o",
         output,
-        "-j65", // JPEG quality TODO: make configurable
+        `-j${options.quality ?? 65}`, // JPEG quality
         "-js1", // JPEG subsampling TODO: make configurable
         "-Y",
         "-c",

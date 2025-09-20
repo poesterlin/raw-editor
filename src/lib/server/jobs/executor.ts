@@ -47,6 +47,16 @@ export async function runImport(payload: ImportPayload, signal?: AbortSignal): P
 			if (signal?.aborted) {
 				throw new Error('Aborted');
 			}
+
+			// Skip already imported images
+			if (image.tifPath) {
+				const fileExists = await Bun.file(image.tifPath).exists();
+				if (fileExists) {
+					console.warn(`[Executor] Skipping already imported image: ${image.id}`);
+					continue;
+				}
+			}
+
 			console.log(`[Executor] Processing ${image.filepath}`);
 			const { pp3, tif } = await generateImportTif(image.filepath, { signal });
 
@@ -155,7 +165,7 @@ export async function runExport(payload: ExportPayload, signal?: AbortSignal): P
 			console.log(`[Executor] Processing ${image.filepath}`);
 			const outputPath = makeOutputPath(image, session, images.length);
 			await mkdirPath(outputPath);
-			await editImage(image.filepath, stringifyPP3(merged), { signal, outputPath, recordedAt: image.recordedAt });
+			await editImage(image.filepath, stringifyPP3(merged), { signal, outputPath, recordedAt: image.recordedAt, quality: 90 });
 			await db.update(imageTable).set({ lastExportedAt: new Date() }).where(eq(imageTable.id, image.id));
 
 			for (const album of albums) {

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { countPP3Properties, diffPP3, parsePP3, stringifyPP3 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
@@ -16,9 +15,11 @@
 		IconCrop,
 		IconFlag,
 		IconHistory,
-		IconRestore
+		IconRestore,
+		IconFilter,
 	} from '$lib/ui/icons';
 	import { IconFlagFilled } from '@tabler/icons-svelte';
+	import FilterModal from './FilterModal.svelte';
 
 	interface Props {
 		img: string;
@@ -30,12 +31,14 @@
 		showClipboard?: boolean;
 		showFlag?: boolean;
 		showLast?: boolean;
+		showFilter?: boolean;
 		isFlagged?: boolean;
 	}
 
-	let { img, showSnapshots, showCrop, showUndoRedo, showReset, showEdit, showClipboard, showFlag, isFlagged, showLast }: Props = $props();
+	let { img, showSnapshots, showCrop, showUndoRedo, showReset, showEdit, showClipboard, showFlag, isFlagged, showLast, showFilter }: Props = $props();
 
 	let showFlagModal = $state(false);
+	let showFilterModal = $state(false);
 	let copiedConfig = $state(false);
 	let pastedConfig = $state(false);
 	let hasClipboardContent = $state(false);
@@ -206,6 +209,7 @@
 			<IconArrowForwardUp />
 		</button>
 	{/if}
+	
 	{#if showReset && edits.canUndo}
 		<button class="reset-btn" onclick={() => {}} aria-label="Reset All">
 			<IconRestore />
@@ -249,6 +253,13 @@
 		</a>
 	{/if}
 
+	<!-- filter button -->
+	{#if showFilter}
+		<button onclick={() => (showFilterModal = true)} aria-label="Filters">
+			<IconFilter />
+		</button>
+	{/if}
+
 	<!-- Copy / Paste config buttons -->
 	{#if showClipboard}
 		<button onclick={copyConfig} aria-label="Copy edit config">
@@ -272,6 +283,10 @@
 
 {#if showFlagModal}
 	<FlagModal {img} onClose={() => (showFlagModal = false)} />
+{/if}
+
+{#if showFilterModal}
+    <FilterModal onClose={() => (showFilterModal = false)} />
 {/if}
 
 <style>
