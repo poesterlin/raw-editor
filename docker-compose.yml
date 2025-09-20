@@ -17,6 +17,8 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+    ports:
+      - 8292:3000
     env_file: 
      - .env
     environment:
