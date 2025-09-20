@@ -5,6 +5,7 @@
 </script>
 
 <SessionList
+	basePath="triage"
 	next={data.next}
 	sessions={data.sessions}
 	onLoaded={({ sessions, next }) => {
