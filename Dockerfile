@@ -31,7 +31,8 @@ RUN apt-get update && \
         curl \
         ca-certificates \
         libexpat1 \
-        gawk && \
+        gawk \
+        libimage-exiftool-perl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
