@@ -80,15 +80,17 @@
 </script>
 
 {#snippet item({ item }: { item: Session })}
-	<a href="/exporter/{item.id}" class="block transition-colors hover:bg-neutral-800/50">
+	<div class="transition-colors hover:bg-neutral-800/50">
 		<div class="flex flex-wrap items-center justify-between gap-4 p-4">
 			<div class="flex items-start gap-4">
 				{#if item.images.length > 0}
+				<a href="/exporter/{item.id}">
 					<img
 						src="/api/images/{item.images[0].id}/preview"
 						alt={`${item.name} thumbnail`}
 						class="h-16 w-16 rounded object-cover"
 					/>
+				</a>
 				{/if}
 				<div>
 					<div class="flex items-center gap-4">
@@ -172,7 +174,7 @@
 				{/if}
 			</div>
 		</div>
-	</a>
+	</div>
 {/snippet}
 
 {#snippet empty()}
