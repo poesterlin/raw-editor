@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import { tagStore } from '$lib/state/tag.svelte';
 	import FlagModal from '$lib/ui/FlagModal.svelte';
-	import { IconArchive, IconChevronLeft, IconChevronRight, IconFlag, IconRestore } from '$lib/ui/icons';
+	import { IconArchive, IconChevronLeft, IconChevronRight, IconFlag, IconRestore, IconAdjustmentsFilled } from '$lib/ui/icons';
 	import ImageStrip from '../ImageStrip.svelte';
 
 	let { data } = $props();
@@ -88,18 +88,27 @@
 				onclick={restoreImage}
 				aria-label="Restore Image"
 				disabled={!data.image.isArchived}
-				class="rounded-full bg-black/20 p-4 border border-white/20 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
+				class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
 			>
 				<IconRestore size={48} />
 			</button>
 			{#if data.previousImage}
-				<a href={`/triage/${data.previousImage}`} class="rounded-full bg-black/20 p-4 border border-white/20 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white" title="Previous Image">
+				<a
+					href={`/triage/${data.previousImage}`}
+					class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
+					title="Previous Image"
+				>
 					<IconChevronLeft size={48} />
 				</a>
 			{/if}
-			<div class="opacity-0 p-2">
-				<IconFlag size={48} />
-			</div>
+			<a
+				href={`/editor/${data.image.id}`}
+				data-sveltekit-preload-data="hover"
+				class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
+				title="Edit Image"
+			>
+				<IconAdjustmentsFilled size={48} />
+			</a>
 		</div>
 
 		<!-- Right Controls -->
@@ -108,7 +117,7 @@
 				onclick={archiveImage}
 				aria-label="Archive Image"
 				disabled={data.image.isArchived}
-				class="rounded-full bg-black/20 p-4 border border-white/20 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
+				class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
 			>
 				<IconArchive size={48} />
 			</button>
@@ -116,13 +125,16 @@
 				<a
 					href={`/triage/${data.nextImage}`}
 					data-sveltekit-preload-data="hover"
-					class="rounded-full bg-black/20 p-4 border border-white/20 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
+					class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
 					title="Next Image"
 				>
 					<IconChevronRight size={48} />
 				</a>
 			{/if}
-			<button onclick={() => (showTagModal = true)} class="rounded-full bg-black/20 p-4 border border-white/20 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white">
+			<button
+				onclick={() => (showTagModal = true)}
+				class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
+			>
 				<IconFlag size={48} />
 			</button>
 		</div>
