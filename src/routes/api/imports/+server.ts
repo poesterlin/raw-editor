@@ -4,7 +4,7 @@ import { JobType } from '$lib/server/jobs/types';
 import { db } from '$lib/server/db';
 import { imageTable, importTable, sessionTable, type Import } from '$lib/server/db/schema';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
-import { and, desc, gt, inArray, isNull } from 'drizzle-orm';
+import { and, desc, eq, gt, inArray, isNull } from 'drizzle-orm';
 import { ExifDateTime, exiftool } from 'exiftool-vendored';
 import pLimit from 'p-limit';
 import { cpus } from 'os';
@@ -28,6 +28,10 @@ export const GET: RequestHandler = async ({ url }) => {
     return json({ items });
 }
 
+function minimumDate(dates: Array<Date | undefined>): Date | null {
+    if (dates.length === 0) return null;
+    return new Date(Math.min(...dates.map(d => d?.getTime() ?? Infinity)));
+}
 
 export const POST: RequestHandler = async ({ request }) => {
     const { name, importIds, sessionId: existingSessionId } = await request.json();
@@ -68,9 +72,20 @@ export const POST: RequestHandler = async ({ request }) => {
         // TODO: add error handling
         const newImages = await Promise.all(imports.map(i => limit(() => getImageDetails(i, sessionId!))));
 
-        await tx.insert(imageTable).values(newImages);
+        const minDate = minimumDate(newImages.map(ni => ni.recordedAt));
+        if (minDate) {
+            const session = await tx.query.sessionTable.findFirst({
+                where: eq(sessionTable.id, sessionId!)
+            });
 
+            if (session && session.startedAt > minDate) {
+                await tx.update(sessionTable).set({ startedAt: minDate }).where(eq(sessionTable.id, sessionId!));
+            }
+        }
+
+        await tx.insert(imageTable).values(newImages);
         await tx.update(importTable).set({ importedAt: new Date() }).where(inArray(importTable.id, importIds));
+
     });
 
     if (sessionId) {

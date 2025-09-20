@@ -182,13 +182,17 @@ export async function runExport(payload: ExportPayload, signal?: AbortSignal): P
 
 export function makeOutputPath(image: Image, session: Session, totalImages: number): string {
 	const digits = Math.max(2, Math.ceil(Math.log10(totalImages + 1)));
+	return join(makeSessionPath(session), `${image.id.toString().padStart(digits, '0')}_${session.name}.jpg`);
+}
 
-	const year = image.recordedAt.getFullYear();
-	const month = (image.recordedAt.getMonth() + 1).toString().padStart(2, '0');
-	const day = image.recordedAt.getDate().toString().padStart(2, '0');
+export function makeSessionPath(session: Session): string {
+	const startedAt = new Date(session.startedAt);
+	const year = startedAt.getFullYear();
+	const month = (startedAt.getMonth() + 1).toString().padStart(2, '0');
+	const day = startedAt.getDate().toString().padStart(2, '0');
 
 	const exportDir = process.env.EXPORT_DIR || '/exports';
-	return join(exportDir, year.toString(), `${year}-${month}-${day}_${session.name}`, `${image.id.toString().padStart(digits, '0')}_${session.name}.jpg`);
+	return join(exportDir, year.toString(), `${year}-${month}-${day}_${session.name}`);
 }
 
 export async function mkdirPath(path: string) {

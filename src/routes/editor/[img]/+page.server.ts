@@ -57,11 +57,11 @@ export const load: PageServerLoad = async ({ params, url }) => {
 	}
 
 	// load luts
-	const glob = new Glob('**/*.png');
 	const cwd = env.CLUT_DIR;
 	let luts: ReturnType<typeof formatLut>[] = [];
-
+	
 	if (cwd) {
+		const glob = new Glob('**/*.png');
 		const files = await Array.fromAsync(glob.scan({ cwd }));
 		luts = files.map((f) => formatLut(f, cwd));
 	}

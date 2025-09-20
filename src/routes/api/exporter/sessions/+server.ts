@@ -81,8 +81,6 @@ export const GET: RequestHandler = async ({ url }) => {
 
 		return {
 			...s,
-			startedAt: s.startedAt.toISOString(),
-			endedAt: s.endedAt ? s.endedAt.toISOString() : null,
 			images: imagesWithStatus.map((img) => ({ id: img.id, filepath: img.filepath, needsExport: img.needsExport })),
 			albums: s.albums,
 			status: sessionStatus

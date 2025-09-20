@@ -80,76 +80,99 @@
 </script>
 
 {#snippet item({ item }: { item: Session })}
-	<li class="flex flex-wrap items-center justify-between gap-4 p-4">
-		<div class="flex items-start gap-4">
-			{#if item.images.length > 0}
-				<img src="/api/images/{item.images[0].id}/preview" alt={`${item.name} thumbnail`} class="h-16 w-16 rounded object-cover" />
-			{/if}
-			<div>
-				<div class="flex items-center gap-4">
-					<h2 class="text-lg font-semibold text-neutral-200">{item.name}</h2>
+	<a href="/exporter/{item.id}" class="block transition-colors hover:bg-neutral-800/50">
+		<div class="flex flex-wrap items-center justify-between gap-4 p-4">
+			<div class="flex items-start gap-4">
+				{#if item.images.length > 0}
+					<img
+						src="/api/images/{item.images[0].id}/preview"
+						alt={`${item.name} thumbnail`}
+						class="h-16 w-16 rounded object-cover"
+					/>
+				{/if}
+				<div>
+					<div class="flex items-center gap-4">
+						<h2 class="text-lg font-semibold text-neutral-200">{item.name}</h2>
 
-					{#if jobStates[item.id] === 'exporting'}
-						<span class="inline-flex items-center rounded-full bg-blue-900/50 px-2.5 py-1 text-xs font-medium text-blue-300">
-							<span class="me-2 h-2 w-2 animate-pulse rounded-full bg-blue-300"></span>
-							Exporting...
-						</span>
-					{:else if item.status === 'Updated'}
-						<span class="inline-flex items-center rounded-full bg-yellow-900/50 px-2.5 py-1 text-xs font-medium text-yellow-300">
-							<span class="me-2 h-2 w-2 rounded-full bg-yellow-300"></span>
-							Updated
-						</span>
-					{:else}
-						<span class="inline-flex items-center rounded-full bg-neutral-800 px-2.5 py-1 text-xs font-medium text-neutral-400">
-							<span class="me-2 h-2 w-2 rounded-full bg-neutral-500"></span>
-							Exported
-						</span>
-					{/if}
+						{#if jobStates[item.id] === 'exporting'}
+							<span
+								class="inline-flex items-center rounded-full bg-blue-900/50 px-2.5 py-1 text-xs font-medium text-blue-300"
+							>
+								<span class="me-2 h-2 w-2 animate-pulse rounded-full bg-blue-300"></span>
+								Exporting...
+							</span>
+						{:else if item.status === 'Updated'}
+							<span
+								class="inline-flex items-center rounded-full bg-yellow-900/50 px-2.5 py-1 text-xs font-medium text-yellow-300"
+							>
+								<span class="me-2 h-2 w-2 rounded-full bg-yellow-300"></span>
+								Updated
+							</span>
+						{:else}
+							<span
+								class="inline-flex items-center rounded-full bg-neutral-800 px-2.5 py-1 text-xs font-medium text-neutral-400"
+							>
+								<span class="me-2 h-2 w-2 rounded-full bg-neutral-500"></span>
+								Exported
+							</span>
+						{/if}
+					</div>
+					<p class="text-sm text-neutral-400">
+						{item.images.length} images • {formatDate(item.startedAt)}
+					</p>
 				</div>
-				<p class="text-sm text-neutral-400">
-					{item.images.length} images • {formatDate(item.startedAt)}
-				</p>
 			</div>
-		</div>
-		<div class="flex items-center gap-4">
-			{#each integrations as integration}
-				{@const album = item.albums.find((a) => a.integration === integration)}
-				{@const img = integrationLogos[integration]}
-				{@const style = 'flex h-10 w-10 items-center justify-center rounded-md p-1 text-white transition-colors hover:bg-neutral-500'}
-				{#if album}
-					<a href={album?.url} target="_blank" rel="noopener noreferrer" title="View Album on {integration}" class={style}>
-						{@html img}
-					</a>
+			<div class="flex items-center gap-4">
+				{#each integrations as integration}
+					{@const album = item.albums.find((a) => a.integration === integration)}
+					{@const img = integrationLogos[integration]}
+					{@const style =
+						'flex h-10 w-10 items-center justify-center rounded-md p-1 text-white transition-colors hover:bg-neutral-500'}
+					{#if album}
+						<a
+							href={album?.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							title="View Album on {integration}"
+							class={style}
+						>
+							{@html img}
+						</a>
+					{:else}
+						<button
+							onclick={() => (albumCreateSession = item.id)}
+							class="{style} opacity-50 hover:opacity-80"
+							title="Create Album on {integration}"
+						>
+							{@html img}
+						</button>
+					{/if}
+				{/each}
+				{#if jobStates[item.id] === 'exporting'}
+					<button
+						onclick={() => cancelExport(item.id)}
+						class="rounded-md border border-transparent bg-neutral-800 px-4 py-2 text-sm font-semibold text-neutral-300 transition-colors hover:border-neutral-700 hover:bg-neutral-700"
+					>
+						Cancel
+					</button>
+				{:else if item.status === 'Updated'}
+					<button
+						onclick={() => exportSession(item.id)}
+						class="rounded-md bg-neutral-50 px-4 py-2 text-sm font-semibold text-neutral-950 shadow-sm transition-colors hover:bg-neutral-200"
+					>
+						Export
+					</button>
 				{:else}
-					<button onclick={() => (albumCreateSession = item.id)} class="{style} opacity-50 hover:opacity-80" title="Create Album on {integration}">
-						{@html img}
+					<button
+						onclick={() => exportSession(item.id)}
+						class="rounded-md border border-transparent bg-neutral-800 px-4 py-2 text-sm font-semibold text-neutral-300 transition-colors hover:border-neutral-700 hover:bg-neutral-700"
+					>
+						Re-export
 					</button>
 				{/if}
-			{/each}
-			{#if jobStates[item.id] === 'exporting'}
-				<button
-					onclick={() => cancelExport(item.id)}
-					class="rounded-md border border-transparent bg-neutral-800 px-4 py-2 text-sm font-semibold text-neutral-300 transition-colors hover:border-neutral-700 hover:bg-neutral-700"
-				>
-					Cancel
-				</button>
-			{:else if item.status === 'Updated'}
-				<button
-					onclick={() => exportSession(item.id)}
-					class="rounded-md bg-neutral-50 px-4 py-2 text-sm font-semibold text-neutral-950 shadow-sm transition-colors hover:bg-neutral-200"
-				>
-					Export
-				</button>
-			{:else}
-				<button
-					onclick={() => exportSession(item.id)}
-					class="rounded-md border border-transparent bg-neutral-800 px-4 py-2 text-sm font-semibold text-neutral-300 transition-colors hover:border-neutral-700 hover:bg-neutral-700"
-				>
-					Re-export
-				</button>
-			{/if}
+			</div>
 		</div>
-	</li>
+	</a>
 {/snippet}
 
 {#snippet empty()}
