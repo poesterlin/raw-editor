@@ -7,7 +7,7 @@ import { respondWithFile } from "$lib/server/utils";
 import { exiftool } from "exiftool-vendored";
 import { createTempDir } from "$lib/server/command-runner";
 import { join } from "path";
-import sharp from "sharp";
+import sharp, { type FitEnum } from "sharp";
 
 const rotations: Record<number, number> = {
     1: 0,
@@ -16,8 +16,10 @@ const rotations: Record<number, number> = {
     8: 270
 };
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params, url }) => {
     const id = Number(params.id);
+    const size = Number(url.searchParams.get("size") || 800);
+    const mode: keyof FitEnum = url.searchParams.get("mode") || "fit" as any;
 
     const image = await db.query.imageTable.findFirst({
         where: eq(imageTable.id, id)
@@ -37,7 +39,7 @@ export const GET: RequestHandler = async ({ params }) => {
 
     const path = await createTempDir("thumbnails");
     const tempFile = join(path, image.id + "_preview.jpg");
-    const compressedFile = join(path, image.id + "_preview.webp");
+    const compressedFile = join(path, image.id + "_preview_rotated.webp");
 
     try {
         const tags = await exiftool.read(image.filepath);
@@ -47,7 +49,7 @@ export const GET: RequestHandler = async ({ params }) => {
         await exiftool.extractThumbnail(image.filepath, tempFile, { ignoreMinorErrors: true, forceWrite: true });
 
         await sharp(tempFile)
-            .resize({ width: 800, height: 800, fit: "contain" })
+            .resize({ width: 2000, height: 2000, fit: 'contain' })
             .rotate(rotations[rotation])
             .webp({ quality: 80 })
             .toFile(compressedFile);
@@ -59,7 +61,18 @@ export const GET: RequestHandler = async ({ params }) => {
         const endTime = performance.now();
         console.log(`Thumbnail extracted and compressed in ${endTime - startTime}ms`);
 
-        return respondWithFile(compressedFile);
+        const buffer = await sharp(compressedFile)
+            .resize({ width: size, height: size, fit: mode })
+            .webp({ quality: 80 })
+            .toBuffer();
+
+        return new Response(buffer as any, {
+            headers: {
+                'Content-Type': 'image/webp',
+                'Content-Length': String(buffer.length),
+                'Cache-Control': `public, max-age=${31536000}`
+            },
+        });
     } catch (err) {
         console.error("Error extracting thumbnail:", err);
     }

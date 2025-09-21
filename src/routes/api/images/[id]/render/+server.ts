@@ -48,5 +48,5 @@ export const GET: RequestHandler = async ({ params }) => {
     await mkdirPath(outputPath);
     await editImage(image.filepath, stringifyPP3(merged), { outputPath, recordedAt: image.recordedAt });
 
-    return respondWithFile(outputPath);
+    return respondWithFile(outputPath, 0);
 };

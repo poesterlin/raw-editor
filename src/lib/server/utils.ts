@@ -1,10 +1,8 @@
 import { SQL, sql, type GetColumnData } from "drizzle-orm";
-import { db } from "./db";
-import type { PgColumn, PgTable, SelectedFields } from "drizzle-orm/pg-core";
-import { imageTable } from "./db/schema";
+import type { PgColumn } from "drizzle-orm/pg-core";
 
 
-export async function respondWithFile(filePath: string) {
+export async function respondWithFile(filePath: string, ageSeconds = 31536000) {
     const file = Bun.file(filePath);
     const exists = await file.exists();
     if (!exists) {
@@ -16,7 +14,7 @@ export async function respondWithFile(filePath: string) {
             'Content-Type': file.type,
             'Content-Length': String(file.size),
             // caching
-            'Cache-Control': 'public, max-age=31536000'
+            'Cache-Control': `public, max-age=${ageSeconds}`
         },
     });
 }
