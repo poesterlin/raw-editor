@@ -29,9 +29,20 @@ export const GET: RequestHandler = async ({ params, url }) => {
         error(404, "Import file not found");
     }
 
-    if (image.previewPath && await Bun.file(image.previewPath).exists()) {
-        return respondWithFile(image.previewPath);
-    }
+    // if (image.previewPath && await Bun.file(image.previewPath).exists()) {
+    //     const buffer = await sharp(image.previewPath)
+    //         .resize({ width: size, height: size, fit: mode })
+    //         .webp({ quality: 80 })
+    //         .toBuffer();
+
+    //     return new Response(buffer as any, {
+    //         headers: {
+    //             'Content-Type': 'image/webp',
+    //             'Content-Length': String(buffer.length),
+    //             'Cache-Control': `public, max-age=${31536000}`
+    //         },
+    //     });
+    // }
 
     if (!await Bun.file(image.filepath).exists()) {
         redirect(302, "/error-thumbnail.jpg");
