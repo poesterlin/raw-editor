@@ -37,7 +37,7 @@ export const GET: RequestHandler = async ({ params }) => {
 
     const path = await createTempDir("thumbnails");
     const tempFile = join(path, image.id + "_preview.jpg");
-    const compressedFile = join(path, image.id + "_preview_compressed.webp");
+    const compressedFile = join(path, image.id + "_preview.webp");
 
     try {
         const tags = await exiftool.read(image.filepath);
@@ -47,7 +47,7 @@ export const GET: RequestHandler = async ({ params }) => {
         await exiftool.extractThumbnail(image.filepath, tempFile, { ignoreMinorErrors: true, forceWrite: true });
 
         await sharp(tempFile)
-            .resize({ width: 400, height: 300, fit: "contain" })
+            .resize({ width: 800, height: 800, fit: "contain" })
             .rotate(rotations[rotation])
             .webp({ quality: 80 })
             .toFile(compressedFile);
