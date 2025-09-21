@@ -18,8 +18,8 @@ const rotations: Record<number, number> = {
 
 export const GET: RequestHandler = async ({ params, url }) => {
     const id = Number(params.id);
-    const size = Number(url.searchParams.get("size") || 800);
-    const mode: keyof FitEnum = url.searchParams.get("mode") || "fit" as any;
+    const size = Number(url.searchParams.get("size") || 400);
+    const mode: keyof FitEnum = url.searchParams.get("mode") || "contain" as any;
 
     const image = await db.query.imageTable.findFirst({
         where: eq(imageTable.id, id)
