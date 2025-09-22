@@ -17,8 +17,6 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    ports:
-      - 8292:3000
     env_file: 
      - .env
     environment:
@@ -28,16 +26,43 @@ services:
       - TMP_DIR=/app/tmp
     volumes:
       - ./cluts:/app/cluts
-      - ./import:/app/import
+      - import:/app/import:ro
       - ./export:/app/export
       - ./tmp:/app/tmp
     networks:
       - traefik_web
+      - editor
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.editor.rule=Host(`${HOST_DOMAIN}`)"
       - "traefik.http.services.editor.loadbalancer.server.port=3000"
 
+  watchers:
+    build:
+      context: .
+      dockerfile: Dockerfile.watchers
+    env_file:
+      - .env
+    depends_on:
+      - editor # Ensure editor is running before watchers start
+    restart: on-failure
+    networks:
+      - editor
+    volumes:
+      - import:/app/import
+      - ${SD_CARD_IMPORT_PATH}:/app/sd-card-import
+    environment:
+      - IMPORT_DIR=/app/import
+      - SD_CARD_IMPORT_PATH=/app/sd-card-import
+      - EDITOR_API_URL=http://editor:3000/api/imports/run-import
+
 networks:
+  editor:
   traefik_web:
     external: true
+
+volumes:
+  import:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./import
+      o: bind

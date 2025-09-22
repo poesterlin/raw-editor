@@ -1,0 +1,9 @@
+FROM oven/bun:alpine
+
+WORKDIR /app
+
+# Copy only necessary files for the watchers
+COPY src/scripts/sd-card-importer.ts ./src/scripts/
+
+# Command to run the sd-card-importer script
+CMD ["bun", "run", "src/scripts/sd-card-importer.ts"]

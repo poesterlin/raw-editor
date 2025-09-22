@@ -39,3 +39,6 @@ tmp/
 export/
 
 data/google_tokens.json
+
+pgdata
+
