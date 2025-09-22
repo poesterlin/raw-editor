@@ -4,7 +4,7 @@ Version=352
 
 [Exposure]
 Enabled=true
-Auto=false
+Auto=true
 
 [White Balance]
 Enabled=true

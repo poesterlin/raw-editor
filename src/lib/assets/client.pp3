@@ -1,6 +1,6 @@
 [Exposure]
 Enabled=true
-Auto=false
+Auto=true
 Compensation=0
 Brightness=0
 Contrast=0
