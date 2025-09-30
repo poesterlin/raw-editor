@@ -3,7 +3,6 @@ import { imageTable } from "$lib/server/db/schema";
 import { eq } from "drizzle-orm";
 import type { RequestHandler } from "./$types";
 import { error, redirect } from "@sveltejs/kit";
-import { respondWithFile } from "$lib/server/utils";
 import { exiftool } from "exiftool-vendored";
 import { createTempDir } from "$lib/server/command-runner";
 import { join } from "path";
@@ -18,7 +17,7 @@ const rotations: Record<number, number> = {
 
 export const GET: RequestHandler = async ({ params, url }) => {
     const id = Number(params.id);
-    const size = Number(url.searchParams.get("size") || 400);
+    const size = Math.min(Number(url.searchParams.get("size") || 400), 2000);
     const mode: keyof FitEnum = url.searchParams.get("mode") || "contain" as any;
 
     const image = await db.query.imageTable.findFirst({
@@ -73,8 +72,8 @@ export const GET: RequestHandler = async ({ params, url }) => {
         console.log(`Thumbnail extracted and compressed in ${endTime - startTime}ms`);
 
         const buffer = await sharp(compressedFile)
-            .resize({ width: size, height: size, fit: mode })
-            .webp({ quality: 80 })
+            // .resize({ width: size, height: size, fit: mode })
+            // .webp({ quality: 80 })
             .toBuffer();
 
         return new Response(buffer as any, {
