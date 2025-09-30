@@ -1,40 +1,27 @@
-import { json } from '@sveltejs/kit';
-import { jobManager } from '$lib/server/jobs/manager';
-import { JobType } from '$lib/server/jobs/types';
-import { db } from '$lib/server/db';
+import { jobManager } from "$lib/server/jobs/manager";
+import { JobType } from "$lib/server/jobs/types";
+import type { RequestHandler } from "@sveltejs/kit";
+import { json } from "@sveltejs/kit";
 
-export async function GET({ params }) {
-	const sessionId = parseInt(params.id, 10);
-	const job = jobManager.getJob(sessionId);
+export const GET: RequestHandler = async ({ params }) => {
+    const { id } = params;
+    const isRunnings = jobManager.getActiveJobs().includes(Number(id));
 
-	if (job) {
-		return json({ job });
-	}
+    if (isRunnings) {
+        return json({ job: id, status: 'running' });
+    }
 
-	return new Response(undefined, { status: 404 });
-}
+    return json({ status: 'not found' }, { status: 404 });
+};
 
-export async function POST({ params }) {
-	const sessionId = parseInt(params.id, 10);
+export const POST: RequestHandler = async ({ params }) => {
+    const { id } = params;
+    jobManager.submit(JobType.EXPORT, { sessionId: Number(id) });
+    return json({ status: 'ok' });
+};
 
-	const session = await db.query.sessionTable.findFirst({
-		where: (sessions, { eq }) => eq(sessions.id, sessionId),
-		with: {
-			images: true
-		}
-	});
-
-	if (!session) {
-		return new Response('Session not found', { status: 404 });
-	}
-
-	jobManager.submit(JobType.EXPORT, { sessionId: session.id, images: session.images, name: session.name });
-
-	return new Response(undefined, { status: 202 });
-}
-
-export async function DELETE({ params }) {
-	const sessionId = parseInt(params.id, 10);
-	jobManager.cancel(sessionId);
-	return new Response(undefined, { status: 202 });
-}
+export const DELETE: RequestHandler = async ({ params }) => {
+    const { id } = params;
+    jobManager.cancel(Number(id));
+    return json({ status: 'ok' });
+};
