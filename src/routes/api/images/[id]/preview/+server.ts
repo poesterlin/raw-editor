@@ -49,7 +49,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 
     const path = await createTempDir("thumbnails");
     const tempFile = join(path, image.id + "_preview.jpg");
-    const compressedFile = join(path, image.id + "_preview_rotated.webp");
+    const compressedFile = join(path, image.id + "_preview_rotated.jpg");
 
     try {
         const tags = await exiftool.read(image.filepath);
@@ -61,7 +61,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
         await sharp(tempFile)
             .resize({ width: 2000, height: 2000, fit: 'contain', withoutEnlargement: true })
             .rotate(rotations[rotation])
-            .webp({ quality: 80 })
+            .jpeg({ quality: 95 })
             .toFile(compressedFile);
 
         Bun.file(tempFile).delete().catch(() => { /* ignore */ });
@@ -72,8 +72,8 @@ export const GET: RequestHandler = async ({ params, url }) => {
         console.log(`Thumbnail extracted and compressed in ${endTime - startTime}ms`);
 
         const buffer = await sharp(compressedFile)
-            // .resize({ width: size, height: size, fit: mode })
-            // .webp({ quality: 80 })
+            .resize({ width: size, height: size, fit: mode })
+            .webp({ quality: 85 })
             .toBuffer();
 
         return new Response(buffer as any, {
