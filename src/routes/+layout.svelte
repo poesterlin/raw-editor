@@ -121,4 +121,9 @@
 	::view-transition-new(root) {
 		animation: 210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in;
 	} */
+
+	:global(main) {
+		overflow: hidden;
+		padding-bottom: 2rem;
+	}
 </style>

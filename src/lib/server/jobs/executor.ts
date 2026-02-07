@@ -1,7 +1,6 @@
-import ExportPP3 from '$lib/assets/export.pp3?raw';
-import { applyPP3Diff, parsePP3, stringifyPP3, type PP3 } from '$lib/pp3-utils';
+import { parsePP3, stringifyPP3 } from '$lib/pp3-utils';
 import { db } from '$lib/server/db';
-import { editImage, generateImportTif, setWhiteBalance } from '$lib/server/image-editor';
+import { editImage, generateExportTif, generateImportTif } from '$lib/server/image-editor';
 import { bmvbhash } from 'blockhash-core';
 import { and, asc, desc, eq, isNull, lt, or } from 'drizzle-orm';
 import { readFile } from 'fs/promises';
@@ -158,14 +157,15 @@ export async function runExport(payload: ExportPayload, signal?: AbortSignal): P
 				orderBy: desc(snapshotTable.createdAt)
 			});
 
-			const pp3 = setWhiteBalance(parsePP3(edit?.pp3 ?? ''), image.whiteBalance, image.tint);
-			const merged = applyPP3Diff(pp3, parsePP3(ExportPP3));
-
+			const pp3 = parsePP3(edit?.pp3 ?? '');
 
 			console.log(`[Executor] Processing ${image.filepath}`);
 			const outputPath = makeOutputPath(image, session, images.length);
 			await mkdirPath(outputPath);
-			await editImage(image.filepath, stringifyPP3(merged), { signal, outputPath, recordedAt: image.recordedAt, quality: 90 });
+
+			// Two-step pipeline: RAW → full-res TIFF → JPEG (matches preview pipeline)
+			const tifPath = await generateExportTif(image.filepath, { signal });
+			await editImage(tifPath, stringifyPP3(pp3), { signal, outputPath, recordedAt: image.recordedAt, quality: 90 });
 			await db.update(imageTable).set({ lastExportedAt: new Date() }).where(eq(imageTable.id, image.id));
 
 			for (const album of albums) {

@@ -1,7 +1,7 @@
 import { basename, extname, join } from "node:path";
 import { createTempDir, runCommand } from "./command-runner";
 import { getFileNameFromPath } from "./utils";
-import { parsePP3, type PP3 } from "$lib/pp3-utils";
+import { parsePP3, stringifyPP3, type PP3 } from "$lib/pp3-utils";
 import { tmpdir } from "os";
 import { mkdtemp, readdir, readFile } from "node:fs/promises";
 import ImportPP3 from '$lib/assets/import.pp3?raw';
@@ -117,6 +117,44 @@ export async function generateImportTif(imagePath: string, options: { signal?: A
     return { pp3: parsePP3(pp3Text), tif: join(outDir, outputName) };
 }
 
+
+/**
+ * Generates a full-resolution TIFF from RAW using the same import.pp3 but with Resize disabled.
+ * This ensures the same auto-exposure and WB are baked in as the preview TIFF, just at full resolution.
+ */
+export async function generateExportTif(imagePath: string, options: { signal?: AbortSignal } = {}) {
+    const start = performance.now();
+
+    const name = getFileNameFromPath(imagePath) + '-export-tiff';
+    const outDir = await createTempDir(name);
+
+    // Parse import PP3 and disable resize for full-resolution output
+    const importPP3 = parsePP3(ImportPP3);
+    importPP3.Resize = { ...importPP3.Resize, Enabled: false };
+
+    const pp3FilePath = join(outDir, 'edit.pp3');
+    await Bun.write(pp3FilePath, stringifyPP3(importPP3));
+
+    const command = [
+        'rawtherapee-cli',
+        "--no-gui",
+        "-p", pp3FilePath,
+        "-b16", "-t",
+        "-O", outDir,
+        "-Y",
+        "-c", imagePath
+    ];
+
+    console.log(`Running command: ${command.join(" ")}`);
+
+    await runCommand(command, { signal: options.signal });
+
+    const outputName = basename(imagePath, extname(imagePath)) + ".tif";
+    const end = performance.now();
+    console.log(`Generated export TIF for ${imagePath} in ${((end - start) / 1000).toFixed(2)} seconds`);
+
+    return join(outDir, outputName);
+}
 
 export function setWhiteBalance(pp3: PP3, temperature: number | null, green: number | null): PP3 {
     if (temperature === null || green === null) {

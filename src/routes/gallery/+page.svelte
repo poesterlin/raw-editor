@@ -15,8 +15,5 @@
 ></SessionList>
 
 <style>
-	:global(main) {
-		overflow: hidden;
-		padding-bottom: 2rem;
-	}
+	
 </style>

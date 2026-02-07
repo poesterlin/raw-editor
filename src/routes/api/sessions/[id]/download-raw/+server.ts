@@ -2,11 +2,9 @@ import { db } from '$lib/server/db';
 import { imageTable, sessionTable } from '$lib/server/db/schema';
 import { and, eq } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
-import { createWriteStream } from 'fs';
+import { basename } from 'path';
 import archiver from 'archiver';
-import { tmpdir } from 'os';
-import { join, basename } from 'path';
-import { respondWithFile } from '$lib/server/utils';
+import { PassThrough } from 'stream';
 
 export const GET: RequestHandler = async ({ params }) => {
 	const sessionId = Number(params.id);
@@ -27,12 +25,15 @@ export const GET: RequestHandler = async ({ params }) => {
 		return new Response('No images to download', { status: 404 });
 	}
 
-	const zipPath = join(tmpdir(), `session-${sessionId}-raw.zip`);
-
-	const output = createWriteStream(zipPath);
 	const archive = archiver('zip', { zlib: { level: 9 } });
+	const pass = new PassThrough();
 
-	archive.pipe(output);
+	archive.on('error', (err) => {
+		pass.destroy(err);
+	});
+
+	// Pipe archive data into the passthrough stream which becomes the response body
+	archive.pipe(pass);
 
 	for (const img of images) {
 		// Use the original filename for the zip entry
@@ -40,17 +41,15 @@ export const GET: RequestHandler = async ({ params }) => {
 		archive.file(img.filepath, { name });
 	}
 
-	try {
-		await new Promise<void>((resolve, reject) => {
-			output.on('close', () => resolve());
-			output.on('end', () => resolve());
-			archive.on('error', (err) => reject(err));
-			archive.finalize().catch(reject);
-		});
-	} catch (err: any) {
-		console.error('Failed to create zip', err);
-		return new Response('Failed to create zip', { status: 500 });
-	}
+	// Finalize asynchronously; errors will destroy the stream
+	archive.finalize().catch((err) => pass.destroy(err));
 
-	return respondWithFile(zipPath, 0);
+	const filename = `session-${sessionId}-raw.zip`;
+	const headers = new Headers({
+		'Content-Type': 'application/zip',
+		'Content-Disposition': `attachment; filename="${filename}"`
+	});
+
+	// @ts-expect-error - PassThrough is a Readable stream which is acceptable as a Response body
+	return new Response(pass, { headers });
 };
