@@ -39,9 +39,13 @@
 	let sliderRef: HTMLInputElement;
 
 	let isDragging = $state(false);
+	let isDragPending = $state(false);
 	let isFocused = $state(false);
 	let lastX = 0;
+	let startX = 0;
+	let startY = 0;
 	let trackWidth = 0;
+	const DRAG_SLOP_PX = 8;
 
 	// Double-tap detection (time + distance threshold)
 	let lastTapTime = 0;
@@ -123,19 +127,49 @@
 			return;
 		}
 
-		isDragging = true;
-		try {
-			wrapperRef.setPointerCapture(e.pointerId);
-		} catch {
-			/* ignore if not supported */
-		}
-		trackWidth = wrapperRef.clientWidth || 1;
+		startX = e.clientX;
+		startY = e.clientY;
 		lastX = e.clientX;
+		trackWidth = wrapperRef.clientWidth || 1;
+
+		if (e.pointerType === 'mouse') {
+			isDragging = true;
+			try {
+				wrapperRef.setPointerCapture(e.pointerId);
+			} catch {
+				/* ignore if not supported */
+			}
+		} else {
+			isDragPending = true;
+		}
 	}
 
 	// UPDATED: Perform drag calculations in the linear domain
 	function handlePointerMove(e: PointerEvent) {
-		if (!isDragging) return;
+		if (!isDragging) {
+			if (!isDragPending) return;
+			const dx = e.clientX - startX;
+			const dy = e.clientY - startY;
+			const absX = Math.abs(dx);
+			const absY = Math.abs(dy);
+
+			if (absX > DRAG_SLOP_PX && absX > absY) {
+				isDragPending = false;
+				isDragging = true;
+				lastX = e.clientX;
+				try {
+					wrapperRef.setPointerCapture(e.pointerId);
+				} catch {
+					/* ignore if not supported */
+				}
+			} else if (absY > DRAG_SLOP_PX && absY > absX) {
+				isDragPending = false;
+				return;
+			} else {
+				return;
+			}
+		}
+
 		e.preventDefault();
 		const dx = e.clientX - lastX;
 		lastX = e.clientX;
@@ -159,8 +193,12 @@
 	}
 
 	function handlePointerUp(e: PointerEvent) {
-		if (!isDragging) return;
+		if (!isDragging) {
+			isDragPending = false;
+			return;
+		}
 		isDragging = false;
+		isDragPending = false;
 		try {
 			wrapperRef.releasePointerCapture(e.pointerId);
 		} catch {
@@ -173,13 +211,6 @@
 	}
 	function handleFocusOut() {
 		isFocused = false;
-	}
-
-	function preventDefault(fn: (e: PointerEvent) => void) {
-		return (e: PointerEvent) => {
-			e.preventDefault();
-			fn(e);
-		};
 	}
 
 	function formatNumber(n: number) {
@@ -200,10 +231,10 @@
 	<div
 		bind:this={wrapperRef}
 		class="
-      relative h-14 w-full cursor-grab touch-none rounded-md
+      relative h-14 w-full cursor-grab touch-pan-y rounded-md
       select-none active:cursor-grabbing
     "
-		onpointerdown={preventDefault(handlePointerDown)}
+		onpointerdown={handlePointerDown}
 		onpointermove={handlePointerMove}
 		onpointerup={handlePointerUp}
 		onpointercancel={handlePointerUp}
