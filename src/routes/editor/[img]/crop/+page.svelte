@@ -155,16 +155,14 @@
 		drawCropGrid(ctx, scaledPP3, { padding, selected: handle });
 	}
 
-
 	async function snapshot() {
-		await edits.snapshot(page.params.img!)
+		await edits.snapshot()
 		snapshotSaved = true;
 
 		setTimeout(() => {
 			snapshotSaved = false;
 		}, 2000);
 	}
-
 
 	function move(event: PointerEvent) {
 		if (!canvasEl || !ctx) {

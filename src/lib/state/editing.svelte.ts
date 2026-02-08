@@ -1,5 +1,5 @@
 import { assert, throttle } from '$lib';
-import { parsePP3, stringifyPP3, type PP3 } from '$lib/pp3-utils';
+import { countPP3Properties, diffPP3, parsePP3, stringifyPP3, type PP3 } from '$lib/pp3-utils';
 import type { Image } from '$lib/server/db/schema';
 
 class EditingState {
@@ -7,11 +7,15 @@ class EditingState {
 	public throttledPP3 = $state<PP3>({});
 	public updateThrottledPP3 = throttle((pp3) => (this.throttledPP3 = pp3), 300);
 	public lastSavedPP3 = $state<PP3>() as PP3;
+	public currentImageId = $state<string | null>(null);
 	public isLoading = $state(false);
 	public isFaulty = $state(false);
+	public hasChanges = $state(false);
 
 	private history = $state<PP3[]>([]);
 	private historyIndex = $state(0);
+	private baselineByImageId = {} as Record<string, PP3>;
+
 
 	initialize(pp3: string | PP3, image: Image) {
 		assert(image, 'Image must be provided to initialize editing state');
@@ -44,32 +48,19 @@ class EditingState {
 		setDefault(newPp3.White_Balance, "Temperature", image.whiteBalance);
 		setDefault(newPp3.White_Balance, "Green", image.tint);
 
+		const id = image.id.toString();
+
 		this.pp3 = newPp3;
 		this.throttledPP3 = newPp3;
 		this.history = [newPp3];
 		this.historyIndex = 0;
+		this.currentImageId = id;
+		this.lastSavedPP3 = structuredClone($state.snapshot(newPp3));
+		this.setBaseline(id, newPp3);
 	}
 
-	update(newPp3: PP3) {
-		// If we undo and then make a change, we want to clear the future history
-		const newHistory = this.history.slice(0, this.historyIndex + 1);
-		newHistory.push(newPp3);
-		this.history = newHistory;
-		this.historyIndex = this.history.length - 1;
-	}
-
-	undo() {
-		if (this.canUndo) {
-			this.historyIndex--;
-			this.pp3 = this.history[this.historyIndex];
-		}
-	}
-
-	redo() {
-		if (this.canRedo) {
-			this.historyIndex++;
-			this.pp3 = this.history[this.historyIndex];
-		}
+	update(_updated: PP3) {
+		this.hasChanges = this.hasChangesFor(this.currentImageId!);
 	}
 
 	get canUndo() {
@@ -80,13 +71,23 @@ class EditingState {
 		return this.historyIndex < this.history.length - 1;
 	}
 
-	async snapshot(id: string) {
+	async snapshot() {
+		const id = this.currentImageId;
+		assert(id, 'No current image to snapshot');
+
+		if (!this.hasChangesFor(id)) {
+			return;
+		}
+
 		edits.lastSavedPP3 = structuredClone($state.snapshot(edits.pp3));
+		edits.setBaseline(id, edits.lastSavedPP3);
+		this.hasChanges = false;
 
 		const res = await fetch(`/api/images/${id}/snapshots`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ pp3: stringifyPP3($state.snapshot(edits.pp3)) })
+			keepalive: true,
+			body: JSON.stringify({ pp3: stringifyPP3(edits.lastSavedPP3) })
 		});
 
 		if (!res.ok) {
@@ -95,6 +96,17 @@ class EditingState {
 		}
 
 		edits.isFaulty = false;
+	}
+
+	hasChangesFor(imageId: string) {
+		const baseline = this.baselineByImageId[imageId];
+		if (!baseline) return false;
+		return countPP3Properties(diffPP3(baseline, this.pp3)) > 0;
+	}
+
+	private setBaseline(imageId: string, pp3: PP3) {
+		const snapshot = structuredClone($state.snapshot(pp3));
+		this.baselineByImageId = { ...this.baselineByImageId, [imageId]: snapshot };
 	}
 }
 

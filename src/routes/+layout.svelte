@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import favicon from '$lib/assets/favicon.svg';
-	import { onNavigate } from '$app/navigation';
+	import { beforeNavigate, onNavigate } from '$app/navigation';
 	import { app } from '$lib/state/app.svelte';
 	import '../app.css';
+	import { edits } from '$lib/state/editing.svelte';
 
 	let { children } = $props();
 
@@ -13,6 +14,10 @@
 	let exporterActive = $derived(currentRoute?.startsWith('/exporter'));
 	let importerActive = $derived(currentRoute?.startsWith('/importer'));
 	let triageActive = $derived(currentRoute?.startsWith('/triage'));
+
+	$effect(() => {
+		edits.update(edits.pp3);
+	});
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) {

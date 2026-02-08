@@ -13,6 +13,9 @@ Black=0
 Enabled=true
 Degree=0
 
+[Shadows & Highlights]
+Enabled=true
+
 # [Crop]
 # X=0
 # Y=0

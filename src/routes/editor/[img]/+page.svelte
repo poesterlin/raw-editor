@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
+	import { beforeNavigate, goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { getWorkerInstance } from '$lib';
 	import BasePP3 from '$lib/assets/client.pp3?raw';
@@ -24,6 +24,13 @@
 	let beforeImage = $derived(apiPath + `/edit?preview&config=${toBase64(filterPP3(edits.throttledPP3, ['Crop', 'Rotation']))}`);
 	let flashKey = $state<string | null>(null);
 	let flashTimer: number | null = null;
+
+	// TODO: Configure autosave behavior in settings
+	beforeNavigate(() => {
+		if(edits.hasChanges) {
+			edits.snapshot();
+		}
+	});
 
 	async function archiveImage() {
 		const res = await fetch(`/api/images/${page.params.img}/archive`, {
@@ -50,7 +57,7 @@
 	}
 
 	async function snapshot() {
-		await edits.snapshot(page.params.img!);
+		await edits.snapshot();
 
 		snapshotSaved = true;
 		await invalidateAll();
