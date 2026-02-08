@@ -39,9 +39,12 @@ export function getCropHandles(pp3: PP3<number>) {
     return handles;
 }
 
-export function drawCropGrid(ctx: CanvasRenderingContext2D, pp3: PP3<number>, { padding, selected }: { padding: number, selected?: string }) {
+export function drawCropGrid(ctx: CanvasRenderingContext2D, pp3: PP3<number>, { padding, paddingX, paddingY, selected }: { padding: number, paddingX?: number, paddingY?: number, selected?: string }) {
     const crop = pp3.Crop;
     if (!crop) return;
+
+    const px = paddingX ?? padding;
+    const py = paddingY ?? padding;
 
     const X = crop.X;
     const Y = crop.Y;
@@ -62,8 +65,8 @@ export function drawCropGrid(ctx: CanvasRenderingContext2D, pp3: PP3<number>, { 
     const ch = canvas.height;
 
     // clamp crop to canvas bounds
-    const left = Math.max(0, Math.min(cw, X)) + padding;
-    const top = Math.max(0, Math.min(ch, Y)) + padding;
+    const left = Math.max(0, Math.min(cw, X)) + px;
+    const top = Math.max(0, Math.min(ch, Y)) + py;
     const width = Math.max(0, Math.min(cw - left, W));
     const height = Math.max(0, Math.min(ch - top, H));
     const right = left + width;
@@ -113,12 +116,12 @@ export function drawCropGrid(ctx: CanvasRenderingContext2D, pp3: PP3<number>, { 
         ctx.strokeStyle = handleStroke;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.rect(h.x + 0.5 + padding, h.y + 0.5 + padding, h.w, h.h);
+        ctx.rect(h.x + 0.5 + px, h.y + 0.5 + py, h.w, h.h);
         ctx.fill();
         ctx.stroke();
     });
 
-    const center = getGridCenter(pp3, { padding });
+    const center = { x: crop.X + crop.W / 2 + px, y: crop.Y + crop.H / 2 + py };
 
     // draw center handle
     ctx.fillStyle = handleFill;
@@ -169,7 +172,14 @@ export function checkGridCollision(pp3: PP3<number>, x: number, y: number, hitSl
     return x >= left && x <= right && y >= top && y <= bottom;
 }
 
-export function moveHandle(pp3: PP3<number>, handle: string, dx: number, dy: number, dimensions: { width: number, height: number }) {
+export function moveHandle(
+    pp3: PP3<number>,
+    handle: string,
+    dx: number,
+    dy: number,
+    dimensions: { width: number, height: number },
+    bounds?: { left: number, top: number, right: number, bottom: number }
+) {
     const crop = pp3.Crop;
 
     switch (handle) {
@@ -209,13 +219,19 @@ export function moveHandle(pp3: PP3<number>, handle: string, dx: number, dy: num
         crop.H = -crop.H;
     }
 
-    // clamp crop to image dimensions
-    crop.X = Math.max(0, Math.min(crop.X, dimensions.width - crop.W));
-    crop.Y = Math.max(0, Math.min(crop.Y, dimensions.height - crop.H));
-    crop.W = Math.max(0, Math.min(crop.W, dimensions.width - crop.X), 20);
-    crop.H = Math.max(0, Math.min(crop.H, dimensions.height - crop.Y), 20);
+    // Use bounds if provided, otherwise fall back to dimensions
+    const minX = bounds?.left ?? 0;
+    const minY = bounds?.top ?? 0;
+    const maxX = bounds?.right ?? dimensions.width;
+    const maxY = bounds?.bottom ?? dimensions.height;
 
+    // clamp crop to bounds
+    crop.X = round(Math.max(minX, Math.min(crop.X, maxX - crop.W)));
+    crop.Y = round(Math.max(minY, Math.min(crop.Y, maxY - crop.H)));
+    crop.W = round(Math.max(20, Math.min(crop.W, maxX - crop.X)));
+    crop.H = round(Math.max(20, Math.min(crop.H, maxY - crop.Y)));
 }
+const round = Math.round;
 
 export function moveGrid(pp3: PP3<number>, dx: number, dy: number) {
     const crop = pp3.Crop;

@@ -3,8 +3,9 @@
 	import { page } from '$app/state';
 	import { getWorkerInstance } from '$lib';
 	import BasePP3 from '$lib/assets/client.pp3?raw';
-	import { filterPP3, parsePP3, stringifyPP3, toBase64 } from '$lib/pp3-utils';
+	import { filterPP3, parsePP3, toBase64 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
+	import { tagStore } from '$lib/state/tag.svelte';
 	import BeforeAfter from '$lib/ui/BeforeAfter.svelte';
 	import Button from '$lib/ui/Button.svelte';
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
@@ -13,16 +14,14 @@
 	import { fade } from 'svelte/transition';
 	import Adjustments from './Adjustments.svelte';
 	import Snapshots from './Snapshots.svelte';
-	import { tagStore } from '$lib/state/tag.svelte';
 
 	let { data } = $props();
 	let showLutPicker = $state(false);
 
-	let cacheBuster = $state(0); 
 	let sampleImage = $state('');
 	let apiPath = $derived(`/api/images/${data.image.id}`);
 	let snapshotSaved = $state(false);
-	let beforeImage = $derived(apiPath + `/edit?preview&v=${cacheBuster}&config=${toBase64(filterPP3(edits.throttledPP3, ['Crop', 'Rotation']))}`);
+	let beforeImage = $derived(apiPath + `/edit?preview&config=${toBase64(filterPP3(edits.throttledPP3, ['Crop', 'Rotation']))}`);
 	let flashKey = $state<string | null>(null);
 	let flashTimer: number | null = null;
 
@@ -51,21 +50,10 @@
 	}
 
 	async function snapshot() {
-		edits.lastSavedPP3 = structuredClone($state.snapshot(edits.pp3));
+		await edits.snapshot(page.params.img!);
 
-		const res = await fetch(`/api/images/${page.params.img}/snapshots`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ pp3: stringifyPP3($state.snapshot(edits.pp3)) })
-		});
-
-		if (res.ok) {
-			snapshotSaved = true;
-			await invalidateAll();
-		} else {
-			// Handle error (optional)
-			alert('Failed to save snapshot.');
-		}
+		snapshotSaved = true;
+		await invalidateAll();
 
 		setTimeout(() => {
 			snapshotSaved = false;
@@ -85,7 +73,7 @@
 		const worker = getWorkerInstance();
 		edits.isLoading = true;
 		worker
-			.refreshImage(page.params.img!, toBase64(edits.throttledPP3), cacheBuster)
+			.refreshImage(page.params.img!, toBase64(edits.throttledPP3))
 			.then((result) => {
 				if (result) {
 					sampleImage = result.url;
@@ -110,7 +98,6 @@
 		['ArrowRight', () => (data.nextImage ? (goto(`/editor/${data.nextImage}?filter=${page.url.searchParams.get('filter')}`)) : undefined)],
 		['ArrowLeft', () => (data.previousImage ? (goto(`/editor/${data.previousImage}?filter=${page.url.searchParams.get('filter')}`)) : undefined)],
 		['a', () => (data.image.isArchived ? restoreImage() : archiveImage())],
-		['r', () => fixImageRendering()],
 		['p', () => showPreview()]
 	]));
 
@@ -139,12 +126,6 @@
 			}
 			action();
 		}
-	}
-
-	function fixImageRendering() {
-		// This function forces a re-render of the image by toggling the edits.pp3 object
-		cacheBuster += 1;
-		console.log('Cache buster incremented to', cacheBuster);
 	}
 
 	function showPreview(){

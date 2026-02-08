@@ -1,5 +1,5 @@
 import { assert, throttle } from '$lib';
-import { parsePP3, type PP3 } from '$lib/pp3-utils';
+import { parsePP3, stringifyPP3, type PP3 } from '$lib/pp3-utils';
 import type { Image } from '$lib/server/db/schema';
 
 class EditingState {
@@ -15,7 +15,7 @@ class EditingState {
 
 	initialize(pp3: string | PP3, image: Image) {
 		assert(image, 'Image must be provided to initialize editing state');
-		
+
 		const newPp3 = typeof pp3 === 'string' ? parsePP3(pp3) : pp3;
 		ensureSectionDefaults(newPp3, 'Exposure', {
 			Enabled: true,
@@ -36,6 +36,10 @@ class EditingState {
 			ShadowTonalWidth: 30,
 			Radius: 40,
 			Lab: false
+		});
+		ensureSectionDefaults(newPp3, 'Rotation', {
+			Enabled: true,
+			Degree: 0
 		});
 		setDefault(newPp3.White_Balance, "Temperature", image.whiteBalance);
 		setDefault(newPp3.White_Balance, "Green", image.tint);
@@ -74,6 +78,23 @@ class EditingState {
 
 	get canRedo() {
 		return this.historyIndex < this.history.length - 1;
+	}
+
+	async snapshot(id: string) {
+		edits.lastSavedPP3 = structuredClone($state.snapshot(edits.pp3));
+
+		const res = await fetch(`/api/images/${id}/snapshots`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ pp3: stringifyPP3($state.snapshot(edits.pp3)) })
+		});
+
+		if (!res.ok) {
+			edits.isFaulty = true;
+			throw new Error('Failed to save snapshot');
+		}
+
+		edits.isFaulty = false;
 	}
 }
 

@@ -1,21 +1,68 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { assert } from '$lib';
+	import Slider from '$lib/ui/Slider.svelte';
+	import BasePP3 from '$lib/assets/client.pp3?raw';
+	import {
+		createInitialCrop,
+		getAutoFillScale,
+		getDisplayDimensions,
+		getDisplayScale,
+		getPreviewDimensions,
+		safeNumber,
+		sanitizeCrop,
+		scaleCropPP3,
+		screenToCropSpace,
+		type Dimensions
+	} from '$lib/canvas/crop';
 	import { checkHandleCollision, drawCropGrid, moveHandle } from '$lib/canvas/grid';
-	import ImportPP3 from '$lib/assets/import.pp3?raw';
-	import { excludePP3, parsePP3, stringifyPP3, toBase64, type PP3 } from '$lib/pp3-utils';
+	import { excludePP3, parsePP3, toBase64, type PP3 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
 	import Button from '$lib/ui/Button.svelte';
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
 	import { IconCheck, IconDeviceFloppy } from '$lib/ui/icons';
-
+	
 	let canvasEl = $state<HTMLCanvasElement>();
 	let imgEl = $state<HTMLImageElement>();
-
-	let imageDimensions = { width: 0, height: 0 };
-	let displayDimensions = { width: 0, height: 0 };
+			
+	let { data } = $props();
+	let imageDimensions: Dimensions = { width: 0, height: 0 };
+	let displayDimensions: Dimensions = { width: 0, height: 0 };
+	let autoFillScale = 1;
 	let displayScale = 1;
 	const padding = 24;
+	let isMoving = false;
+	let handle: string | undefined = undefined;
+	let lastX = 0;
+	let lastY = 0;
+	let apiPath = $derived(`/api/images/${data.image.id}`);
+	let imageUrl = $derived(apiPath + `/edit?preview&config=${toBase64(excludePP3(edits.throttledPP3, ['Crop', 'Rotation']))}`);
+
+	$effect(() => {
+		const latestSnapshot = data.snapshots[0];
+		if (latestSnapshot) {
+			edits.initialize(latestSnapshot.pp3, data.image);
+		} else {
+			edits.initialize(parsePP3(BasePP3), data.image);
+		}
+	});
+
+	$effect(() => {
+		fetch(apiPath + '/details')
+			.then((res) => (res.ok ? res.json() : null))
+			.then((data) => {
+				imageInfo = data ? { resolutionX: data.resolutionX, resolutionY: data.resolutionY } : undefined;
+			})
+			.catch(() => {
+				imageInfo = undefined;
+			});
+	});
+
+	let moveCursor = $state(false);
+	let snapshotSaved = $state(false);
+	let flashKey = $state<string>();
+	let flashTimer: number | null = null;
+	let imageInfo = $state<{ resolutionX: number; resolutionY: number }>();
 
 	let ctx = $derived.by(() => {
 		if (!canvasEl) {
@@ -26,6 +73,10 @@
 		assert(context, 'Failed to get canvas context');
 		return context;
 	});
+
+	function getRotationDeg() {
+		return safeNumber(edits.pp3?.Rotation?.Degree);
+	}
 
 	function updateDimensions() {
 		if (!canvasEl || !imgEl) {
@@ -47,29 +98,14 @@
 			return;
 		}
 
-		displayScale = Math.min(1, maxWidth / imageDimensions.width, maxHeight / imageDimensions.height);
-		displayDimensions = {
-			width: Math.round(imageDimensions.width * displayScale),
-			height: Math.round(imageDimensions.height * displayScale)
-		};
+		const angleDeg = getRotationDeg();
+		autoFillScale = getAutoFillScale(imageDimensions.width, imageDimensions.height, angleDeg);
+		displayScale = getDisplayScale(imageDimensions.width, imageDimensions.height, maxWidth, maxHeight);
+		displayDimensions = getDisplayDimensions(imageDimensions.width, imageDimensions.height, displayScale);
 	}
 
 	function getScaledPP3() {
-		if (!edits.pp3?.Crop) {
-			return null;
-		}
-
-		const crop = edits.pp3.Crop;
-		return {
-			...edits.pp3,
-			Crop: {
-				...crop,
-				X: crop.X * displayScale,
-				Y: crop.Y * displayScale,
-				W: crop.W * displayScale,
-				H: crop.H * displayScale
-			}
-		} as PP3<number>;
+		return scaleCropPP3(edits.pp3, displayScale);
 	}
 
 	function draw() {
@@ -82,16 +118,33 @@
 			return;
 		}
 
-		canvasEl.width = displayDimensions.width + padding * 2;
-		canvasEl.height = displayDimensions.height + padding * 2;
+		const displayW = displayDimensions.width;
+		const displayH = displayDimensions.height;
+		canvasEl.width = displayW + padding * 2;
+		canvasEl.height = displayH + padding * 2;
 
 		// clear canvas
 		ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
 		ctx.fillStyle = '#000';
 		ctx.fillRect(0, 0, canvasEl.width, canvasEl.height);
 
-		// draw image
-		ctx.drawImage(imgEl, padding, padding, displayDimensions.width, displayDimensions.height);
+		// clip to content area to hide black corners from rotation
+		ctx.save();
+		ctx.beginPath();
+		ctx.rect(padding, padding, displayW, displayH);
+		ctx.clip();
+
+		// draw rotated image with AutoFill zoom
+		const angleDeg = getRotationDeg();
+		const angleRad = (angleDeg * Math.PI) / 180;
+		const centerX = padding + displayW / 2;
+		const centerY = padding + displayH / 2;
+		ctx.translate(centerX, centerY);
+		ctx.scale(displayScale * autoFillScale, displayScale * autoFillScale);
+		ctx.rotate(-angleRad);
+		ctx.translate(-imageDimensions.width / 2, -imageDimensions.height / 2);
+		ctx.drawImage(imgEl, 0, 0, imageDimensions.width, imageDimensions.height);
+		ctx.restore();
 
 		// draw crop grid
 		const scaledPP3 = getScaledPP3();
@@ -102,105 +155,16 @@
 		drawCropGrid(ctx, scaledPP3, { padding, selected: handle });
 	}
 
-	let isMoving = false;
-	let handle: string | undefined = undefined;
-	let lastX = 0;
-	let lastY = 0;
-	let moveCursor = $state(false);
-	let snapshotSaved = $state(false);
-	let flashKey = $state<string | null>(null);
-	let flashTimer: number | null = null;
-	let imageInfo = $state<{ resolutionX: number; resolutionY: number } | null>(null);
-
-	const importPP3 = parsePP3(ImportPP3);
-
-	function getPreviewDimensions(width: number, height: number) {
-		const resize = importPP3.Resize as { Enabled?: boolean; LongEdge?: number; Width?: number; Height?: number } | undefined;
-
-		if (!resize?.Enabled) {
-			return { width, height };
-		}
-
-		const longEdge = Number.isFinite(resize.LongEdge) ? Number(resize.LongEdge) : 0;
-		if (longEdge > 0) {
-			const scale = longEdge / Math.max(width, height);
-			return { width: Math.round(width * scale), height: Math.round(height * scale) };
-		}
-
-		const previewWidth = Number.isFinite(resize.Width) ? Number(resize.Width) : width;
-		const previewHeight = Number.isFinite(resize.Height) ? Number(resize.Height) : height;
-		return { width: Math.round(previewWidth), height: Math.round(previewHeight) };
-	}
-
-	function sanitizeCrop() {
-		if (!edits.pp3?.Crop) {
-			return;
-		}
-
-		const crop = edits.pp3.Crop as unknown as Record<string, number>;
-		const width = Math.max(1, imageDimensions.width);
-		const height = Math.max(1, imageDimensions.height);
-
-		const toNumber = (value: unknown, fallback = 0) =>
-			Number.isFinite(Number(value)) ? Number(value) : fallback;
-
-		crop.X = toNumber(crop.X, 0);
-		crop.Y = toNumber(crop.Y, 0);
-		crop.W = toNumber(crop.W, 0);
-		crop.H = toNumber(crop.H, 0);
-
-		// normalize negative sizes
-		if (crop.W < 0) {
-			crop.X += crop.W;
-			crop.W = -crop.W;
-		}
-		if (crop.H < 0) {
-			crop.Y += crop.H;
-			crop.H = -crop.H;
-		}
-
-		// clamp to image bounds and round to integers
-		crop.X = Math.max(0, Math.min(Math.round(crop.X), width - 1));
-		crop.Y = Math.max(0, Math.min(Math.round(crop.Y), height - 1));
-		crop.W = Math.max(20, Math.min(Math.round(crop.W), width - crop.X));
-		crop.H = Math.max(20, Math.min(Math.round(crop.H), height - crop.Y));
-	}
 
 	async function snapshot() {
-		sanitizeCrop();
-		edits.lastSavedPP3 = structuredClone($state.snapshot(edits.pp3));
-
-		const res = await fetch(`/api/images/${page.params.img}/snapshots`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ pp3: stringifyPP3($state.snapshot(edits.pp3)) })
-		});
-
-		if (res.ok) {
-			snapshotSaved = true;
-		} else {
-			alert('Failed to save snapshot.');
-		}
+		await edits.snapshot(page.params.img!)
+		snapshotSaved = true;
 
 		setTimeout(() => {
 			snapshotSaved = false;
 		}, 2000);
 	}
 
-	$effect(() => {
-		const id = page.params.img;
-		if (!id) {
-			return;
-		}
-		fetch(`/api/images/${id}/details`)
-			.then((res) => (res.ok ? res.json() : null))
-			.then((data) => {
-				imageInfo = data ? { resolutionX: data.resolutionX, resolutionY: data.resolutionY } : null;
-			})
-			.catch(() => {
-				imageInfo = null;
-			});
-	});
 
 	function move(event: PointerEvent) {
 		if (!canvasEl || !ctx) {
@@ -208,12 +172,16 @@
 		}
 
 		const rect = canvasEl.getBoundingClientRect();
-		const x = event.clientX - padding - rect.left;
-		const y = event.clientY - padding - rect.top;
-		const dx = x - lastX;
-		const dy = y - lastY;
-		lastX = x;
-		lastY = y;
+		const cropPoint = screenToCropSpace(
+			event.clientX - rect.left,
+			event.clientY - rect.top,
+			padding,
+			displayScale
+		);
+		const dx = cropPoint.x - lastX;
+		const dy = cropPoint.y - lastY;
+		lastX = cropPoint.x;
+		lastY = cropPoint.y;
 
 		if (!edits.pp3?.Crop || !displayScale) {
 			return;
@@ -224,20 +192,23 @@
 			return;
 		}
 
-		moveCursor = !!checkHandleCollision(scaledPP3, x, y, 48);
+		moveCursor = !!checkHandleCollision(scaledPP3, cropPoint.x * displayScale, cropPoint.y * displayScale, 48);
 
 		if (!isMoving || !handle) {
 			return;
 		}
 
-		const dxImage = dx / displayScale;
-		const dyImage = dy / displayScale;
-		moveHandle(edits.pp3 as PP3<number>, handle, dxImage, dyImage, imageDimensions);
+		moveHandle(edits.pp3 as PP3<number>, handle, dx, dy, imageDimensions);
 
 		requestAnimationFrame(() => draw());
 	}
 
 	function startMove(event: PointerEvent) {
+		const pp3 = edits.pp3;
+		if (!pp3) {
+			return;
+		}
+
 		if (!displayScale) {
 			updateDimensions();
 		}
@@ -247,23 +218,17 @@
 		}
 
 		const rect = canvasEl!.getBoundingClientRect();
-		const x = event.clientX - padding - rect.left;
-		const y = event.clientY - padding - rect.top;
-		const imageX = x / displayScale;
-		const imageY = y / displayScale;
-		lastX = x;
-		lastY = y;
+		const cropPoint = screenToCropSpace(
+			event.clientX - rect.left,
+			event.clientY - rect.top,
+			padding,
+			displayScale
+		);
+		lastX = cropPoint.x;
+		lastY = cropPoint.y;
 
-		if (!edits.pp3.Crop) {
-			edits.pp3.Crop = {
-				Enabled: true,
-				X: Math.max(0, Math.min(imageX, imageDimensions.width - 1)),
-				Y: Math.max(0, Math.min(imageY, imageDimensions.height - 1)),
-				W: 24,
-				H: 24,
-				FixedRatio: false,
-				Ratio: '1:1'
-			};
+		if (!pp3.Crop) {
+			pp3.Crop = createInitialCrop(cropPoint.x, cropPoint.y, imageDimensions);
 
 			handle = 'se';
 			isMoving = true;
@@ -273,7 +238,9 @@
 		}
 
 		const scaledPP3 = getScaledPP3();
-		handle = scaledPP3 ? checkHandleCollision(scaledPP3, x, y, 48) : undefined;
+		handle = scaledPP3
+			? checkHandleCollision(scaledPP3, cropPoint.x * displayScale, cropPoint.y * displayScale, 48)
+			: undefined;
 		if (handle && canvasEl) {
 			isMoving = true;
 			moveCursor = true;
@@ -294,7 +261,9 @@
 		canvasEl.releasePointerCapture(event.pointerId);
 		moveCursor = false;
 
-		sanitizeCrop();
+		if (edits.pp3?.Crop) {
+			sanitizeCrop(edits.pp3.Crop as unknown as { X: number; Y: number; W: number; H: number }, imageDimensions, imageDimensions);
+		}
 		edits.pp3 = structuredClone($state.snapshot(edits.pp3));
 
 		requestAnimationFrame(() => draw());
@@ -317,17 +286,18 @@
 			}
 			flashTimer = window.setTimeout(() => {
 				if (flashKey === normalizedKey) {
-					flashKey = null;
+					flashKey = undefined;
 				}
 			}, 220);
 			snapshot();
 		}
 	}
+
 </script>
 
 <svelte:window onkeydown={handleKeyDown} onpointerup={endMove} />
 
-<img src="/api/images/{page.params.img}/edit?config={toBase64(excludePP3(edits.pp3, ['Crop']))}" alt="" class="hidden" bind:this={imgEl} onload={draw} />
+<img src={imageUrl} alt="" class="hidden" bind:this={imgEl} onload={draw} />
 
 <div class="relative flex h-full w-full items-center justify-center">
 	<canvas bind:this={canvasEl} onpointerdown={startMove} onpointermove={move} class:cursor-move={moveCursor} class="m-auto"></canvas>
@@ -343,9 +313,9 @@
 		</Button>
 		<div class="mt-2 max-w-[18rem] rounded-md border border-neutral-800/60 bg-neutral-950/70 p-2 text-xs text-neutral-300">
 			{#if imageInfo}
-				<div>RAW: {imageInfo.resolutionX} × {imageInfo.resolutionY}</div>
-				{@const preview = getPreviewDimensions(imageInfo.resolutionX, imageInfo.resolutionY)}
-				<div>Preview TIFF: {preview.width} × {preview.height}</div>
+				<div>RAW: {imageInfo.resolutionX} x {imageInfo.resolutionY}</div>
+				{@const preview = getPreviewDimensions(imageInfo.resolutionX, imageInfo.resolutionY, {})}
+				<div>Preview TIFF: {preview.width} x {preview.height}</div>
 			{:else}
 				<div>RAW: —</div>
 				<div>Preview TIFF: —</div>
@@ -355,7 +325,22 @@
 			{:else}
 				<div>Crop: —</div>
 			{/if}
+			<div>Rotation: {getRotationDeg().toFixed(1)}°</div>
 			<div class="text-neutral-400">Export uses full-resolution crop coordinates.</div>
 		</div>
+		{#if edits.pp3?.Rotation?.Enabled}
+		<div class="mt-2 max-w-[18rem] rounded-md border border-neutral-800/60 bg-neutral-950/70 p-2 text-xs text-neutral-300">
+			<Slider
+			label="Rotate"
+			min={-45}
+			max={45}
+			step={0.1}
+			centered
+			resetValue={0}
+			bind:value={edits.pp3.Rotation.Degree as number}
+			onchange={(v) => (edits.pp3.Rotation.Degree = v)}
+			></Slider>
+		</div>
+		{/if}
 	</div>
 </div>

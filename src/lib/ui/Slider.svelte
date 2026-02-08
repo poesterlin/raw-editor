@@ -33,7 +33,7 @@
 		resetValue,
 		precision = 3,
 		map = (n) => n,
-		inverseMap = (n) => n
+		inverseMap = (n) => n,
 	}: Props = $props();
 
 	let wrapperRef: HTMLDivElement;
