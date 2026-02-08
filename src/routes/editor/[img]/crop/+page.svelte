@@ -1,14 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import { assert } from '$lib';
-	import Slider from '$lib/ui/Slider.svelte';
 	import BasePP3 from '$lib/assets/client.pp3?raw';
 	import {
 		createInitialCrop,
 		getAutoFillScale,
 		getDisplayDimensions,
 		getDisplayScale,
-		getPreviewDimensions,
 		safeNumber,
 		sanitizeCrop,
 		scaleCropPP3,
@@ -21,6 +18,7 @@
 	import Button from '$lib/ui/Button.svelte';
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
 	import { IconCheck, IconDeviceFloppy } from '$lib/ui/icons';
+	import Slider from '$lib/ui/Slider.svelte';
 	
 	let canvasEl = $state<HTMLCanvasElement>();
 	let imgEl = $state<HTMLImageElement>();
