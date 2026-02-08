@@ -299,35 +299,12 @@
 
 <div class="relative flex h-full w-full items-center justify-center">
 	<canvas bind:this={canvasEl} onpointerdown={startMove} onpointermove={move} class:cursor-move={moveCursor} class="m-auto"></canvas>
-	<EditModeNav showEdit img={page.params.img!} />
-	<div class="absolute bottom-4 right-4">
-		<Button onclick={snapshot} flash={flashKey === 's'}>
-			<span>Save Crop</span>
-			{#if snapshotSaved}
-				<IconCheck />
-			{:else}
-				<IconDeviceFloppy />
-			{/if}
-		</Button>
-		<div class="mt-2 max-w-[18rem] rounded-md border border-neutral-800/60 bg-neutral-950/70 p-2 text-xs text-neutral-300">
-			{#if imageInfo}
-				<div>RAW: {imageInfo.resolutionX} x {imageInfo.resolutionY}</div>
-				{@const preview = getPreviewDimensions(imageInfo.resolutionX, imageInfo.resolutionY, {})}
-				<div>Preview TIFF: {preview.width} x {preview.height}</div>
-			{:else}
-				<div>RAW: —</div>
-				<div>Preview TIFF: —</div>
-			{/if}
-			{#if edits.pp3?.Crop}
-				<div>Crop: X {edits.pp3.Crop.X} Y {edits.pp3.Crop.Y} W {edits.pp3.Crop.W} H {edits.pp3.Crop.H}</div>
-			{:else}
-				<div>Crop: —</div>
-			{/if}
-			<div>Rotation: {getRotationDeg().toFixed(1)}°</div>
-			<div class="text-neutral-400">Export uses full-resolution crop coordinates.</div>
-		</div>
+	{#if edits.currentImageId}
+		<EditModeNav showEdit img={edits.currentImageId} />
+	{/if}
+
+	<div class="absolute bottom-4 right-4 w-xs flex flex-col items-end gap-4">
 		{#if edits.pp3?.Rotation?.Enabled}
-		<div class="mt-2 max-w-[18rem] rounded-md border border-neutral-800/60 bg-neutral-950/70 p-2 text-xs text-neutral-300">
 			<Slider
 			label="Rotate"
 			min={-45}
@@ -338,7 +315,15 @@
 			bind:value={edits.pp3.Rotation.Degree as number}
 			onchange={(v) => (edits.pp3.Rotation.Degree = v)}
 			></Slider>
-		</div>
 		{/if}
+
+		<Button onclick={snapshot} flash={flashKey === 's'} class="w-full">
+			<span>Save Crop</span>
+			{#if snapshotSaved}
+				<IconCheck />
+			{:else}
+				<IconDeviceFloppy />
+			{/if}
+		</Button>
 	</div>
 </div>
