@@ -17,6 +17,26 @@ class EditingState {
 		assert(image, 'Image must be provided to initialize editing state');
 		
 		const newPp3 = typeof pp3 === 'string' ? parsePP3(pp3) : pp3;
+		ensureSectionDefaults(newPp3, 'Exposure', {
+			Enabled: true,
+			Auto: false,
+			Compensation: 0,
+			Brightness: 0,
+			Contrast: 0,
+			Saturation: 0,
+			HighlightCompr: 0,
+			ShadowCompr: 0,
+			Black: 0
+		});
+		ensureSectionDefaults(newPp3, 'Shadows_&_Highlights', {
+			Enabled: false,
+			Highlights: 0,
+			HighlightTonalWidth: 70,
+			Shadows: 0,
+			ShadowTonalWidth: 30,
+			Radius: 40,
+			Lab: false
+		});
 		setDefault(newPp3.White_Balance, "Temperature", image.whiteBalance);
 		setDefault(newPp3.White_Balance, "Green", image.tint);
 
@@ -60,12 +80,24 @@ class EditingState {
 export const edits = new EditingState();
 
 function setDefault(section: PP3[keyof PP3], key: string, value: any) {
-	if (key !in section){
+	if (!(key in section)) {
 		section[key] = value;
 		return;
 	}
 
 	if (section[key] === undefined && value) {
 		section[key] = value;
+	}
+}
+
+function ensureSectionDefaults(pp3: PP3, section: string, defaults: Record<string, string | number | boolean>) {
+	if (!pp3[section]) {
+		pp3[section] = {};
+	}
+
+	for (const [key, value] of Object.entries(defaults)) {
+		if (pp3[section][key] === undefined) {
+			pp3[section][key] = value;
+		}
 	}
 }

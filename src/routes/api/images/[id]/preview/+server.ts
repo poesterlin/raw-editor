@@ -30,6 +30,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 
     if (image.previewPath && await Bun.file(image.previewPath).exists()) {
         const buffer = await sharp(image.previewPath)
+            .rotate()
             .resize({ width: size, height: size, fit: mode, withoutEnlargement: true })
             .webp({ quality: 80 })
             .toBuffer();

@@ -17,8 +17,7 @@
 
 	let { data, showLutPicker = $bindable() }: Props = $props();
 
-	let sampleImage = $state('');
-	let apiPath = $derived(`/api/images/${data.image.id}`);
+	let apiPath = $derived(`/api/images/${data.image?.id}`);
 
 	$effect(() => {
 		const worker = getWorkerInstance();
@@ -27,7 +26,6 @@
 			.refreshImage(page.params.img!, toBase64(edits.throttledPP3))
 			.then((result) => {
 				if (result) {
-					sampleImage = result.url;
 					edits.isFaulty = result.error;
 					edits.isLoading = false;
 				}
@@ -120,9 +118,34 @@
 		/>
 		<Slider label="Contrast" bind:value={edits.pp3.Exposure.Contrast as number} centered />
 		<Slider label="Saturation" bind:value={edits.pp3.Exposure.Saturation as number} centered />
-		<Slider label="Highlights" bind:value={edits.pp3.Exposure.HighlightCompr as number} centered map={(x) => -x} inverseMap={(y) => -y} />
-		<Slider label="Shadows" bind:value={edits.pp3.Exposure.ShadowCompr as number} centered />
-		<Slider label="Black" bind:value={edits.pp3.Exposure.Black as number} centered />
+		<Slider
+			label="Black"
+			bind:value={edits.pp3.Exposure.Black as number}
+			centered
+			ignored={edits.pp3.Exposure.Auto as boolean}
+			onchange={() => (edits.pp3.Exposure.Auto = false)}
+		/>
+	</Section>
+	<Section title="Shadows & Highlights" section="Shadows_&_Highlights">
+		{@const shadowsHighlights = edits.pp3['Shadows_&_Highlights']}
+		<Slider
+			label="Highlights"
+			bind:value={shadowsHighlights.Highlights as number}
+			min={0}
+			max={100}
+			step={1}
+			ignored={!shadowsHighlights.Enabled as boolean}
+			onchange={() => (shadowsHighlights.Enabled = true)}
+		/>
+		<Slider
+			label="Shadows"
+			bind:value={shadowsHighlights.Shadows as number}
+			min={0}
+			max={100}
+			step={1}
+			ignored={!shadowsHighlights.Enabled as boolean}
+			onchange={() => (shadowsHighlights.Enabled = true)}
+		/>
 	</Section>
 	<Section title="Sharpening" section="Sharpening" enabledKey="Sharpen_Enabled">
 		<Slider label="Sharpen Amount" bind:value={edits.pp3.Sharpening.Amount as number} min={0} max={200} step={1} resetValue={50} />
