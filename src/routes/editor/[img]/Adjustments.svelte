@@ -127,8 +127,6 @@
 			label="Saturation"
 			bind:value={edits.pp3.Exposure.Saturation as number}
 			centered
-			ignored={edits.pp3.Exposure.Auto as boolean}
-			onchange={() => (edits.pp3.Exposure.Auto = false)}
 		/>
 		<!-- <Slider
 			label="Black"
