@@ -23,6 +23,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate third-party licenses
+        run: bun run licenses:generate
       - uses: docker/metadata-action@v5
         id: meta
         with:
