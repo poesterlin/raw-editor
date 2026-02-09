@@ -592,4 +592,8 @@ export class GooglePhotosProvider implements PhotoIntegration {
 
 		return { id: newId };
 	}
+
+	getLinkToAlbum(album: Album): string {
+		return `https://photos.google.com/album/${album.externalId}`;
+	}
 }

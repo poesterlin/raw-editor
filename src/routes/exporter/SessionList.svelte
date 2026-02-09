@@ -7,6 +7,8 @@
 	import { enhance } from '$app/forms';
 	import { app } from '$lib/state/app.svelte';
 	import { integrationLogos } from '$lib/ui/integrations';
+	import { invalidateAll } from '$app/navigation';
+	import { IconFileExport } from '@tabler/icons-svelte';
 
 	type Session = ExporterSessionsResponse['sessions'][number];
 	interface Props {
@@ -24,6 +26,7 @@
 	let pollingIntervals: Record<number, ReturnType<typeof setInterval>> = {};
 
 	let albumCreateSession = $state<number>();
+	let albumDeleteId = $state<number>();
 
 	function pollJobStatus(sessionId: number) {
 		const intervalId = setInterval(async () => {
@@ -129,16 +132,28 @@
 							{@const album = item.albums.find((a) => a.integration === integration)}
 							{@const img = integrationLogos[integration]}
 							{#if album}
-								<Tooltip text="View Album on {integration}" position="top">
-									<a
-										href={album?.url}
-										target="_blank"
-										rel="noopener noreferrer"
-										class="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-800/50 p-1.5 text-neutral-100 transition-all hover:bg-neutral-800 hover:scale-110"
+								<div class="group/album relative">
+									<Tooltip text="View Album on {integration}" position="top">
+										<a
+											href="/api/integrations/{integration}/albums/{album.id}"
+											target="_blank"
+											class="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-800/50 p-1.5 text-neutral-100 transition-all hover:bg-neutral-800 hover:scale-110"
+										>
+											{@html img}
+										</a>
+									</Tooltip>
+									<button
+										onclick={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+											albumDeleteId = album.id;
+										}}
+										class="absolute -right-1.5 -top-1.5 hidden h-5 w-5 items-center justify-center rounded-full bg-neutral-800 border border-neutral-700 text-neutral-400 hover:text-white group-hover/album:flex"
+										title="Remove Link"
 									>
-										{@html img}
-									</a>
-								</Tooltip>
+										<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+									</button>
+								</div>
 							{:else}
 								<Tooltip text="Create Album on {integration}" position="top">
 									<button
@@ -155,12 +170,12 @@
 			</div>
 
 			<div class="flex items-center gap-3 shrink-0">
-				<a
+				<!-- <a
 					href="/exporter/{item.id}"
 					class="flex items-center gap-2 rounded-2xl border border-neutral-800 bg-neutral-900/50 px-5 py-3 text-xs font-bold text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100"
 				>
 					View Details
-				</a>
+				</a> -->
 
 				{#if jobStates[item.id] === 'exporting'}
 					<button
@@ -174,17 +189,30 @@
 						onclick={() => exportSession(item.id)}
 						class="group/btn flex items-center gap-3 rounded-2xl bg-neutral-100 px-8 py-3 text-xs font-black uppercase tracking-tight text-neutral-950 transition-all hover:bg-white hover:scale-105"
 					>
+					<IconFileExport size={14} />
 						Export Now
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover/btn:translate-x-1"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+
 					</button>
 				{:else}
-					<button
-						onclick={() => exportSession(item.id)}
-						class="flex items-center gap-2 rounded-2xl border border-neutral-800 bg-neutral-900/50 px-6 py-3 text-xs font-bold text-neutral-500 transition-all hover:bg-neutral-800 hover:text-neutral-100"
-					>
-						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
-						Re-export
-					</button>
+					<div class="flex items-center gap-2">
+						{#if item.albums.length > 0}
+							<button
+								onclick={() => exportSession(item.id)}
+								class="flex items-center gap-2 rounded-2xl border border-neutral-800 bg-neutral-900/50 px-6 py-3 text-xs font-bold text-neutral-400 transition-all hover:bg-neutral-800"
+								title="Sync images to albums"
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+								Sync
+							</button>
+						{/if}
+						<button
+							onclick={() => exportSession(item.id)}
+							class="flex items-center gap-2 rounded-2xl border border-neutral-800 bg-neutral-900/50 px-6 py-3 text-xs font-bold text-neutral-500 transition-all hover:bg-neutral-800 hover:text-neutral-100"
+						>
+							<IconFileExport size={14} />
+							Re-export
+						</button>
+					</div>
 				{/if}
 			</div>
 		</div>
@@ -251,6 +279,7 @@
 						} else if (result.type === 'failure') {
 							app.addToast(`Failed to create album: ${result.data?.error}`, 'error');
 						}
+						invalidateAll();
 					};
 				}}
 				class="flex flex-col gap-8"
@@ -284,6 +313,45 @@
 						Nevermind
 					</button>
 				</div>
+			</form>
+		</div>
+	</Modal>
+{/if}
+
+{#if albumDeleteId}
+	<Modal onClose={() => (albumDeleteId = undefined)} class="!max-w-md !rounded-[2.5rem] !border-neutral-800 !bg-neutral-950 shadow-3xl">
+		<div class="p-10">
+			<h1 class="mb-2 text-3xl font-black italic uppercase tracking-tighter text-neutral-100 leading-none">Remove <span class="text-neutral-500 not-italic font-light">Link</span></h1>
+			<p class="mb-10 font-medium leading-relaxed text-neutral-400">This will only remove the link from the database. The album will remain on the external service.</p>
+			
+			<form
+				method="POST"
+				action="?/delete-album"
+				use:enhance={() => {
+					return async ({ result, update }) => {
+						if (result.type === 'success') {
+							app.addToast('Link removed successfully!', 'success');
+							albumDeleteId = undefined;
+						} else if (result.type === 'error') {
+							app.addToast(`Failed to remove link`, 'error');
+						} else if (result.type === 'redirect') {
+							update();
+						} else if (result.type === 'failure') {
+							app.addToast(`Failed to remove link: ${result.data?.error}`, 'error');
+						}
+						invalidateAll();
+					};
+				}}
+				class="flex flex-col gap-3"
+			>
+				<input type="hidden" name="id" value={albumDeleteId} required />
+
+				<button class="w-full rounded-2xl bg-red-600 py-4 text-sm font-black tracking-tight text-white transition-all hover:bg-red-500 hover:scale-[1.02]" type="submit">
+					REMOVE LINK
+				</button>
+				<button type="button" onclick={() => (albumDeleteId = undefined)} class="w-full py-2 text-sm font-bold text-neutral-600 transition-colors hover:text-neutral-400">
+					Cancel
+				</button>
 			</form>
 		</div>
 	</Modal>

@@ -3,10 +3,19 @@ import { db } from '$lib/server/db';
 import { editImage, generateExportTif, generateImportTif, mapCropFromPreviewToExport } from '$lib/server/image-editor';
 import { bmvbhash } from 'blockhash-core';
 import { and, asc, desc, eq, isNull, lt, or } from 'drizzle-orm';
-import { readFile } from 'fs/promises';
+import { readFile, mkdir, stat } from 'fs/promises';
 import { decode } from 'jpeg-js';
-import { join } from 'path';
-import { imageTable, mediaTable, sessionTable, snapshotTable, type Album, type Image, type Session } from '../db/schema';
+import { dirname, join } from 'path';
+
+async function fileExists(path: string) {
+	try {
+		await stat(path);
+		return true;
+	} catch {
+		return false;
+	}
+}
+import { imageTable, mediaTable, sessionTable, snapshotTable, albumTable, type Album, type Image, type Session } from '../db/schema';
 import type { ExportPayload, ImportPayload, JobResult } from './types';
 import { integrations } from '../integrations';
 import { exiftool } from 'exiftool-vendored';
@@ -123,22 +132,31 @@ async function stackSimilarImages(currentImage: Image, currentHash: string, sess
 export async function runExport(payload: ExportPayload, signal?: AbortSignal): Promise<JobResult> {
 	const { sessionId } = payload;
 
-	const session = await db.query.sessionTable.findFirst({ where: eq(sessionTable.id, sessionId) });
+	const session = await db.query.sessionTable.findFirst({
+		where: eq(sessionTable.id, sessionId),
+		with: {
+			images: {
+				where: eq(imageTable.isArchived, false),
+				columns: { id: true }
+			}
+		}
+	});
+
 	if (!session) {
 		console.error(`[Executor] Session not found for export: ${sessionId}`);
 		return { status: 'error', message: 'Session not found' };
 	}
 
 	const albums = await db.query.albumTable.findMany({
-		where: eq(sessionTable.id, sessionId)
+		where: eq(albumTable.sessionId, sessionId)
 	});
 
 	console.log(`[Executor] Found ${albums.length} albums for session: ${sessionId}`, albums);
 
-	console.log(`[Executor] Starting export for session: ${sessionId}`);
+	console.log(`[Executor] Starting export/sync for session: ${sessionId}`);
 	try {
 		const images = await db.query.imageTable.findMany({
-			where: and(eq(imageTable.sessionId, sessionId), or(lt(imageTable.lastExportedAt, imageTable.updatedAt), isNull(imageTable.lastExportedAt))),
+			where: eq(imageTable.sessionId, sessionId),
 			orderBy: asc(imageTable.recordedAt)
 		});
 
@@ -148,29 +166,44 @@ export async function runExport(payload: ExportPayload, signal?: AbortSignal): P
 			}
 			const image = images[i];
 			if (image.isArchived) {
-				console.log(`[Executor] Skipping archived image: ${image.id}`);
 				continue;
 			}
 
-			const edit = await db.query.snapshotTable.findFirst({
-				where: eq(snapshotTable.imageId, image.id),
-				orderBy: desc(snapshotTable.createdAt)
-			});
+			const outputPath = makeOutputPath(image, session);
+			const needsExport = !image.lastExportedAt || image.lastExportedAt < image.updatedAt;
+			let isReadyForUpload = false;
 
-			const pp3 = parsePP3(edit?.pp3 ?? '');
+			if (needsExport) {
+				console.log(`[Executor] Exporting ${image.filepath}`);
+				const edit = await db.query.snapshotTable.findFirst({
+					where: eq(snapshotTable.imageId, image.id),
+					orderBy: desc(snapshotTable.createdAt)
+				});
 
-			console.log(`[Executor] Processing ${image.filepath}`);
-			const outputPath = makeOutputPath(image, session, images.length);
-			await mkdirPath(outputPath);
+				const pp3 = parsePP3(edit?.pp3 ?? '');
+				await ensureDir(outputPath);
 
-			// Two-step pipeline: RAW → full-res TIFF → JPEG (matches preview pipeline)
-			const tifPath = await generateExportTif(image.filepath, { signal });
-			const mappedPP3 = await mapCropFromPreviewToExport(pp3, image.tifPath, tifPath);
-			await editImage(tifPath, stringifyPP3(mappedPP3), { signal, outputPath, recordedAt: image.recordedAt, quality: 90 });
-			await db.update(imageTable).set({ lastExportedAt: new Date() }).where(eq(imageTable.id, image.id));
+				// Two-step pipeline: RAW → full-res TIFF → JPEG
+				const tifPath = await generateExportTif(image.filepath, { signal });
+				const mappedPP3 = await mapCropFromPreviewToExport(pp3, image.tifPath, tifPath);
+				await editImage(tifPath, stringifyPP3(mappedPP3), {
+					signal,
+					outputPath,
+					recordedAt: image.recordedAt,
+					quality: 90
+				});
+				await db.update(imageTable).set({ lastExportedAt: new Date() }).where(eq(imageTable.id, image.id));
+				isReadyForUpload = true;
+			} else {
+				isReadyForUpload = await fileExists(outputPath);
+			}
 
-			for (const album of albums) {
-				await upsertAlbumImage(album, image, outputPath);
+			if (isReadyForUpload) {
+				for (const album of albums) {
+					await upsertAlbumImage(album, image, outputPath);
+				}
+			} else if (!needsExport) {
+				console.warn(`[Executor] Image ${image.id} is marked as exported but JPEG is missing at ${outputPath}. Skipping sync.`);
 			}
 		}
 		console.log(`[Executor] Finished export for session: ${sessionId}`);
@@ -181,7 +214,8 @@ export async function runExport(payload: ExportPayload, signal?: AbortSignal): P
 	}
 }
 
-export function makeOutputPath(image: Image, session: Session, totalImages: number): string {
+export function makeOutputPath(image: Image, session: Session): string {
+	const totalImages = (session as any).images?.length ?? 100;
 	const digits = Math.max(2, Math.ceil(Math.log10(totalImages + 1)));
 	return join(makeSessionPath(session), `${image.id.toString().padStart(digits, '0')}_${session.name}.jpg`);
 }
@@ -196,8 +230,8 @@ export function makeSessionPath(session: Session): string {
 	return join(exportDir, year.toString(), `${year}-${month}-${day}_${session.name}`);
 }
 
-export async function mkdirPath(path: string) {
-	await Bun.file(path).write('');
+export async function ensureDir(path: string) {
+	await mkdir(dirname(path), { recursive: true });
 }
 
 async function upsertAlbumImage(album: Album, image: Image, outputPath: string) {

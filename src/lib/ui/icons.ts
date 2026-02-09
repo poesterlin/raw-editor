@@ -25,8 +25,10 @@ import IconFilter from '@tabler/icons-svelte/icons/filter';
 import IconAdjustmentsFilled from '@tabler/icons-svelte/icons/adjustments-filled';
 import IconLayoutGrid from '@tabler/icons-svelte/icons/layout-grid';
 import IconGitBranch from '@tabler/icons-svelte/icons/git-branch';
+import IconFileExport from '@tabler/icons-svelte/icons/file-export';
 
 export {
+	IconFileExport,
 	IconBell,
 	IconSettings,
 	IconUser,

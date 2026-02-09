@@ -10,4 +10,5 @@ export interface PhotoIntegration {
     addToAlbum(album: Album, media: string[]): Promise<void>;
     removeFromAlbum(album: Album, media: string[]): Promise<void>;
     replaceInAlbum(album: Album, oldMediaId: string, fileBuffer: Uint8Array | Buffer, filename: string, image: Image): Promise<{ id: string }>;
+    getLinkToAlbum(album: Album): string;
 }

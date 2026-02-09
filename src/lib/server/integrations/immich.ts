@@ -106,4 +106,8 @@ export class ImmichProvider implements PhotoIntegration {
         await this.removeFromAlbum(album, [oldMediaId]);
         return uploaded;
     }
+
+    getLinkToAlbum(album: Album): string {
+        return `${this.baseUrl}/albums/${album.externalId}`;
+    }
 }

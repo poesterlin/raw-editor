@@ -62,5 +62,22 @@ export const actions: Actions = {
 		}
 
 		console.log(`Created album ${title} for session ${session.id} on integration ${integrationType}`);
+	},
+	'delete-album': async ({ request }) => {
+		const body = await request.formData();
+		const albumId = body.get('id') as string;
+
+		if (!albumId || isNaN(Number(albumId))) {
+			return fail(400, { error: 'Album ID is required' });
+		}
+
+		try {
+			await db.delete(albumTable).where(eq(albumTable.id, Number(albumId)));
+		} catch (error) {
+			console.error('Failed to delete album', error);
+			return fail(500, { error: 'Failed to delete album' });
+		}
+
+		console.log(`Deleted album ${albumId}`);
 	}
 };

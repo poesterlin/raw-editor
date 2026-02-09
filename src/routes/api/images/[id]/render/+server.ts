@@ -4,7 +4,7 @@ import { desc, eq } from "drizzle-orm";
 import type { RequestHandler } from "./$types";
 import { error } from "@sveltejs/kit";
 import { parsePP3, stringifyPP3 } from "$lib/pp3-utils";
-import { mkdirPath } from "$lib/server/jobs/executor";
+import { ensureDir } from "$lib/server/jobs/executor";
 import { assert } from "$lib";
 import { env } from "$env/dynamic/private";
 import { editImage, generateExportTif, mapCropFromPreviewToExport } from "$lib/server/image-editor";
@@ -43,8 +43,7 @@ export const GET: RequestHandler = async ({ params }) => {
     console.log(`[Render] Processing ${image.filepath}`);
     assert(env.TMP_DIR, 'TMP_DIR not set in env');
     const outputPath = join(env.TMP_DIR, `${id}.jpg`);
-    await mkdirPath(outputPath);
-
+    await ensureDir(outputPath);
     // Two-step pipeline: RAW → full-res TIFF → JPEG (matches preview pipeline)
     const tifPath = await generateExportTif(image.filepath);
     const mappedPP3 = await mapCropFromPreviewToExport(pp3, image.tifPath, tifPath);
