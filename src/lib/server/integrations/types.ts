@@ -5,7 +5,7 @@ export interface PhotoIntegration {
     isConfigured(): boolean;
     canBeConfigured(): boolean;
     configure(): void | never;
-    createAlbum(title: string): Promise<{ id: string; }>;
+    createAlbum(title: string): Promise<{ id: string; url?: string }>;
     uploadFile(fileBuffer: Uint8Array | Buffer, filename: string, image: Image): Promise<{ id: string }>;
     addToAlbum(album: Album, media: string[]): Promise<void>;
     removeFromAlbum(album: Album, media: string[]): Promise<void>;

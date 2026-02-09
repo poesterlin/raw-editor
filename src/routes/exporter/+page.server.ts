@@ -48,10 +48,11 @@ export const actions: Actions = {
 		const title = `${session.name} - ${year}`;
 
 		try {
-			const { id } = await integration.createAlbum(title);
+			const { id, url } = await integration.createAlbum(title);
 			await db.insert(albumTable).values({
 				title,
 				externalId: id,
+				url,
 				sessionId: session.id,
 				integration: integrationType
 			});

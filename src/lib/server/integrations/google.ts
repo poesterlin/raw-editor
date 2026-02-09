@@ -363,7 +363,7 @@ export class GooglePhotosProvider implements PhotoIntegration {
 		}
 	}
 
-	async createAlbum(title: string): Promise<{ id: string }> {
+	async createAlbum(title: string): Promise<{ id: string; url?: string }> {
 		const res = await this.fetchWithRetry(`${GOOGLE_API_BASE}/albums`, {
 			method: 'POST',
 			headers: async () => await this.headers(),
@@ -374,7 +374,7 @@ export class GooglePhotosProvider implements PhotoIntegration {
 		if (!res.ok) throw new Error(`Google.createAlbum failed: ${res.status} ${await res.text()}`);
 		const album = await res.json();
 		assert(album?.id, 'Google.createAlbum: no album id in response');
-		return album as { id: string };
+		return { id: album.id, url: album.productUrl };
 	}
 
 	private async uploadBytesGetToken(fileBuffer: Uint8Array | Buffer, filename: string, mime: string): Promise<string> {
@@ -594,6 +594,6 @@ export class GooglePhotosProvider implements PhotoIntegration {
 	}
 
 	getLinkToAlbum(album: Album): string {
-		return `https://photos.google.com/album/${album.externalId}`;
+		return album.url ?? `https://photos.google.com/album/${album.externalId}`;
 	}
 }

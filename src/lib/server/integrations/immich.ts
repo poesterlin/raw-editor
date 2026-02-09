@@ -103,7 +103,13 @@ export class ImmichProvider implements PhotoIntegration {
         const uploaded = await this.uploadFile(fileBuffer, filename, image);
         const newId = uploaded.id;
         await this.addToAlbum(album, [newId]);
-        await this.removeFromAlbum(album, [oldMediaId]);
+        
+        try {
+            await this.removeFromAlbum(album, [oldMediaId]);
+        } catch (error) {
+            console.warn(`[Immich] Failed to remove old asset ${oldMediaId} during replacement. It might have been deleted already. Continuing...`, error);
+        }
+
         return uploaded;
     }
 
