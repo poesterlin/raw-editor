@@ -34,6 +34,51 @@ docker compose -f docker-compose.yml up -d
 - See `docs/CONFIGURATION.md` for environment variables
 - CLUT source (Hald CLUT pack): http://rawtherapee.com/shared/HaldCLUT.zip
 
+## Integrations
+
+RAW Editor supports exporting to external photo management services.
+
+### Immich
+
+1) Get an **API Key** from your Immich user settings.
+2) Add the following to your `.env`:
+   - `IMMICH_BASE_URL`: Your Immich instance URL (e.g., `https://immich.example.com`)
+   - `IMMICH_API_KEY`: Your generated API key
+
+### Google Photos
+
+1) Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
+2) Enable the **Photos Library API**.
+3) Create an **OAuth 2.0 Client ID** (Type: Web Application).
+4) Add `http://localhost:4893/api/auth/google/callback` (or your production domain) as a **Redirect URI**.
+5) Add the following to your `.env`:
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+
+#### Token Persistence (Self-Hosting)
+
+When you authenticate with Google, tokens are saved to `/app/data/google_tokens.json` inside the container. To persist this across container restarts, ensure you have the `data` volume mapped in your `docker-compose.yml`:
+
+```yaml
+services:
+  editor:
+    # ...
+    volumes:
+      - ./data:/app/data
+```
+
+## Roadmap
+
+- [ ] User authentication
+- More editing tools
+   - [ ] Black Point/White Point
+   - [ ] Curves
+   - [ ] Vibrance
+   - [ ] ColorToning
+   - [ ] HSV Equalizer
+   - [ ] Lens corrections
+- [ ] Progressive loading for better quality previews
+
 ## License
 
 See `LICENSE` for GPLv3 terms.
