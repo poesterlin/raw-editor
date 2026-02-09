@@ -25,6 +25,7 @@ export const GET: RequestHandler = async ({ params, url }) => {
 		const pp3String = config ? fromBase64(config) : stringifyPP3({});
 
 		if (!image.tifPath || !(await Bun.file(image.tifPath).exists())) {
+			// TODO: import image if it doesn't exist, instead of just throwing an error
 			error(404, 'Image was not imported properly');
 		}
 

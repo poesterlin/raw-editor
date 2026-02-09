@@ -9,6 +9,7 @@
 	import BeforeAfter from '$lib/ui/BeforeAfter.svelte';
 	import Button from '$lib/ui/Button.svelte';
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
+	import Tooltip from '$lib/ui/Tooltip.svelte';
 	import LutPicker from '$lib/ui/LutPicker.svelte';
 	import { IconArchive, IconCheck, IconChevronLeft, IconChevronRight, IconDeviceFloppy, IconFidgetSpinner, IconRestore } from '$lib/ui/icons';
 	import { fade } from 'svelte/transition';
@@ -164,7 +165,7 @@
 <div class="flex h-full flex-col overflow-hidden bg-neutral-950 text-neutral-200 lg:flex-row">
 	<!-- Image Preview Section -->
 	<div class="relative flex-1 overflow-hidden bg-neutral-900 shadow-inner">
-		<div class="flex h-full items-center justify-center p-2 sm:p-4">
+		<div class="flex h-full items-center justify-center p-2 sm:p-2">
 			<BeforeAfter {beforeImage} afterImage={sampleImage} />
 		</div>
 		
@@ -254,14 +255,15 @@
 			<div class="mt-4 flex items-center justify-between border-t border-neutral-800 pt-3 lg:mt-6 lg:pt-4">
 				<div class="flex items-center gap-4">
 					{#if data.previousImage}
-						<a
-							href={`/editor/${data.previousImage}?filter=${page.url.searchParams.get('filter')}`}
-							class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-neutral-800 hover:text-neutral-50"
-							class:nav-flash={flashKey === 'ArrowLeft'}
-							title="Previous Image"
-						>
-							<IconChevronLeft size={20} />
-						</a>
+						<Tooltip text="Previous Image" position="top">
+							<a
+								href={`/editor/${data.previousImage}?filter=${page.url.searchParams.get('filter')}`}
+								class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-neutral-800 hover:text-neutral-50"
+								class:nav-flash={flashKey === 'ArrowLeft'}
+							>
+								<IconChevronLeft size={20} />
+							</a>
+						</Tooltip>
 					{:else}
 						<div class="flex h-9 w-9 items-center justify-center text-neutral-800">
 							<IconChevronLeft size={20} />
@@ -273,14 +275,15 @@
 					</div>
 
 					{#if data.nextImage}
-						<a
-							href={`/editor/${data.nextImage}?filter=${page.url.searchParams.get('filter')}`}
-							class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-neutral-800 hover:text-neutral-50"
-							class:nav-flash={flashKey === 'ArrowRight'}
-							title="Next Image"
-						>
-							<IconChevronRight size={20} />
-						</a>
+						<Tooltip text="Next Image" position="top">
+							<a
+								href={`/editor/${data.nextImage}?filter=${page.url.searchParams.get('filter')}`}
+								class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-neutral-800 hover:text-neutral-50"
+								class:nav-flash={flashKey === 'ArrowRight'}
+							>
+								<IconChevronRight size={20} />
+							</a>
+						</Tooltip>
 					{:else}
 						<div class="flex h-9 w-9 items-center justify-center text-neutral-800">
 							<IconChevronRight size={20} />

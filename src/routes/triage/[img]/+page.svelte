@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import { tagStore } from '$lib/state/tag.svelte';
 	import FlagModal from '$lib/ui/FlagModal.svelte';
+	import Tooltip from '$lib/ui/Tooltip.svelte';
 	import { IconArchive, IconChevronLeft, IconChevronRight, IconFlag, IconRestore, IconAdjustmentsFilled } from '$lib/ui/icons';
 	import ImageStrip from '../ImageStrip.svelte';
 
@@ -102,71 +103,79 @@
 		<!-- Left Side Controls -->
 		<div class="absolute inset-y-0 left-4 flex flex-col justify-center gap-8 pointer-events-none sm:left-8">
 			<div class="pointer-events-auto flex flex-col gap-4">
-				<button
-					onclick={restoreImage}
-					aria-label="Restore Image"
-					disabled={!data.image.isArchived}
-					class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all active:scale-90 disabled:opacity-50 sm:h-16 sm:w-14 shadow-2xl"
-					class:text-neutral-100={data.image.isArchived}
-					class:bg-neutral-800={data.image.isArchived}
-					class:hover:bg-neutral-100={data.image.isArchived}
-					class:hover:text-neutral-950={data.image.isArchived}
-				>
-					<IconRestore size={28} />
-				</button>
+				<Tooltip text="Restore Image" position="right">
+					<button
+						onclick={restoreImage}
+						aria-label="Restore Image"
+						disabled={!data.image.isArchived}
+						class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all active:scale-90 disabled:opacity-50 sm:h-16 sm:w-14 shadow-2xl"
+						class:text-neutral-100={data.image.isArchived}
+						class:bg-neutral-800={data.image.isArchived}
+						class:hover:bg-neutral-100={data.image.isArchived}
+						class:hover:text-neutral-950={data.image.isArchived}
+					>
+						<IconRestore size={28} />
+					</button>
+				</Tooltip>
 
 				{#if data.previousImage}
-					<a
-						href={`/triage/${data.previousImage}`}
-						class="flex h-24 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-100 hover:text-neutral-950 active:scale-90 sm:w-14 shadow-2xl"
-						title="Previous Image (Left Arrow)"
-					>
-						<IconChevronLeft size={32} />
-					</a>
+					<Tooltip text="Previous Image (Left Arrow)" position="right">
+						<a
+							href={`/triage/${data.previousImage}`}
+							class="flex h-24 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-100 hover:text-neutral-950 active:scale-90 sm:w-14 shadow-2xl"
+						>
+							<IconChevronLeft size={32} />
+						</a>
+					</Tooltip>
 				{/if}
 
-				<a
-					href={`/editor/${data.image.id}`}
-					class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-100 text-neutral-950 transition-all hover:bg-neutral-200 active:scale-90 sm:h-16 sm:w-14 shadow-2xl"
-					title="Edit Image"
-				>
-					<IconAdjustmentsFilled size={28} />
-				</a>
+				<Tooltip text="Edit Image" position="right">
+					<a
+						href={`/editor/${data.image.id}`}
+						class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-100 text-neutral-950 transition-all hover:bg-neutral-200 active:scale-90 sm:h-16 sm:w-14 shadow-2xl"
+					>
+						<IconAdjustmentsFilled size={28} />
+					</a>
+				</Tooltip>
 			</div>
 		</div>
 
 		<!-- Right Side Controls -->
 		<div class="absolute inset-y-0 right-4 flex flex-col justify-center gap-8 pointer-events-none sm:right-8">
 			<div class="pointer-events-auto flex flex-col gap-4">
-				<button
-					onclick={archiveImage}
-					aria-label="Archive Image"
-					disabled={data.image.isArchived}
-					class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-red-400 backdrop-blur-md transition-all active:scale-90 disabled:opacity-10 sm:h-16 sm:w-14 shadow-2xl"
-					class:hover:bg-red-500={!data.image.isArchived}
-					class:hover:text-white={!data.image.isArchived}
-				>
-					<IconArchive size={28} />
-				</button>
+				<Tooltip text="Archive Image" position="left">
+					<button
+						onclick={archiveImage}
+						aria-label="Archive Image"
+						disabled={data.image.isArchived}
+						class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-red-400 backdrop-blur-md transition-all active:scale-90 disabled:opacity-10 sm:h-16 sm:w-14 shadow-2xl"
+						class:hover:bg-red-500={!data.image.isArchived}
+						class:hover:text-white={!data.image.isArchived}
+					>
+						<IconArchive size={28} />
+					</button>
+				</Tooltip>
 
 				{#if data.nextImage}
-					<a
-						href={`/triage/${data.nextImage}`}
-						data-sveltekit-preload-data="hover"
-						class="flex h-24 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-100 hover:text-neutral-950 active:scale-90 sm:w-14 shadow-2xl"
-						title="Next Image (Right Arrow)"
-					>
-						<IconChevronRight size={32} />
-					</a>
+					<Tooltip text="Next Image (Right Arrow)" position="left">
+						<a
+							href={`/triage/${data.nextImage}`}
+							data-sveltekit-preload-data="hover"
+							class="flex h-24 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-100 hover:text-neutral-950 active:scale-90 sm:w-14 shadow-2xl"
+						>
+							<IconChevronRight size={32} />
+						</a>
+					</Tooltip>
 				{/if}
 
-				<button
-					onclick={() => (showTagModal = true)}
-					class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90 sm:h-16 sm:w-14 shadow-2xl"
-					title="Tag Image (T)"
-				>
-					<IconFlag size={28} />
-				</button>
+				<Tooltip text="Tag Image (T)" position="left">
+					<button
+						onclick={() => (showTagModal = true)}
+						class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90 sm:h-16 sm:w-14 shadow-2xl"
+					>
+						<IconFlag size={28} />
+					</button>
+				</Tooltip>
 			</div>
 		</div>
 	</main>

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import Scroller from '$lib/ui/Scroller.svelte';
+	import Tooltip from '$lib/ui/Tooltip.svelte';
 	import type { ExporterSessionsResponse } from '../api/exporter/sessions/+server';
 	import Modal from '$lib/ui/Modal.svelte';
 	import { enhance } from '$app/forms';
@@ -128,23 +129,25 @@
 							{@const album = item.albums.find((a) => a.integration === integration)}
 							{@const img = integrationLogos[integration]}
 							{#if album}
-								<a
-									href={album?.url}
-									target="_blank"
-									rel="noopener noreferrer"
-									title="View Album on {integration}"
-									class="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-800/50 p-1.5 text-neutral-100 transition-all hover:bg-neutral-800 hover:scale-110"
-								>
-									{@html img}
-								</a>
+								<Tooltip text="View Album on {integration}" position="top">
+									<a
+										href={album?.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-800/50 p-1.5 text-neutral-100 transition-all hover:bg-neutral-800 hover:scale-110"
+									>
+										{@html img}
+									</a>
+								</Tooltip>
 							{:else}
-								<button
-									onclick={() => (albumCreateSession = item.id)}
-									class="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-800/30 p-1.5 text-neutral-500 opacity-50 transition-all hover:bg-neutral-800 hover:text-neutral-100 hover:opacity-100 hover:scale-110"
-									title="Create Album on {integration}"
-								>
-									{@html img}
-								</button>
+								<Tooltip text="Create Album on {integration}" position="top">
+									<button
+										onclick={() => (albumCreateSession = item.id)}
+										class="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-800/30 p-1.5 text-neutral-500 opacity-50 transition-all hover:bg-neutral-800 hover:text-neutral-100 hover:opacity-100 hover:scale-110"
+									>
+										{@html img}
+									</button>
+								</Tooltip>
 							{/if}
 						{/each}
 					</div>

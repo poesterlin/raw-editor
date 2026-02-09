@@ -333,7 +333,7 @@
 <div class="flex h-full flex-col overflow-hidden bg-neutral-950 text-neutral-200 lg:flex-row">
 	<!-- Image Preview Section -->
 	<div class="relative flex-1 overflow-hidden bg-neutral-900 shadow-inner">
-		<div class="flex h-full items-center justify-center p-2 sm:p-4">
+		<div class="flex h-full items-center justify-center p-2 sm:p-2">
 			<canvas bind:this={canvasEl} onpointerdown={startMove} onpointermove={move} class:cursor-move={moveCursor} class="m-auto"></canvas>
 		</div>
 		

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import Scroller from '$lib/ui/Scroller.svelte';
+	import Tooltip from '$lib/ui/Tooltip.svelte';
 	import { IconAdjustmentsFilled, IconArchive, IconLayoutGrid, IconTransferIn, IconDeviceFloppy } from '$lib/ui/icons';
 	import { app } from '$lib/state/app.svelte';
 	import type { SessionsResponse } from '../../routes/api/sessions/+server';
@@ -107,60 +108,64 @@
 							Processing
 						</div>
 					{:else}
-						<button
-							aria-label="Reprocess Session Images"
-							onclick={() => importSession(item.id)}
-							title="Process Session Images"
-							class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
-						>
-							<IconTransferIn size={18}></IconTransferIn>
-						</button>
+						<Tooltip text="Process Session Images" position="top">
+							<button
+								aria-label="Reprocess Session Images"
+								onclick={() => importSession(item.id)}
+								class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
+							>
+								<IconTransferIn size={18}></IconTransferIn>
+							</button>
+						</Tooltip>
 					{/if}
 					
-					<button 
-						onclick={() => archiveSession(item.id)} 
-						aria-label="Archive Session" 
-						title="Archive Session" 
-						class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-red-400"
-					>
-						<IconArchive size={18}></IconArchive>
-					</button>
+					<Tooltip text="Archive Session" position="top">
+						<button 
+							onclick={() => archiveSession(item.id)} 
+							aria-label="Archive Session" 
+							class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-red-400"
+						>
+							<IconArchive size={18}></IconArchive>
+						</button>
+					</Tooltip>
 
 					{#if basePath !== 'triage' && item.images.length > 0}
-						<a 
-							href={`/triage/${item.images[0].id}`} 
-							aria-label="Triage Session" 
-							title="Triage Session" 
-							class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
-						>
-							<IconLayoutGrid size={18} />
-						</a>
+						<Tooltip text="Triage Session" position="top">
+							<a 
+								href={`/triage/${item.images[0].id}`} 
+								aria-label="Triage Session" 
+								class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
+							>
+								<IconLayoutGrid size={18} />
+							</a>
+						</Tooltip>
 					{/if}
 
-					<button
-						aria-label="Download Raw Files"
-						title="Download Raw Files"
-						class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
-						onclick={async () => {
-							const res = await fetch(`/api/sessions/${item.id}/download-raw`);
-							if (!res.ok) {
-								app.addToast('Failed to download raw files', 'error');
-								return;
-							}
+					<Tooltip text="Download Raw Files" position="top">
+						<button
+							aria-label="Download Raw Files"
+							class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
+							onclick={async () => {
+								const res = await fetch(`/api/sessions/${item.id}/download-raw`);
+								if (!res.ok) {
+									app.addToast('Failed to download raw files', 'error');
+									return;
+								}
 
-							const blob = await res.blob();
-							const url = URL.createObjectURL(blob);
-							const a = document.createElement('a');
-							a.href = url;
-							a.download = `${item.name}-raw.zip`;
-							document.body.appendChild(a);
-							a.click();
-							a.remove();
-							URL.revokeObjectURL(url);
-						}}
-					>
-						<IconDeviceFloppy size={18} />
-					</button>
+								const blob = await res.blob();
+								const url = URL.createObjectURL(blob);
+								const a = document.createElement('a');
+								a.href = url;
+								a.download = `${item.name}-raw.zip`;
+								document.body.appendChild(a);
+								a.click();
+								a.remove();
+								URL.revokeObjectURL(url);
+							}}
+						>
+							<IconDeviceFloppy size={18} />
+						</button>
+					</Tooltip>
 				</div>
 			</div>
 		</div>
