@@ -10,7 +10,7 @@ if (!env.DATABASE_URL && !building) {
     throw new Error('DATABASE_URL is not set');
 }
 
-const client = new SQL(env.DATABASE_URL) as any;
+const client = new SQL(env.DATABASE_URL!) as any;
 client.options = {
     parsers: {},
     serializers: {}
