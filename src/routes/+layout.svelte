@@ -133,11 +133,12 @@
 					<span class="relative inline-flex h-2 w-2 rounded-full bg-neutral-500"></span>
 				</span>
 			</button> -->
-			<!-- <div
+			<a
+				href="/settings"
 				class="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900 text-neutral-400 transition-colors hover:border-neutral-700 hover:text-neutral-100 sm:h-9 sm:w-9"
 			>
 				<IconUser size={20} />
-			</div> -->
+		</a>
 		</div>
 	</header>
 	<main>
@@ -170,9 +171,9 @@
 		to {
 			opacity: 0;
 		}
-	} */
+	}
 
-	/* ::view-transition-old(root) {
+	::view-transition-old(root) {
 		animation: 90ms cubic-bezier(0.4, 0, 1, 1) both fade-out;
 	}
 

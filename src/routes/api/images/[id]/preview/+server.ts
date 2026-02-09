@@ -7,6 +7,7 @@ import { exiftool } from "exiftool-vendored";
 import { createTempDir } from "$lib/server/command-runner";
 import { join } from "path";
 import sharp, { type FitEnum } from "sharp";
+import { cp } from "fs/promises";
 
 const rotations: Record<number, number> = {
     1: 0,
@@ -52,13 +53,20 @@ export const GET: RequestHandler = async ({ params, url }) => {
     const tempFile = join(path, image.id + "_preview.jpg");
     const compressedFile = join(path, image.id + "_preview_rotated.jpg");
 
+    const startTime = performance.now();
+    let rotation = 1;
     try {
         const tags = await exiftool.read(image.filepath);
-        const rotation = tags.Orientation ?? 1;
+        rotation = tags.Orientation ?? 1;
 
-        const startTime = performance.now();
         await exiftool.extractPreview(image.filepath, tempFile, { ignoreMinorErrors: true, forceWrite: true });
+    } catch (err) {
+        console.error("Error extracting thumbnail with exiftool:", err);
+        // Fallback to using the original image if thumbnail extraction fails
+        await cp(image.filepath, tempFile);
+    }
 
+    try {
         await sharp(tempFile)
             .resize({ width: 2000, height: 2000, fit: 'contain', withoutEnlargement: true })
             .rotate(rotations[rotation])
