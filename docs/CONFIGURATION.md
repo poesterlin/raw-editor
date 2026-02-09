@@ -13,6 +13,7 @@ Copy `.env.example` to `.env` and adjust values.
 ## Optional
 
 - `HOST_DOMAIN`: Domain name for Traefik routing (if using Traefik)
+- `RAWTHERAPEE_VERSION`: RawTherapee release tag used when building the Docker image (defaults to latest)
 
 ## Docker defaults
 

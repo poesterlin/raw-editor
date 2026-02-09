@@ -1,0 +1,1335 @@
+├─ @esbuild/linux-x64@0.27.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/evanw/esbuild
+│  ├─ path: /home/philip/git/raw-editor/node_modules/vite/node_modules/esbuild/node_modules/@esbuild/linux-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/vite/node_modules/esbuild/node_modules/@esbuild/linux-x64/README.md
+├─ @img/colour@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lovell/colour
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@img/colour
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@img/colour/LICENSE.md
+├─ @img/sharp-libvips-linux-x64@1.2.0
+│  ├─ licenses: LGPL-3.0-or-later
+│  ├─ repository: https://github.com/lovell/sharp-libvips
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/@img/sharp-libvips-linux-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/@img/sharp-libvips-linux-x64/README.md
+├─ @img/sharp-libvips-linux-x64@1.2.4
+│  ├─ licenses: LGPL-3.0-or-later
+│  ├─ repository: https://github.com/lovell/sharp-libvips
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@img/sharp-libvips-linux-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@img/sharp-libvips-linux-x64/README.md
+├─ @img/sharp-libvips-linuxmusl-x64@1.2.0
+│  ├─ licenses: LGPL-3.0-or-later
+│  ├─ repository: https://github.com/lovell/sharp-libvips
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/@img/sharp-libvips-linuxmusl-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/@img/sharp-libvips-linuxmusl-x64/README.md
+├─ @img/sharp-libvips-linuxmusl-x64@1.2.4
+│  ├─ licenses: LGPL-3.0-or-later
+│  ├─ repository: https://github.com/lovell/sharp-libvips
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@img/sharp-libvips-linuxmusl-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@img/sharp-libvips-linuxmusl-x64/README.md
+├─ @img/sharp-linux-x64@0.34.3
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/lovell/sharp
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/@img/sharp-linux-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/@img/sharp-linux-x64/LICENSE
+├─ @img/sharp-linux-x64@0.34.5
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/lovell/sharp
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@img/sharp-linux-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@img/sharp-linux-x64/LICENSE
+├─ @img/sharp-linuxmusl-x64@0.34.3
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/lovell/sharp
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/@img/sharp-linuxmusl-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/@img/sharp-linuxmusl-x64/LICENSE
+├─ @img/sharp-linuxmusl-x64@0.34.5
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/lovell/sharp
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@img/sharp-linuxmusl-x64
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@img/sharp-linuxmusl-x64/LICENSE
+├─ @isaacs/cliui@8.0.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/yargs/cliui
+│  ├─ publisher: Ben Coe
+│  ├─ email: ben@npmjs.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@isaacs/cliui
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@isaacs/cliui/LICENSE.txt
+├─ @jridgewell/gen-mapping@0.3.12
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jridgewell/sourcemaps
+│  ├─ publisher: Justin Ridgewell
+│  ├─ email: justin@ridgewell.name
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@jridgewell/gen-mapping
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@jridgewell/gen-mapping/LICENSE
+├─ @jridgewell/remapping@2.3.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jridgewell/sourcemaps
+│  ├─ publisher: Justin Ridgewell
+│  ├─ email: justin@ridgewell.name
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@jridgewell/remapping
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@jridgewell/remapping/LICENSE
+├─ @jridgewell/resolve-uri@3.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jridgewell/resolve-uri
+│  ├─ publisher: Justin Ridgewell
+│  ├─ email: justin@ridgewell.name
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@jridgewell/resolve-uri
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@jridgewell/resolve-uri/LICENSE
+├─ @jridgewell/sourcemap-codec@1.5.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jridgewell/sourcemaps
+│  ├─ publisher: Justin Ridgewell
+│  ├─ email: justin@ridgewell.name
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@jridgewell/sourcemap-codec
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@jridgewell/sourcemap-codec/LICENSE
+├─ @jridgewell/sourcemap-codec@1.5.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jridgewell/sourcemaps
+│  ├─ publisher: Justin Ridgewell
+│  ├─ email: justin@ridgewell.name
+│  ├─ path: /home/philip/git/raw-editor/node_modules/magic-string/node_modules/@jridgewell/sourcemap-codec
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/magic-string/node_modules/@jridgewell/sourcemap-codec/LICENSE
+├─ @jridgewell/trace-mapping@0.3.29
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jridgewell/sourcemaps
+│  ├─ publisher: Justin Ridgewell
+│  ├─ email: justin@ridgewell.name
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@jridgewell/trace-mapping
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@jridgewell/trace-mapping/LICENSE
+├─ @petamoriken/float16@3.9.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/petamoriken/float16
+│  ├─ publisher: Kenta Moriuchi
+│  ├─ email: moriken@kimamass.com
+│  ├─ url: https://moriken.dev
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@petamoriken/float16
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@petamoriken/float16/LICENSE
+├─ @photostructure/tz-lookup@11.4.0
+│  ├─ licenses: CC0-1.0
+│  ├─ repository: https://github.com/photostructure/tz-lookup
+│  ├─ publisher: PhotoStructure, Inc.
+│  ├─ email: tzlookup@photostructure.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@photostructure/tz-lookup
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@photostructure/tz-lookup/LICENSE
+├─ @pkgjs/parseargs@0.11.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/pkgjs/parseargs
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@pkgjs/parseargs
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@pkgjs/parseargs/LICENSE
+├─ @polka/url@1.0.0-next.29
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lukeed/polka
+│  ├─ publisher: Luke Edwards
+│  ├─ email: luke@lukeed.com
+│  ├─ url: https://lukeed.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@polka/url
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@polka/url/readme.md
+├─ @rollup/plugin-commonjs@28.0.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/plugins
+│  ├─ publisher: Rich Harris
+│  ├─ email: richard.a.harris@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@rollup/plugin-commonjs
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@rollup/plugin-commonjs/LICENSE
+├─ @rollup/plugin-json@6.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/plugins
+│  ├─ publisher: rollup
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@rollup/plugin-json
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@rollup/plugin-json/LICENSE
+├─ @rollup/plugin-node-resolve@16.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/plugins
+│  ├─ publisher: Rich Harris
+│  ├─ email: richard.a.harris@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@rollup/plugin-node-resolve
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@rollup/plugin-node-resolve/LICENSE
+├─ @rollup/pluginutils@5.2.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/plugins
+│  ├─ publisher: Rich Harris
+│  ├─ email: richard.a.harris@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@rollup/pluginutils
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@rollup/pluginutils/LICENSE
+├─ @rollup/rollup-linux-x64-gnu@4.46.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/rollup
+│  ├─ publisher: Lukas Taegert-Atkinson
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@rollup/rollup-linux-x64-gnu
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@rollup/rollup-linux-x64-gnu/README.md
+├─ @rollup/rollup-linux-x64-musl@4.46.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/rollup
+│  ├─ publisher: Lukas Taegert-Atkinson
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@rollup/rollup-linux-x64-musl
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@rollup/rollup-linux-x64-musl/README.md
+├─ @standard-schema/spec@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/standard-schema/standard-schema
+│  ├─ publisher: Colin McDonnell
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@standard-schema/spec
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@standard-schema/spec/LICENSE
+├─ @sveltejs/acorn-typescript@1.0.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sveltejs/acorn-typescript
+│  ├─ publisher: tyrealhu and the Svelte team
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@sveltejs/acorn-typescript
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@sveltejs/acorn-typescript/LICENSE.md
+├─ @sveltejs/adapter-node@5.5.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sveltejs/kit
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@sveltejs/adapter-node
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@sveltejs/adapter-node/LICENSE
+├─ @sveltejs/kit@2.50.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sveltejs/kit
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@sveltejs/kit
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@sveltejs/kit/LICENSE
+├─ @sveltejs/vite-plugin-svelte-inspector@5.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sveltejs/vite-plugin-svelte
+│  ├─ publisher: dominikg
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@sveltejs/vite-plugin-svelte-inspector
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@sveltejs/vite-plugin-svelte-inspector/LICENSE
+├─ @sveltejs/vite-plugin-svelte@6.2.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sveltejs/vite-plugin-svelte
+│  ├─ publisher: dominikg
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@sveltejs/vite-plugin-svelte
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@sveltejs/vite-plugin-svelte/LICENSE
+├─ @tabler/icons-svelte@3.36.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/tabler/tabler-icons
+│  ├─ publisher: codecalm
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@tabler/icons-svelte
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@tabler/icons-svelte/LICENSE
+├─ @tabler/icons@3.36.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/tabler/tabler-icons
+│  ├─ publisher: codecalm
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@tabler/icons
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@tabler/icons/LICENSE
+├─ @types/archiver@6.0.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/archiver
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/archiver/LICENSE
+├─ @types/cookie@0.6.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/cookie
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/cookie/LICENSE
+├─ @types/estree@1.0.8
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/estree
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/estree/LICENSE
+├─ @types/luxon@3.7.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/luxon
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/luxon/LICENSE
+├─ @types/node@22.17.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/readdir-glob/node_modules/@types/node
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/readdir-glob/node_modules/@types/node/LICENSE
+├─ @types/node@22.19.9
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/node
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/node/LICENSE
+├─ @types/readdir-glob@1.1.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/readdir-glob
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/readdir-glob/LICENSE
+├─ @types/resolve@1.20.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/resolve
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/resolve/LICENSE
+├─ @types/sharp@0.32.0
+│  ├─ licenses: MIT
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/sharp
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/sharp/LICENSE
+├─ abort-controller@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mysticatea/abort-controller
+│  ├─ publisher: Toru Nagashima
+│  ├─ url: https://github.com/mysticatea
+│  ├─ path: /home/philip/git/raw-editor/node_modules/abort-controller
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/abort-controller/LICENSE
+├─ acorn@8.15.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/acornjs/acorn
+│  ├─ path: /home/philip/git/raw-editor/node_modules/acorn
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/acorn/LICENSE
+├─ ansi-regex@5.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/ansi-regex
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/string-width-cjs/node_modules/strip-ansi/node_modules/ansi-regex
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/string-width-cjs/node_modules/strip-ansi/node_modules/ansi-regex/license
+├─ ansi-regex@6.2.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/ansi-regex
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/ansi-regex
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/ansi-regex/license
+├─ ansi-styles@4.3.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/ansi-styles
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/ansi-styles
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/ansi-styles/license
+├─ ansi-styles@6.2.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/ansi-styles
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/wrap-ansi/node_modules/ansi-styles
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/wrap-ansi/node_modules/ansi-styles/license
+├─ archiver-utils@5.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/archiverjs/archiver-utils
+│  ├─ publisher: Chris Talkington
+│  ├─ url: http://christalkington.com/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/archiver-utils
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/archiver-utils/LICENSE
+├─ archiver@7.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/archiverjs/node-archiver
+│  ├─ publisher: Chris Talkington
+│  ├─ url: http://christalkington.com/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/archiver
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/archiver/LICENSE
+├─ aria-query@5.3.2
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/A11yance/aria-query
+│  ├─ publisher: Jesse Beach
+│  ├─ email: splendidnoise@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/aria-query
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/aria-query/LICENSE
+├─ async@3.2.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/caolan/async
+│  ├─ publisher: Caolan McMahon
+│  ├─ path: /home/philip/git/raw-editor/node_modules/async
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/async/LICENSE
+├─ axobject-query@4.1.0
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/A11yance/axobject-query
+│  ├─ publisher: Jesse Beach
+│  ├─ email: splendidnoise@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/axobject-query
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/axobject-query/LICENSE
+├─ b4a@1.7.3
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/holepunchto/b4a
+│  ├─ publisher: Holepunch
+│  ├─ path: /home/philip/git/raw-editor/node_modules/b4a
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/b4a/LICENSE
+├─ balanced-match@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/juliangruber/balanced-match
+│  ├─ publisher: Julian Gruber
+│  ├─ email: mail@juliangruber.com
+│  ├─ url: http://juliangruber.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/balanced-match
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/balanced-match/LICENSE.md
+├─ bare-events@2.7.0
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/holepunchto/bare-events
+│  ├─ publisher: Holepunch
+│  ├─ path: /home/philip/git/raw-editor/node_modules/bare-events
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/bare-events/LICENSE
+├─ base64-js@1.5.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/beatgammit/base64-js
+│  ├─ publisher: T. Jameson Little
+│  ├─ email: t.jameson.little@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/base64-js
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/base64-js/LICENSE
+├─ batch-cluster@15.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/photostructure/batch-cluster.js
+│  ├─ publisher: Matthew McEachen
+│  ├─ email: matthew-batchcluster@photostructure.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/batch-cluster
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/batch-cluster/LICENSE
+├─ blockhash-core@0.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/LinusU/blockhash-core
+│  ├─ path: /home/philip/git/raw-editor/node_modules/blockhash-core
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/blockhash-core/LICENSE
+├─ brace-expansion@2.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/juliangruber/brace-expansion
+│  ├─ publisher: Julian Gruber
+│  ├─ email: mail@juliangruber.com
+│  ├─ url: http://juliangruber.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/glob/node_modules/minimatch/node_modules/brace-expansion/LICENSE
+├─ buffer-crc32@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/brianloveswords/buffer-crc32
+│  ├─ publisher: Brian J. Brennan
+│  ├─ email: brianloveswords@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/buffer-crc32
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/buffer-crc32/LICENSE
+├─ buffer@6.0.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/feross/buffer
+│  ├─ publisher: Feross Aboukhadijeh
+│  ├─ email: feross@feross.org
+│  ├─ url: https://feross.org
+│  ├─ path: /home/philip/git/raw-editor/node_modules/buffer
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/buffer/LICENSE
+├─ bun-types@1.3.8
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/oven-sh/bun
+│  ├─ path: /home/philip/git/raw-editor/node_modules/bun-types
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/bun-types/README.md
+├─ clsx@2.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lukeed/clsx
+│  ├─ publisher: Luke Edwards
+│  ├─ email: luke.edwards05@gmail.com
+│  ├─ url: https://lukeed.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/clsx
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/clsx/license
+├─ color-convert@2.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Qix-/color-convert
+│  ├─ publisher: Heather Arthur
+│  ├─ email: fayearthur@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/color-convert
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/color-convert/LICENSE
+├─ color-name@1.1.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/colorjs/color-name
+│  ├─ publisher: DY
+│  ├─ email: dfcreative@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/color-name
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/color-name/LICENSE
+├─ color-string@1.9.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Qix-/color-string
+│  ├─ publisher: Heather Arthur
+│  ├─ email: fayearthur@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/color-string
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/color-string/LICENSE
+├─ color@4.2.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Qix-/color
+│  ├─ path: /home/philip/git/raw-editor/node_modules/color
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/color/LICENSE
+├─ comlink@4.4.2
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/GoogleChromeLabs/comlink
+│  ├─ publisher: Surma
+│  ├─ email: surma@google.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/comlink
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/comlink/LICENSE
+├─ commondir@1.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/substack/node-commondir
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /home/philip/git/raw-editor/node_modules/commondir
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/commondir/LICENSE
+├─ compress-commons@6.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/archiverjs/node-compress-commons
+│  ├─ publisher: Chris Talkington
+│  ├─ url: http://christalkington.com/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/compress-commons
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/compress-commons/LICENSE
+├─ cookie@0.6.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jshttp/cookie
+│  ├─ publisher: Roman Shtylman
+│  ├─ email: shtylman@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/cookie
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/cookie/LICENSE
+├─ core-util-is@1.0.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/isaacs/core-util-is
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/core-util-is
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/core-util-is/LICENSE
+├─ crc-32@1.2.2
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/SheetJS/js-crc32
+│  ├─ publisher: sheetjs
+│  ├─ path: /home/philip/git/raw-editor/node_modules/crc-32
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/crc-32/LICENSE
+├─ crc32-stream@6.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/archiverjs/node-crc32-stream
+│  ├─ publisher: Chris Talkington
+│  ├─ url: http://christalkington.com/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/crc32-stream
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/crc32-stream/LICENSE
+├─ cross-spawn@7.0.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/moxystudio/node-cross-spawn
+│  ├─ publisher: André Cruz
+│  ├─ email: andre@moxy.studio
+│  ├─ path: /home/philip/git/raw-editor/node_modules/cross-spawn
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/cross-spawn/LICENSE
+├─ debug@4.4.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/debug-js/debug
+│  ├─ publisher: Josh Junon
+│  ├─ url: https://github.com/qix-
+│  ├─ path: /home/philip/git/raw-editor/node_modules/debug
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/debug/LICENSE
+├─ deepmerge@4.3.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/TehShrike/deepmerge
+│  ├─ path: /home/philip/git/raw-editor/node_modules/deepmerge
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/deepmerge/license.txt
+├─ detect-libc@2.0.4
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/lovell/detect-libc
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/detect-libc
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/detect-libc/LICENSE
+├─ detect-libc@2.1.2
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/lovell/detect-libc
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/detect-libc
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/detect-libc/LICENSE
+├─ devalue@5.6.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sveltejs/devalue
+│  ├─ path: /home/philip/git/raw-editor/node_modules/devalue
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/devalue/LICENSE
+├─ drizzle-orm@0.40.1
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/drizzle-team/drizzle-orm
+│  ├─ publisher: Drizzle Team
+│  ├─ path: /home/philip/git/raw-editor/node_modules/drizzle-orm
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/drizzle-orm/README.md
+├─ eastasianwidth@0.2.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/komagata/eastasianwidth
+│  ├─ publisher: Masaki Komagata
+│  ├─ path: /home/philip/git/raw-editor/node_modules/eastasianwidth
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/eastasianwidth/README.md
+├─ emoji-regex@8.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mathiasbynens/emoji-regex
+│  ├─ publisher: Mathias Bynens
+│  ├─ url: https://mathiasbynens.be/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/string-width-cjs/node_modules/emoji-regex
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/string-width-cjs/node_modules/emoji-regex/LICENSE-MIT.txt
+├─ emoji-regex@9.2.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mathiasbynens/emoji-regex
+│  ├─ publisher: Mathias Bynens
+│  ├─ url: https://mathiasbynens.be/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/emoji-regex
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/emoji-regex/LICENSE-MIT.txt
+├─ env-paths@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/env-paths
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/env-paths
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/env-paths/license
+├─ esbuild@0.27.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/evanw/esbuild
+│  ├─ path: /home/philip/git/raw-editor/node_modules/vite/node_modules/esbuild
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/vite/node_modules/esbuild/LICENSE.md
+├─ esm-env@1.2.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/benmccann/esm-env
+│  ├─ publisher: Ben McCann
+│  ├─ url: https://www.benmccann.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/esm-env
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/esm-env/LICENSE
+├─ esrap@2.2.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sveltejs/esrap
+│  ├─ path: /home/philip/git/raw-editor/node_modules/esrap
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/esrap/LICENSE
+├─ estree-walker@2.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Rich-Harris/estree-walker
+│  ├─ publisher: Rich Harris
+│  ├─ path: /home/philip/git/raw-editor/node_modules/estree-walker
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/estree-walker/LICENSE
+├─ event-target-shim@5.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mysticatea/event-target-shim
+│  ├─ publisher: Toru Nagashima
+│  ├─ path: /home/philip/git/raw-editor/node_modules/event-target-shim
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/event-target-shim/LICENSE
+├─ events-universal@1.0.1
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/holepunchto/events-universal
+│  ├─ publisher: Holepunch
+│  ├─ path: /home/philip/git/raw-editor/node_modules/events-universal
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/events-universal/LICENSE
+├─ events@3.3.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Gozala/events
+│  ├─ publisher: Irakli Gozalishvili
+│  ├─ email: rfobic@gmail.com
+│  ├─ url: http://jeditoolkit.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/events
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/events/LICENSE
+├─ exiftool-vendored.pl@13.35.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/photostructure/exiftool-vendored.pl
+│  ├─ publisher: Matthew McEachen
+│  ├─ email: exiftool-vendored-pl@photostructure.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/exiftool-vendored.pl
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/exiftool-vendored.pl/LICENSE
+├─ exiftool-vendored@30.5.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/photostructure/exiftool-vendored.js
+│  ├─ publisher: Matthew McEachen
+│  ├─ email: matthew-exiftoolvendored@photostructure.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/exiftool-vendored
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/exiftool-vendored/LICENSE
+├─ fast-fifo@1.3.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mafintosh/fast-fifo
+│  ├─ publisher: Mathias Buus
+│  ├─ url: @mafintosh
+│  ├─ path: /home/philip/git/raw-editor/node_modules/fast-fifo
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/fast-fifo/LICENSE
+├─ fdir@6.4.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/thecodrr/fdir
+│  ├─ publisher: thecodrr
+│  ├─ email: thecodrr@protonmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/fdir
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/fdir/LICENSE
+├─ fdir@6.5.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/thecodrr/fdir
+│  ├─ publisher: thecodrr
+│  ├─ email: thecodrr@protonmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/tinyglobby/node_modules/fdir
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/tinyglobby/node_modules/fdir/LICENSE
+├─ foreground-child@3.3.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/tapjs/foreground-child
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/foreground-child
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/foreground-child/LICENSE
+├─ function-bind@1.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Raynos/function-bind
+│  ├─ publisher: Raynos
+│  ├─ email: raynos2@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/function-bind
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/function-bind/LICENSE
+├─ gel@2.1.1
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/geldata/gel-js
+│  ├─ publisher: Gel
+│  ├─ email: info@geldata.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/gel
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/gel/README.md
+├─ glob@10.4.5
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/node-glob
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: https://blog.izs.me/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/glob
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/glob/LICENSE
+├─ graceful-fs@4.2.11
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/node-graceful-fs
+│  ├─ path: /home/philip/git/raw-editor/node_modules/graceful-fs
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/graceful-fs/LICENSE
+├─ hasown@2.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/inspect-js/hasOwn
+│  ├─ publisher: Jordan Harband
+│  ├─ email: ljharb@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/hasown
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/hasown/LICENSE
+├─ he@1.2.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mathiasbynens/he
+│  ├─ publisher: Mathias Bynens
+│  ├─ url: https://mathiasbynens.be/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/he
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/he/LICENSE-MIT.txt
+├─ ieee754@1.2.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/feross/ieee754
+│  ├─ publisher: Feross Aboukhadijeh
+│  ├─ email: feross@feross.org
+│  ├─ url: https://feross.org
+│  ├─ path: /home/philip/git/raw-editor/node_modules/ieee754
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/ieee754/LICENSE
+├─ inherits@2.0.4
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/inherits
+│  ├─ path: /home/philip/git/raw-editor/node_modules/inherits
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/inherits/LICENSE
+├─ is-arrayish@0.3.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/qix-/node-is-arrayish
+│  ├─ publisher: Qix
+│  ├─ url: http://github.com/qix-
+│  ├─ path: /home/philip/git/raw-editor/node_modules/is-arrayish
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/is-arrayish/LICENSE
+├─ is-core-module@2.16.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/inspect-js/is-core-module
+│  ├─ publisher: Jordan Harband
+│  ├─ email: ljharb@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/is-core-module
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/is-core-module/LICENSE
+├─ is-fullwidth-code-point@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/is-fullwidth-code-point
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/is-fullwidth-code-point
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/is-fullwidth-code-point/license
+├─ is-module@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/component/is-module
+│  ├─ publisher: Jonathan Ong
+│  ├─ email: me@jongleberry.com
+│  ├─ url: http://jongleberry.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/is-module
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/is-module/README.md
+├─ is-reference@1.2.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Rich-Harris/is-reference
+│  ├─ publisher: Rich Harris
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@rollup/plugin-commonjs/node_modules/is-reference
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@rollup/plugin-commonjs/node_modules/is-reference/README.md
+├─ is-reference@3.0.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Rich-Harris/is-reference
+│  ├─ publisher: Rich Harris
+│  ├─ path: /home/philip/git/raw-editor/node_modules/is-reference
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/is-reference/README.md
+├─ is-stream@2.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/is-stream
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/is-stream
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/is-stream/license
+├─ isarray@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/juliangruber/isarray
+│  ├─ publisher: Julian Gruber
+│  ├─ email: mail@juliangruber.com
+│  ├─ url: http://juliangruber.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/isarray
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/isarray/README.md
+├─ isexe@2.0.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/isexe
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/cross-spawn/node_modules/which/node_modules/isexe
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/cross-spawn/node_modules/which/node_modules/isexe/LICENSE
+├─ isexe@3.1.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/isexe
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/isexe
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/isexe/LICENSE
+├─ jackspeak@3.4.3
+│  ├─ licenses: BlueOak-1.0.0
+│  ├─ repository: https://github.com/isaacs/jackspeak
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ path: /home/philip/git/raw-editor/node_modules/jackspeak
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/jackspeak/LICENSE.md
+├─ jiti@2.6.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/unjs/jiti
+│  ├─ path: /home/philip/git/raw-editor/node_modules/jiti
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/jiti/LICENSE
+├─ jpeg-js@0.4.4
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/eugeneware/jpeg-js
+│  ├─ publisher: Eugene Ware
+│  ├─ email: eugene@noblesamurai.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/jpeg-js
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/jpeg-js/LICENSE
+├─ kleur@4.1.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lukeed/kleur
+│  ├─ publisher: Luke Edwards
+│  ├─ email: luke.edwards05@gmail.com
+│  ├─ url: https://lukeed.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/kleur
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/kleur/license
+├─ lazystream@1.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jpommerening/node-lazystream
+│  ├─ publisher: Jonas Pommerening
+│  ├─ email: jonas.pommerening@gmail.com
+│  ├─ url: https://npmjs.org/~jpommerening
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lazystream
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lazystream/LICENSE
+├─ lightningcss-linux-x64-gnu@1.30.2
+│  ├─ licenses: MPL-2.0
+│  ├─ repository: https://github.com/parcel-bundler/lightningcss
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lightningcss-linux-x64-gnu
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lightningcss-linux-x64-gnu/LICENSE
+├─ lightningcss-linux-x64-musl@1.30.2
+│  ├─ licenses: MPL-2.0
+│  ├─ repository: https://github.com/parcel-bundler/lightningcss
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lightningcss-linux-x64-musl
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lightningcss-linux-x64-musl/LICENSE
+├─ lightningcss@1.30.2
+│  ├─ licenses: MPL-2.0
+│  ├─ repository: https://github.com/parcel-bundler/lightningcss
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lightningcss
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lightningcss/LICENSE
+├─ locate-character@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: git+https://gitlab.com/Rich-Harris/locate-character
+│  ├─ publisher: Rich Harris
+│  ├─ path: /home/philip/git/raw-editor/node_modules/locate-character
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/locate-character/README.md
+├─ lodash@4.17.21
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lodash/lodash
+│  ├─ publisher: John-David Dalton
+│  ├─ email: john.david.dalton@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lodash
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lodash/LICENSE
+├─ lru-cache@10.4.3
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/node-lru-cache
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lru-cache
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lru-cache/LICENSE
+├─ luxon@3.7.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/moment/luxon
+│  ├─ publisher: Isaac Cambron
+│  ├─ path: /home/philip/git/raw-editor/node_modules/luxon
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/luxon/LICENSE.md
+├─ magic-string@0.30.17
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rich-harris/magic-string
+│  ├─ publisher: Rich Harris
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@rollup/plugin-commonjs/node_modules/magic-string
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@rollup/plugin-commonjs/node_modules/magic-string/LICENSE
+├─ magic-string@0.30.21
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Rich-Harris/magic-string
+│  ├─ publisher: Rich Harris
+│  ├─ path: /home/philip/git/raw-editor/node_modules/magic-string
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/magic-string/LICENSE
+├─ minimatch@5.1.6
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/minimatch
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me
+│  ├─ path: /home/philip/git/raw-editor/node_modules/readdir-glob/node_modules/minimatch
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/readdir-glob/node_modules/minimatch/LICENSE
+├─ minimatch@9.0.5
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/minimatch
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me
+│  ├─ path: /home/philip/git/raw-editor/node_modules/glob/node_modules/minimatch
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/glob/node_modules/minimatch/LICENSE
+├─ minipass@7.1.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/minipass
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/minipass
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/minipass/LICENSE
+├─ mri@1.2.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lukeed/mri
+│  ├─ publisher: Luke Edwards
+│  ├─ email: luke.edwards05@gmail.com
+│  ├─ url: https://lukeed.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/mri
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/mri/license.md
+├─ mrmime@2.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lukeed/mrmime
+│  ├─ publisher: Luke Edwards
+│  ├─ email: luke.edwards05@gmail.com
+│  ├─ url: https://lukeed.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/mrmime
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/mrmime/license
+├─ ms@2.1.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/vercel/ms
+│  ├─ path: /home/philip/git/raw-editor/node_modules/ms
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/ms/license.md
+├─ nanoid@3.3.11
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/ai/nanoid
+│  ├─ publisher: Andrey Sitnik
+│  ├─ email: andrey@sitnik.ru
+│  ├─ path: /home/philip/git/raw-editor/node_modules/nanoid
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/nanoid/LICENSE
+├─ normalize-path@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jonschlinkert/normalize-path
+│  ├─ publisher: Jon Schlinkert
+│  ├─ url: https://github.com/jonschlinkert
+│  ├─ path: /home/philip/git/raw-editor/node_modules/normalize-path
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/normalize-path/LICENSE
+├─ obug@2.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sxzz/obug
+│  ├─ publisher: Kevin Deng
+│  ├─ email: sxzz@sxzz.moe
+│  ├─ path: /home/philip/git/raw-editor/node_modules/obug
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/obug/LICENSE
+├─ p-limit@7.3.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/p-limit
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/p-limit
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/p-limit/license
+├─ package-json-from-dist@1.0.1
+│  ├─ licenses: BlueOak-1.0.0
+│  ├─ repository: https://github.com/isaacs/package-json-from-dist
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: https://izs.me
+│  ├─ path: /home/philip/git/raw-editor/node_modules/package-json-from-dist
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/package-json-from-dist/LICENSE.md
+├─ path-key@3.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/path-key
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/path-key
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/path-key/license
+├─ path-parse@1.0.7
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jbgutierrez/path-parse
+│  ├─ publisher: Javier Blanco
+│  ├─ email: http://jbgutierrez.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/path-parse
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/path-parse/LICENSE
+├─ path-scurry@1.11.1
+│  ├─ licenses: BlueOak-1.0.0
+│  ├─ repository: https://github.com/isaacs/path-scurry
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: https://blog.izs.me
+│  ├─ path: /home/philip/git/raw-editor/node_modules/path-scurry
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/path-scurry/LICENSE.md
+├─ picocolors@1.1.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/alexeyraspopov/picocolors
+│  ├─ publisher: Alexey Raspopov
+│  ├─ path: /home/philip/git/raw-editor/node_modules/picocolors
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/picocolors/LICENSE
+├─ picomatch@4.0.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/micromatch/picomatch
+│  ├─ publisher: Jon Schlinkert
+│  ├─ url: https://github.com/jonschlinkert
+│  ├─ path: /home/philip/git/raw-editor/node_modules/picomatch
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/picomatch/LICENSE
+├─ postcss@8.5.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/postcss/postcss
+│  ├─ publisher: Andrey Sitnik
+│  ├─ email: andrey@sitnik.ru
+│  ├─ path: /home/philip/git/raw-editor/node_modules/postcss
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/postcss/LICENSE
+├─ postgres@3.4.7
+│  ├─ licenses: Unlicense
+│  ├─ repository: https://github.com/porsager/postgres
+│  ├─ publisher: Rasmus Porsager
+│  ├─ email: rasmus@porsager.com
+│  ├─ url: https://www.porsager.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/postgres
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/postgres/README.md
+├─ process-nextick-args@2.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/calvinmetcalf/process-nextick-args
+│  ├─ path: /home/philip/git/raw-editor/node_modules/process-nextick-args
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/process-nextick-args/license.md
+├─ process@0.11.10
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/shtylman/node-process
+│  ├─ publisher: Roman Shtylman
+│  ├─ email: shtylman@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/process
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/process/LICENSE
+├─ readable-stream@2.3.8
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/nodejs/readable-stream
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lazystream/node_modules/readable-stream
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lazystream/node_modules/readable-stream/LICENSE
+├─ readable-stream@4.7.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/nodejs/readable-stream
+│  ├─ path: /home/philip/git/raw-editor/node_modules/readable-stream
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/readable-stream/LICENSE
+├─ readdir-glob@1.1.3
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/Yqnn/node-readdir-glob
+│  ├─ publisher: Yann Armelin
+│  ├─ path: /home/philip/git/raw-editor/node_modules/readdir-glob
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/readdir-glob/LICENSE
+├─ resolve@1.22.10
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/browserify/resolve
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /home/philip/git/raw-editor/node_modules/resolve
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/resolve/LICENSE
+├─ rollup@4.46.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/rollup
+│  ├─ publisher: Rich Harris
+│  ├─ path: /home/philip/git/raw-editor/node_modules/rollup
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/rollup/LICENSE.md
+├─ sade@1.8.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lukeed/sade
+│  ├─ publisher: Luke Edwards
+│  ├─ email: luke.edwards05@gmail.com
+│  ├─ url: https://lukeed.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/sade
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/sade/license
+├─ safe-buffer@5.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/feross/safe-buffer
+│  ├─ publisher: Feross Aboukhadijeh
+│  ├─ email: feross@feross.org
+│  ├─ url: http://feross.org
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lazystream/node_modules/readable-stream/node_modules/safe-buffer
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lazystream/node_modules/readable-stream/node_modules/safe-buffer/LICENSE
+├─ safe-buffer@5.2.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/feross/safe-buffer
+│  ├─ publisher: Feross Aboukhadijeh
+│  ├─ email: feross@feross.org
+│  ├─ url: https://feross.org
+│  ├─ path: /home/philip/git/raw-editor/node_modules/safe-buffer
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/safe-buffer/LICENSE
+├─ semver@7.7.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/node-semver
+│  ├─ publisher: GitHub Inc.
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/semver
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/node_modules/semver/LICENSE
+├─ semver@7.7.4
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/node-semver
+│  ├─ publisher: GitHub Inc.
+│  ├─ path: /home/philip/git/raw-editor/node_modules/semver
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/semver/LICENSE
+├─ set-cookie-parser@3.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/nfriedly/set-cookie-parser
+│  ├─ publisher: Nathan Friedly
+│  ├─ url: http://nfriedly.com/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/set-cookie-parser
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/set-cookie-parser/LICENSE
+├─ sharp@0.34.3
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/lovell/sharp
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/@types/sharp/node_modules/sharp/LICENSE
+├─ sharp@0.34.5
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/lovell/sharp
+│  ├─ publisher: Lovell Fuller
+│  ├─ email: npm@lovell.info
+│  ├─ path: /home/philip/git/raw-editor/node_modules/sharp
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/sharp/LICENSE
+├─ shebang-command@2.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/kevva/shebang-command
+│  ├─ publisher: Kevin Mårtensson
+│  ├─ email: kevinmartensson@gmail.com
+│  ├─ url: github.com/kevva
+│  ├─ path: /home/philip/git/raw-editor/node_modules/shebang-command
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/shebang-command/license
+├─ shebang-regex@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/shebang-regex
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/shebang-regex
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/shebang-regex/license
+├─ shell-quote@1.8.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/ljharb/shell-quote
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /home/philip/git/raw-editor/node_modules/shell-quote
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/shell-quote/LICENSE
+├─ signal-exit@4.1.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/tapjs/signal-exit
+│  ├─ publisher: Ben Coe
+│  ├─ email: ben@npmjs.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/signal-exit
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/signal-exit/LICENSE.txt
+├─ simple-swizzle@0.2.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/qix-/node-simple-swizzle
+│  ├─ publisher: Qix
+│  ├─ url: http://github.com/qix-
+│  ├─ path: /home/philip/git/raw-editor/node_modules/simple-swizzle
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/simple-swizzle/LICENSE
+├─ sirv@3.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lukeed/sirv
+│  ├─ publisher: Luke Edwards
+│  ├─ email: luke@lukeed.com
+│  ├─ url: https://lukeed.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/sirv
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/sirv/readme.md
+├─ source-map-js@1.2.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/7rulnik/source-map-js
+│  ├─ publisher: Valentin 7rulnik Semirulnik
+│  ├─ email: v7rulnik@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/source-map-js
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/source-map-js/LICENSE
+├─ streamx@2.23.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mafintosh/streamx
+│  ├─ publisher: Mathias Buus
+│  ├─ url: @mafintosh
+│  ├─ path: /home/philip/git/raw-editor/node_modules/streamx
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/streamx/LICENSE
+├─ string-width@4.2.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/string-width
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/string-width-cjs
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/string-width-cjs/license
+├─ string-width@5.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/string-width
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/string-width
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/string-width/license
+├─ string_decoder@1.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/nodejs/string_decoder
+│  ├─ path: /home/philip/git/raw-editor/node_modules/lazystream/node_modules/readable-stream/node_modules/string_decoder
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/lazystream/node_modules/readable-stream/node_modules/string_decoder/LICENSE
+├─ string_decoder@1.3.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/nodejs/string_decoder
+│  ├─ path: /home/philip/git/raw-editor/node_modules/string_decoder
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/string_decoder/LICENSE
+├─ strip-ansi@6.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/strip-ansi
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/string-width-cjs/node_modules/strip-ansi
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/string-width-cjs/node_modules/strip-ansi/license
+├─ strip-ansi@7.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/strip-ansi
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/strip-ansi
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/strip-ansi/license
+├─ supports-preserve-symlinks-flag@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/inspect-js/node-supports-preserve-symlinks-flag
+│  ├─ publisher: Jordan Harband
+│  ├─ email: ljharb@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/supports-preserve-symlinks-flag
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/supports-preserve-symlinks-flag/LICENSE
+├─ svelte@5.50.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sveltejs/svelte
+│  ├─ path: /home/philip/git/raw-editor/node_modules/svelte
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/svelte/LICENSE.md
+├─ tar-stream@3.1.7
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mafintosh/tar-stream
+│  ├─ publisher: Mathias Buus
+│  ├─ email: mathiasbuus@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/tar-stream
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/tar-stream/LICENSE
+├─ text-decoder@1.2.3
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/holepunchto/text-decoder
+│  ├─ publisher: Holepunch
+│  ├─ path: /home/philip/git/raw-editor/node_modules/text-decoder
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/text-decoder/LICENSE
+├─ tinyglobby@0.2.15
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/SuperchupuDev/tinyglobby
+│  ├─ publisher: Superchupu
+│  ├─ path: /home/philip/git/raw-editor/node_modules/tinyglobby
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/tinyglobby/LICENSE
+├─ totalist@3.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lukeed/totalist
+│  ├─ publisher: Luke Edwards
+│  ├─ email: luke.edwards05@gmail.com
+│  ├─ url: https://lukeed.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/totalist
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/totalist/license
+├─ typescript@5.9.3
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/microsoft/TypeScript
+│  ├─ publisher: Microsoft Corp.
+│  ├─ path: /home/philip/git/raw-editor/node_modules/typescript
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/typescript/LICENSE.txt
+├─ undici-types@6.21.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/nodejs/undici
+│  ├─ path: /home/philip/git/raw-editor/node_modules/undici-types
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/undici-types/LICENSE
+├─ util-deprecate@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/TooTallNate/util-deprecate
+│  ├─ publisher: Nathan Rajlich
+│  ├─ email: nathan@tootallnate.net
+│  ├─ url: http://n8.io/
+│  ├─ path: /home/philip/git/raw-editor/node_modules/util-deprecate
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/util-deprecate/LICENSE
+├─ vite@7.3.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/vitejs/vite
+│  ├─ publisher: Evan You
+│  ├─ path: /home/philip/git/raw-editor/node_modules/vite
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/vite/LICENSE.md
+├─ vitefu@1.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/svitejs/vitefu
+│  ├─ path: /home/philip/git/raw-editor/node_modules/vitefu
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/vitefu/LICENSE
+├─ which@2.0.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/node-which
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me
+│  ├─ path: /home/philip/git/raw-editor/node_modules/cross-spawn/node_modules/which
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/cross-spawn/node_modules/which/LICENSE
+├─ which@4.0.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/node-which
+│  ├─ publisher: GitHub Inc.
+│  ├─ path: /home/philip/git/raw-editor/node_modules/which
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/which/LICENSE
+├─ wrap-ansi@7.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/wrap-ansi
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/wrap-ansi-cjs
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/wrap-ansi-cjs/license
+├─ wrap-ansi@8.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/wrap-ansi
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/wrap-ansi
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/wrap-ansi/license
+├─ yaml@1.10.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/eemeli/yaml
+│  ├─ publisher: Eemeli Aro
+│  ├─ email: eemeli@gmail.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/yaml
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/yaml/LICENSE
+├─ yocto-queue@1.2.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/yocto-queue
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: /home/philip/git/raw-editor/node_modules/yocto-queue
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/yocto-queue/license
+├─ zimmerframe@1.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Rich-Harris/zimmerframe
+│  ├─ path: /home/philip/git/raw-editor/node_modules/zimmerframe
+│  └─ licenseFile: /home/philip/git/raw-editor/node_modules/zimmerframe/LICENSE
+└─ zip-stream@6.0.1
+   ├─ licenses: MIT
+   ├─ repository: https://github.com/archiverjs/node-zip-stream
+   ├─ publisher: Chris Talkington
+   ├─ url: http://christalkington.com/
+   ├─ path: /home/philip/git/raw-editor/node_modules/zip-stream
+   └─ licenseFile: /home/philip/git/raw-editor/node_modules/zip-stream/LICENSE

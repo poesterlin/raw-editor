@@ -6,23 +6,42 @@ WORKDIR /app
 
 COPY package.json bun.lock ./
 
+# Install dependencies (dev + prod) for the build
+RUN bun install
+
+# Generate third-party license report for the UI
+RUN bun run licenses:generate
+
 # Copy source (use .dockerignore to exclude unnecessary files like node_modules, .git)
 COPY . .
-
-# Install dependencies
-RUN bun install
 
 # Create the JS bundle
 RUN bun run build
 
 #####################################################################
 
+# STAGE 1b: Install production-only deps for the runtime image
+FROM oven/bun:debian AS deps
+
+WORKDIR /app
+
+COPY package.json bun.lock ./
+
+# Only production deps
+RUN bun install --production
+
+#####################################################################
+
 # STAGE 2: Create a minimal base with the RawTherapee CLI from AppImage
-# Use Debian 12 for the smallest possible base.
 FROM debian:12 AS rawtherapee-base
+
+# Pin RawTherapee for compliance (optional build arg; defaults to latest).
+ARG RAWTHERAPEE_VERSION=latest
 
 # Set environment variables to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
+
+# TODO: allow it to be configured via env var
 ENV TZ=UTC
 
 # Install dependencies for downloading and extracting the AppImage
@@ -38,15 +57,22 @@ RUN apt-get update && \
 
 # Install rawtherapee from appimage
 RUN \
-  RAWTHERAPEE_VERSION=$(curl -sX GET "https://api.github.com/repos/rawtherapee/rawtherapee/releases/latest" \
-  | awk '/tag_name/{print $4;exit}' FS='[""]') && \
+  if [ "$RAWTHERAPEE_VERSION" = "latest" ]; then \
+    RAWTHERAPEE_VERSION=$(curl -sX GET "https://api.github.com/repos/rawtherapee/rawtherapee/releases/latest" \
+    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
+  fi && \
+  echo "$RAWTHERAPEE_VERSION" > /tmp/rawtherapee-version.txt && \
   cd /tmp && \
-  curl -o \
-    /tmp/rawtherapee.app -L \
+  curl -o /tmp/rawtherapee.app -L \
     "https://github.com/rawtherapee/rawtherapee/releases/download/${RAWTHERAPEE_VERSION}/RawTherapee_${RAWTHERAPEE_VERSION}_release.AppImage" && \
   chmod +x /tmp/rawtherapee.app && \
   ./rawtherapee.app --appimage-extract && \
   mv squashfs-root /opt/rawtherapee && \
+  mkdir -p /opt/rawtherapee/metadata && \
+  cp /tmp/rawtherapee-version.txt /opt/rawtherapee/metadata/VERSION && \
+  echo "https://github.com/RawTherapee/RawTherapee/tree/${RAWTHERAPEE_VERSION}" > /opt/rawtherapee/metadata/SOURCE_URL && \
+  (cp /opt/rawtherapee/usr/share/doc/rawtherapee/About/GPLtxt /opt/rawtherapee/metadata/LICENSE.txt || \
+   curl -L https://www.gnu.org/licenses/gpl-3.0.txt -o /opt/rawtherapee/metadata/LICENSE.txt) && \
   rm -rf /tmp/*
 
 # Add rawtherapee to the path
@@ -74,9 +100,8 @@ RUN mkdir -p /app/import
 # Copy the single compiled executable from the 'build' stage
 COPY --from=build /app/build/ build/
 
-# Copy node_modules and package.json if your build requires dynamic requires at runtime
-# (Omit these lines if your 'bun run build' produces a fully self-contained bundle to save ~200MB+)
-COPY --from=build /app/node_modules/ node_modules
+# Copy production-only node_modules and package.json
+COPY --from=deps /app/node_modules/ node_modules
 COPY --from=build /app/package.json ./
 
 EXPOSE 3000

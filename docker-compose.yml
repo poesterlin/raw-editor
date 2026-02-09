@@ -17,8 +17,12 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+      args:
+        RAWTHERAPEE_VERSION: ${RAWTHERAPEE_VERSION}
     env_file: 
      - .env
+    ports:
+      - 3000:3000
     environment:
       - CLUT_DIR=/app/cluts
       - IMPORT_DIR=/app/import
@@ -30,35 +34,35 @@ services:
       - ./export:/app/export
       - ./tmp:/app/tmp
     networks:
-      - traefik_web
+      # - traefik_web
       - editor
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.editor.rule=Host(`${HOST_DOMAIN}`)"
       - "traefik.http.services.editor.loadbalancer.server.port=3000"
 
-  watchers:
-    build:
-      context: .
-      dockerfile: Dockerfile.watchers
-    env_file:
-      - .env
-    depends_on:
-      - editor # Ensure editor is running before watchers start
-    restart: on-failure
-    networks:
-      - editor
-    volumes:
-      - import:/app/import
-      - ${SD_CARD_IMPORT_PATH}:/app/sd-card-import
-    environment:
-      - IMPORT_DIR=/app/import
-      - EDITOR_API_URL=http://editor:3000/api/imports/run-import
+  # watchers:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.watchers
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - editor # Ensure editor is running before watchers start
+  #   restart: on-failure
+  #   networks:
+  #     - editor
+  #   volumes:
+  #     - import:/app/import
+  #     - ${SD_CARD_IMPORT_PATH}:/app/sd-card-import
+  #   environment:
+  #     - IMPORT_DIR=/app/import
+  #     - EDITOR_API_URL=http://editor:3000/api/imports/run-import
 
 networks:
   editor:
-  traefik_web:
-    external: true
+  # traefik_web:
+  #   external: true
 
 volumes:
   import:

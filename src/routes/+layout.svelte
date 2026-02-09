@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import favicon from '$lib/assets/favicon.svg';
-	import { beforeNavigate, onNavigate } from '$app/navigation';
+	import { onNavigate } from '$app/navigation';
 	import { app } from '$lib/state/app.svelte';
-	import '../app.css';
 	import { edits } from '$lib/state/editing.svelte';
+	import '../app.css';
 
 	let { children } = $props();
 
@@ -14,6 +14,7 @@
 	let exporterActive = $derived(currentRoute?.startsWith('/exporter'));
 	let importerActive = $derived(currentRoute?.startsWith('/importer'));
 	let triageActive = $derived(currentRoute?.startsWith('/triage'));
+	let legalActive = $derived(currentRoute?.startsWith('/legal'));
 
 	$effect(() => {
 		edits.update(edits.pp3);
@@ -84,6 +85,15 @@
 				class:font-semibold={exporterActive}
 			>
 				Exporter
+			</a>
+			<a
+				href="/legal"
+				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
+				class:bg-neutral-800={legalActive}
+				class:text-neutral-50={legalActive}
+				class:font-semibold={legalActive}
+			>
+				Legal
 			</a>
 		</nav>
 	</header>

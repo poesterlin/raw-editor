@@ -16,6 +16,7 @@
     "format": "prettier --write .",
     "lint": "prettier --check . && eslint .",
     "test": "bun test",
+    "licenses:generate": "bunx license-checker --production --excludePrivatePackages --out src/lib/assets/THIRD_PARTY_LICENSES.txt",
     "db:start": "docker compose up",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",

@@ -18,7 +18,13 @@ Web-based RAW photo editor that runs RawTherapee CLI in a container, so you can 
 cp .env.example .env
 ```
 
-2) Start the stack (app + Postgres):
+2) (Optional) Set the RawTherapee version used in the Docker image:
+
+```bash
+export RAWTHERAPEE_VERSION=5.11
+```
+
+3) Start the stack (app + Postgres):
 
 ```bash
 docker compose -f docker-compose.selfhost.yml up -d --build
@@ -33,6 +39,12 @@ docker compose -f docker-compose.selfhost.yml up -d --build
 - Edit `.env` for database and paths
 - See `docs/DOCKER.md` for a full Docker setup
 - See `docs/CONFIGURATION.md` for environment variables
+ - Generate `src/lib/assets/THIRD_PARTY_LICENSES.txt` with `bun run licenses:generate`
+
+## RawTherapee source compliance
+
+When distributing a Docker image, publish the exact RawTherapee source URL that matches
+`RAWTHERAPEE_VERSION` (the app surfaces this automatically in the Legal page).
 
 ## Development (Bun)
 
