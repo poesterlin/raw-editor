@@ -1,10 +1,16 @@
 import { db } from '$lib/server/db';
 import { imageTable, imageToTagTable } from '$lib/server/db/schema';
-import { error } from '@sveltejs/kit';
+import { getBooleanSetting } from '$lib/server/db/settings';
+import { error, redirect } from '@sveltejs/kit';
 import { asc, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
+	const triageEnabled = await getBooleanSetting('triage_enabled', true);
+	if (!triageEnabled) {
+		throw redirect(302, `/editor/${params.img}`);
+	}
+
 	const { img } = params;
 	const imageId = Number(img);
 

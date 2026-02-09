@@ -4,11 +4,12 @@
 		disabled?: boolean;
 		label?: string;
 		id?: string;
+		name?: string;
 		small?: boolean;
 		onchange?: (value: boolean) => void;
 	}
 
-	let { checked = $bindable(false), disabled = false, label = 'Toggle', id = `toggle-${Math.random().toString(36).slice(2, 9)}`, small, onchange }: Props = $props();
+	let { checked = $bindable(false), disabled = false, label = 'Toggle', id = `toggle-${Math.random().toString(36).slice(2, 9)}`, name, small, onchange }: Props = $props();
 
 	function handleChange(e: Event) {
 		const next = (e.target as HTMLInputElement).checked;
@@ -56,7 +57,7 @@
 		></div>
 
 		<!-- Native checkbox for keyboard + screen readers -->
-		<input {id} type="checkbox" class="absolute inset-0 opacity-0 pointer-events-auto" {disabled} bind:checked onchange={handleChange} />
+		<input {id} {name} type="checkbox" class="absolute inset-0 opacity-0 pointer-events-auto" {disabled} bind:checked onchange={handleChange} />
 	</label>
 </div>
 

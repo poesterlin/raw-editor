@@ -17,7 +17,7 @@
 	} from '$lib/ui/icons';
 	import '../app.css';
 
-	let { children } = $props();
+	let { children, data } = $props();
 
 	let currentRoute = $derived(page.route?.id);
 	let galleryActive = $derived(currentRoute?.startsWith('/gallery'));
@@ -25,6 +25,8 @@
 	let exporterActive = $derived(currentRoute?.startsWith('/exporter'));
 	let importerActive = $derived(currentRoute?.startsWith('/importer'));
 	let triageActive = $derived(currentRoute?.startsWith('/triage'));
+
+	let triageEnabled = $derived(data.triageEnabled);
 
 	$effect(() => {
 		edits.update(edits.pp3);
@@ -86,17 +88,19 @@
 				<IconLayoutGrid size={18} />
 				<span class="hidden md:block">Gallery</span>
 			</a>
-			<a
-				href="/triage"
-				class="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all sm:px-4"
-				class:bg-neutral-100={triageActive}
-				class:text-neutral-950={triageActive}
-				class:text-neutral-400={!triageActive}
-				class:hover:text-neutral-100={!triageActive}
-			>
-				<IconFlag size={18} />
-				<span class="hidden md:block">Triage</span>
-			</a>
+			{#if triageEnabled}
+				<a
+					href="/triage"
+					class="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all sm:px-4"
+					class:bg-neutral-100={triageActive}
+					class:text-neutral-950={triageActive}
+					class:text-neutral-400={!triageActive}
+					class:hover:text-neutral-100={!triageActive}
+				>
+					<IconFlag size={18} />
+					<span class="hidden md:block">Triage</span>
+				</a>
+			{/if}
 			<a
 				href="/editor"
 				class="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all sm:px-4"

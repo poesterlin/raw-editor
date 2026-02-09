@@ -12,9 +12,10 @@
 		next: number | null;
 		onLoaded: (data: SessionsResponse) => void;
 		basePath?: 'editor' | 'triage';
+		triageEnabled?: boolean;
 	}
 
-	let { sessions, next, onLoaded, basePath = 'editor' }: Props = $props();
+	let { sessions, next, onLoaded, basePath = 'editor', triageEnabled = true }: Props = $props();
 
 	let initialImports = $derived(sessions.filter((s) => s.isImporting).map((s) => s.id));
 
@@ -129,7 +130,7 @@
 						</button>
 					</Tooltip>
 
-					{#if basePath !== 'triage' && item.images.length > 0}
+					{#if triageEnabled && basePath !== 'triage' && item.images.length > 0}
 						<Tooltip text="Triage Session" position="top">
 							<a 
 								href={`/triage/${item.images[0].id}`} 

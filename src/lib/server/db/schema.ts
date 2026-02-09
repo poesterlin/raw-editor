@@ -143,6 +143,13 @@ export const mediaTable = pgTable('media', {
 ]);
 export type Media = typeof mediaTable.$inferSelect;
 
+export const settingTable = pgTable('setting', {
+	key: text('key').primaryKey(),
+	value: text('value').notNull(),
+});
+
+export type Setting = typeof settingTable.$inferSelect;
+
 export const sessionRelations = relations(sessionTable, ({ many }) => ({
 	images: many(imageTable),
 	albums: many(albumTable)
