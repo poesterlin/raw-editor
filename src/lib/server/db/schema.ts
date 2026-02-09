@@ -1,24 +1,6 @@
 import { relations } from 'drizzle-orm';
 import { boolean, index, integer, pgTable, primaryKey, real, serial, text, timestamp, uniqueIndex, type AnyPgColumn } from 'drizzle-orm/pg-core';
 
-export const sessionTable = pgTable('session', {
-	id: serial('id').primaryKey(),
-	name: text('name').notNull(),
-	startedAt: timestamp('started_at', { withTimezone: true, mode: 'date' }).notNull(),
-	endedAt: timestamp('ended_at', { withTimezone: true, mode: 'date' }),
-	isArchived: boolean('is_archived').notNull().default(false)
-}, (table) => [
-	index('session_is_archived_idx').on(table.isArchived),
-	index('session_started_at_idx').on(table.startedAt),
-]);
-
-export type Session = typeof sessionTable.$inferSelect;
-
-export const sessionRelations = relations(sessionTable, ({ many }) => ({
-	images: many(imageTable),
-	albums: many(albumTable)
-}));
-
 export const imageTable = pgTable('image', {
 	id: serial('id').primaryKey(),
 	filepath: text('filename').notNull(),
@@ -56,6 +38,18 @@ export const imageTable = pgTable('image', {
 ]);
 
 export type Image = typeof imageTable.$inferSelect;
+export const sessionTable = pgTable('session', {
+	id: serial('id').primaryKey(),
+	name: text('name').notNull(),
+	startedAt: timestamp('started_at', { withTimezone: true, mode: 'date' }).notNull(),
+	endedAt: timestamp('ended_at', { withTimezone: true, mode: 'date' }),
+	isArchived: boolean('is_archived').notNull().default(false)
+}, (table) => [
+	index('session_is_archived_idx').on(table.isArchived),
+	index('session_started_at_idx').on(table.startedAt),
+]);
+
+export type Session = typeof sessionTable.$inferSelect;
 
 export const imageRelations = relations(imageTable, ({ one, many }) => ({
 	session: one(sessionTable, {
@@ -72,6 +66,11 @@ export const imageRelations = relations(imageTable, ({ one, many }) => ({
 		relationName: 'stack'
 	}),
 	imageToTags: many(imageToTagTable)
+}));
+
+export const sessionRelations = relations(sessionTable, ({ many }) => ({
+	images: many(imageTable),
+	albums: many(albumTable)
 }));
 
 export const snapshotTable = pgTable('snapshot', {
