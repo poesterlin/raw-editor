@@ -175,7 +175,6 @@
 					img={page.params.img!}
 					showCrop
 					showSnapshots
-					showReset
 					showClipboard
 					showFlag
 					showLast
@@ -191,7 +190,6 @@
 					img={page.params.img!}
 					showCrop
 					showSnapshots
-					showReset
 					showClipboard
 					showFlag
 					showLast

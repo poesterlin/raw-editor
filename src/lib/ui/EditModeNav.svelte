@@ -23,8 +23,8 @@
 		img: string;
 		showSnapshots?: boolean;
 		showCrop?: boolean;
-		showUndoRedo?: boolean;
-		showReset?: boolean;
+		// showUndoRedo?: boolean;
+		// showReset?: boolean;
 		showEdit?: boolean;
 		showClipboard?: boolean;
 		showFlag?: boolean;
@@ -33,7 +33,7 @@
 		isFlagged?: boolean;
 	}
 
-	let { img, showSnapshots, showCrop, showUndoRedo, showReset, showEdit, showClipboard, showFlag, isFlagged, showLast, showFilter }: Props = $props();
+	let { img, showSnapshots, showCrop, showEdit, showClipboard, showFlag, isFlagged, showLast, showFilter }: Props = $props();
 
 	let showFlagModal = $state(false);
 	let showFilterModal = $state(false);
@@ -200,7 +200,7 @@
 
 <nav class="flex flex-row lg:flex-col items-center gap-1 rounded-full border border-neutral-800/50 bg-neutral-950/40 p-1 backdrop-blur-xl shadow-2xl">
 	
-	{#if showReset && edits.canUndo}
+	<!-- {#if showReset && edits.canUndo}
 		<button 
 			class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90" 
 			onclick={() => {}} 
@@ -208,7 +208,7 @@
 		>
 			<IconRestore size={20} />
 		</button>
-	{/if}
+	{/if} -->
 
 	<!-- navigation -->
 	{#if showCrop}
