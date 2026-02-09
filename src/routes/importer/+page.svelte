@@ -6,6 +6,7 @@
 	import SegmentedControl from '$lib/ui/SegmentedControl.svelte';
 	import { slide } from 'svelte/transition';
 	import SessionPicker from '$lib/ui/SessionPicker.svelte';
+	import pLimit from 'p-limit';
 
 	let { data } = $props();
 
@@ -235,10 +236,16 @@
 		let uploadedCount = 0;
 
 		const batchSize = 5;
+		const maxConcurrentBatches = 3;
 		const fileArray = Array.from(files);
+		const limit = pLimit(maxConcurrentBatches);
+		const batches: File[][] = [];
 
 		for (let i = 0; i < fileArray.length; i += batchSize) {
-			const batch = fileArray.slice(i, i + batchSize);
+			batches.push(fileArray.slice(i, i + batchSize));
+		}
+
+		const uploadBatch = async (batch: File[]) => {
 			const formData = new FormData();
 			batch.forEach((file) => formData.append('files', file));
 
@@ -258,7 +265,9 @@
 				console.error('Upload error:', error);
 				app.addToast('Some files failed to upload', 'error');
 			}
-		}
+		};
+
+		await Promise.all(batches.map((batch) => limit(() => uploadBatch(batch))));
 
 		app.addToast(`Successfully uploaded ${uploadedCount} files`, 'success');
 		isUploading = false;
