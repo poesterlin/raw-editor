@@ -181,7 +181,7 @@
 	} */
 
 	:global(main) {
-		overflow: hidden;
+		overflow-y: auto;
 		padding-bottom: 2rem;
 	}
 </style>

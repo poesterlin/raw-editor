@@ -4,13 +4,6 @@
 
 <div class="mx-auto flex max-w-7xl h-full flex-col items-center justify-center p-6 lg:p-12">
 	<div class="text-center mb-16 lg:mb-24">
-		<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-400 text-xs font-bold uppercase tracking-widest mb-6">
-			<span class="relative flex h-2 w-2">
-				<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-neutral-500 opacity-75"></span>
-				<span class="relative inline-flex h-2 w-2 rounded-full bg-neutral-400"></span>
-			</span>
-			Professional Workflow
-		</div>
 		<h1 class="mb-6 text-6xl lg:text-8xl font-black tracking-tighter text-neutral-100 italic">
 			RAW<span class="text-neutral-500 not-italic font-light">EDITOR</span>
 		</h1>
