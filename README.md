@@ -34,11 +34,6 @@ docker compose -f docker-compose.yml up -d
 - See `docs/CONFIGURATION.md` for environment variables
 - CLUT source (Hald CLUT pack): http://rawtherapee.com/shared/HaldCLUT.zip
 
-## RawTherapee source compliance
-
-When distributing a Docker image, publish the exact RawTherapee source URL used by the image
-(the app surfaces this automatically in the Legal page).
-
 ## License
 
 See `LICENSE` for GPLv3 terms.

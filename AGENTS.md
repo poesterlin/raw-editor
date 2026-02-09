@@ -149,7 +149,6 @@ Required in `.env` (see `.env.example`):
 - `CLUT_DIR`: Directory containing LUT files for film simulation
 - `IMPORT_DIR`: Directory watched for automatic imports
 - `EXPORT_DIR`: Directory for exported images
-- `SD_CARD_IMPORT_PATH`: Optional path to SD card mount for auto-import
 - `HOST_DOMAIN`: Domain for Traefik routing (production)
 
 ## Docker Deployment
