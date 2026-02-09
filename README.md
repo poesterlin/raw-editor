@@ -50,7 +50,7 @@ RAW Editor supports exporting to external photo management services.
 1) Create a project in the [Google Cloud Console](https://console.cloud.google.com/).
 2) Enable the **Photos Library API**.
 3) Create an **OAuth 2.0 Client ID** (Type: Web Application).
-4) Add `http://localhost:4893/api/auth/google/callback` (or your production domain) as a **Redirect URI**.
+4) Add `<HOST_DOMAIN>/api/auth/google/callback` (or your production domain) as a **Redirect URI**.
 5) Add the following to your `.env`:
    - `GOOGLE_CLIENT_ID`
    - `GOOGLE_CLIENT_SECRET`
