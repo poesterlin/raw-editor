@@ -103,7 +103,7 @@ ENV PATH="/usr/local/bin:${PATH}"
 
 # Set production env for runtime
 ENV NODE_ENV=production
-ENV BODY_SIZE_LIMIT=0
+ENV BODY_SIZE_LIMIT=Infinity
 
 WORKDIR /app
 
