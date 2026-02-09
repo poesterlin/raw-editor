@@ -3,7 +3,7 @@ import { imageTable, sessionTable, snapshotTable } from '$lib/server/db/schema';
 import { jobManager } from '$lib/server/jobs/manager';
 import { buildJSONColumn } from '$lib/server/utils';
 import { json } from '@sveltejs/kit';
-import { and, count, desc, eq, exists, SQL } from 'drizzle-orm';
+import { and, count, desc, eq, exists, type SQL } from 'drizzle-orm';
 import type { RequestHandler } from './$types';
 
 export type SessionsResponse = {

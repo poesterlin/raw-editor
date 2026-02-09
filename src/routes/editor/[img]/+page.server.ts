@@ -1,8 +1,8 @@
 import { db } from '$lib/server/db';
-import { imageTable, imageToTagTable, snapshotTable, type Image, profileTable } from '$lib/server/db/schema';
+import { imageTable, imageToTagTable, profileTable, snapshotTable } from '$lib/server/db/schema';
 import { error } from '@sveltejs/kit';
 import { Glob } from 'bun';
-import { and, asc, desc, eq, exists, gt, isNotNull, isNull, lt, notExists, or, SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, exists, gt, isNull, lt, notExists, or, type SQL } from 'drizzle-orm';
 import { join } from 'node:path';
 import { env } from 'node:process';
 import type { PageServerLoad } from './$types';
