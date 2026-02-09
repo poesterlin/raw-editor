@@ -33,13 +33,6 @@ services:
       - import:/app/import:ro
       - ./export:/app/export
       - ./tmp:/app/tmp
-    networks:
-      # - traefik_web
-      - editor
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.editor.rule=Host(`${HOST_DOMAIN}`)"
-      - "traefik.http.services.editor.loadbalancer.server.port=3000"
 
   # watchers:
   #   build:
@@ -58,11 +51,6 @@ services:
   #   environment:
   #     - IMPORT_DIR=/app/import
   #     - EDITOR_API_URL=http://editor:3000/api/imports/run-import
-
-networks:
-  editor:
-  # traefik_web:
-  #   external: true
 
 volumes:
   import:
