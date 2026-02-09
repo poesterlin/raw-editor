@@ -2,7 +2,7 @@
 	let { data } = $props();
 </script>
 
-<div class="p-4 sm:p-6 md:p-8">
+<div class="h-full overflow-y-auto p-4 sm:p-6 md:p-8">
 	<h1 class="mb-4 text-2xl font-bold text-neutral-50 sm:mb-6 sm:text-3xl">Tagged Images</h1>
 
 	<div class="flex flex-col gap-8">

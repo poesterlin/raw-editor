@@ -271,7 +271,11 @@
 
 	<!-- filter button -->
 	{#if showFilter}
+		{@const filter = page.url.searchParams.get('filter')}
+		{@const hasFilter = filter !== null && filter !== 'none'}
 		<button 
+			class:bg-neutral-700={hasFilter}
+			class:text-neutral-100={hasFilter}
 			class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
 			onclick={() => (showFilterModal = true)} 
 			aria-label="Filters"

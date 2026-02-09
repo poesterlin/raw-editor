@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Button from '$lib/ui/Button.svelte';
 	import { onMount } from 'svelte';
 	import { IconChevronRight, IconChevronLeft, IconX } from '$lib/ui/icons';
 
@@ -20,6 +19,8 @@
 			nextImage();
 		} else if (event.key === 'ArrowLeft') {
 			prevImage();
+		} else if (event.key === 'Escape') {
+			window.location.href = '/exporter';
 		}
 	}
 
@@ -77,7 +78,7 @@
 </svelte:head>
 
 <div
-	class="relative flex h-full w-full max-w-full max-h-full select-none items-center justify-center bg-neutral-950"
+	class="relative flex h-full w-full select-none items-center justify-center bg-black overflow-hidden"
 	onmousedown={handleMouseDown}
 	onmouseup={handleMouseUp}
 	onmouseleave={() => (isDragging = false)}
@@ -85,40 +86,77 @@
 	ontouchend={handleTouchEnd}
 	role="presentation"
 >
+	<!-- Top Bar -->
+	<div class="absolute top-0 left-0 right-0 z-30 flex items-center justify-between p-6 bg-linear-to-b from-black/80 to-transparent">
+		<div class="flex items-center gap-4">
+			<a
+				href="/exporter"
+				class="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-900/50 text-neutral-400 backdrop-blur-xl border border-neutral-800 transition-all hover:bg-neutral-800 hover:text-neutral-100"
+				aria-label="Back to Exporter"
+			>
+				<IconChevronLeft size={24} />
+			</a>
+			<div class="flex flex-col">
+				<h1 class="text-lg font-black italic uppercase tracking-tighter text-neutral-100">{data.session.name}</h1>
+			</div>
+		</div>
+		
+		<a
+			href="/exporter"
+			class="flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-900/50 text-neutral-100 backdrop-blur-xl border border-neutral-800 hover:bg-neutral-800"
+		>
+			<IconX size={24} />
+		</a>
+	</div>
+
 	{#if data.images.length > 0}
-		<div class="relative flex h-full w-full items-center justify-center">
-			{#each data.images as image, i}
-				<img
-					src={`/api/exporter/sessions/${data.session.id}/${image}`}
-					alt={`Exported image ${i + 1} for session ${data.session.name}`}
-					loading="lazy"
-					class="h-full w-full max-w-screen max-h-screen object-contain transition-opacity duration-300 {i === currentIndex
-						? 'opacity-100'
-						: 'opacity-0'}"
-					style={i === currentIndex ? '' : 'position: absolute;'}
-				/>
-			{/each}
+		<div class="relative flex h-full w-full items-center justify-center p-12">
+			<img
+				src={`/api/exporter/sessions/${data.session.id}/${data.images[currentIndex]}`}
+				alt={`Exported image ${currentIndex + 1} for session ${data.session.name}`}
+				class="h-full w-full max-w-full max-h-full object-contain"
+			/>
 		</div>
 
-		<div class="absolute top-1/2 left-4 -translate-y-1/2">
-			<Button onclick={prevImage}>
-				<IconChevronLeft />
-			</Button>
-		</div>
-		<div class="absolute top-1/2 right-4 -translate-y-1/2">
-			<Button onclick={nextImage}>
-				<IconChevronRight />
-			</Button>
+		<!-- Navigation Controls -->
+		<div class="absolute inset-y-0 left-0 z-20 flex items-center p-6">
+			<button
+				onclick={prevImage}
+				class="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-900/20 text-neutral-400 backdrop-blur-md border border-neutral-800/50 hover:bg-neutral-900 hover:text-neutral-100"
+			>
+				<IconChevronLeft size={32} />
+			</button>
 		</div>
 
-		<div class="absolute bottom-4 text-center text-neutral-400">
-			{currentIndex + 1} / {data.images.length}
+		<div class="absolute inset-y-0 right-0 z-20 flex items-center p-6">
+			<button
+				onclick={nextImage}
+				class="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-900/20 text-neutral-400 backdrop-blur-md border border-neutral-800/50 hover:bg-neutral-900 hover:text-neutral-100"
+			>
+				<IconChevronRight size={32} />
+			</button>
+		</div>
+
+		<!-- Counter -->
+		<div class="absolute bottom-8 left-1/2 z-30 -translate-x-1/2 flex items-center gap-3">
+			<div class="flex items-center gap-2 rounded-full bg-neutral-900/50 px-6 py-2 text-xs font-black tracking-widest text-neutral-100 backdrop-blur-xl border border-neutral-800">
+				<span class="text-neutral-500">{currentIndex + 1}</span>
+				<span class="text-neutral-700">/</span>
+				<span>{data.images.length}</span>
+			</div>
 		</div>
 	{:else}
-		<div class="text-center text-neutral-400">
-			<h1 class="mb-2 text-2xl font-bold">No exported images found for {data.session}</h1>
-			<p>It seems this session has a folder but no .jpg files inside it.</p>
-			<a href="/exporter" class="mt-4 inline-block text-blue-500 hover:underline">
+		<div class="text-center">
+			<div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-neutral-900 text-neutral-700">
+				<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+			</div>
+			<h3 class="text-2xl font-black italic uppercase tracking-tighter text-neutral-100">No exports found</h3>
+			<p class="mt-2 font-medium text-neutral-500 max-w-xs">It seems this session has a folder but no JPG files inside it.</p>
+			
+			<a
+				href="/exporter"
+				class="mt-8 inline-flex items-center gap-2 rounded-2xl bg-neutral-100 px-8 py-3 text-sm font-black tracking-tight text-neutral-950 hover:bg-white"
+			>
 				Return to Exporter
 			</a>
 		</div>
@@ -127,6 +165,8 @@
 
 <style>
 	:global(main) {
-		padding-bottom: 0;
+		padding: 0 !important;
+		margin: 0 !important;
+		max-width: none !important;
 	}
 </style>

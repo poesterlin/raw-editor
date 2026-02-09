@@ -297,7 +297,7 @@
 </script>
 
 <div
-	class="relative min-h-screen bg-black p-6 lg:p-12"
+	class="relative h-full overflow-y-auto bg-black p-6 lg:p-12"
 	ondragover={handleDragOver}
 	ondrop={(e) => {
 		handleDrop(e);
@@ -499,12 +499,6 @@
 </div>
 
 <style>
-	:global(main) {
-		background: black;
-		min-height: 100vh;
-		overflow-y: auto;
-	}
-
 	/* Elegant Scrollbar */
 	:global(::-webkit-scrollbar) {
 		width: 6px;
