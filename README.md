@@ -10,55 +10,34 @@ Web-based RAW photo editor that runs RawTherapee CLI in a container, so you can 
 - Background import/export jobs per session
 - Docker-first setup for self-hosting
 
-## Quick start (Docker-first)
+## Quick start (prebuilt container)
 
-1) Copy the env file and edit values:
+1) Download the compose file: [docker-compose.yml](https://raw.githubusercontent.com/poesterlin/raw-editor/main/docker-compose.selfhost.yml)
+
+2) Copy the env file and edit values:
 
 ```bash
 cp .env.example .env
 ```
 
-2) (Optional) Set the RawTherapee version used in the Docker image:
-
-```bash
-export RAWTHERAPEE_VERSION=5.11
-```
-
 3) Start the stack (app + Postgres):
 
 ```bash
-docker compose -f docker-compose.selfhost.yml up -d --build
+docker compose -f docker-compose.yml up -d
 ```
 
-3) Open the UI:
-
-- http://localhost:3000
+3) Open Port 4893
 
 ## Configuration
 
 - Edit `.env` for database and paths
-- See `docs/DOCKER.md` for a full Docker setup
 - See `docs/CONFIGURATION.md` for environment variables
- - Generate `src/lib/assets/THIRD_PARTY_LICENSES.txt` with `bun run licenses:generate`
+- CLUT source (Hald CLUT pack): http://rawtherapee.com/shared/HaldCLUT.zip
 
 ## RawTherapee source compliance
 
-When distributing a Docker image, publish the exact RawTherapee source URL that matches
-`RAWTHERAPEE_VERSION` (the app surfaces this automatically in the Legal page).
-
-## Development (Bun)
-
-```bash
-bun install
-bun run dev
-```
-
-## Project structure
-
-- `src/lib/server/image-editor.ts`: RawTherapee CLI wrapper
-- `src/lib/pp3-utils.ts`: PP3 parse/diff/apply utilities
-- `src/lib/server/db/schema.ts`: Drizzle schema
-- `src/lib/server/jobs/`: job manager and workers
+When distributing a Docker image, publish the exact RawTherapee source URL used by the image
+(the app surfaces this automatically in the Legal page).
 
 ## License
 

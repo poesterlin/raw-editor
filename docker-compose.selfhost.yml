@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password # Change this password
+      POSTGRES_DB: raweditor
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  editor:
+    image: ghcr.io/poesterlin/raw-editor:latest
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/raweditor # Update 'password' if you changed it above
+      - CLUT_DIR=/app/cluts
+      - IMPORT_DIR=/app/import
+      - EXPORT_DIR=/app/export
+      - TMP_DIR=/app/tmp
+    volumes:
+      - ./cluts:/app/cluts
+      - ./import:/app/import:ro
+      - ./export:/app/export
+      - ./tmp:/app/tmp
+    ports:
+      - "4893:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
