@@ -6,9 +6,26 @@ Web-based RAW photo editor, you can edit and export from anywhere.
 
 - RAW import
 - Web-based editing with versioned snapshots
+- Mobile-friendly UI
 - Export to external integrations (Immich, Google Photos)
 - Background import/export jobs per session
 - Docker-first setup for self-hosting
+
+## Screenshots
+
+### 1. Import
+![Import](docs/images/1-import.png)
+
+### 2. Gallery
+![Gallery](docs/images/2-gallery.png)
+
+### 3. Editor
+![Editor](docs/images/3-editor.png)
+![Editor Mobile](docs/images/3-editor-mobile.png)
+![LUTs](docs/images/3-luts.png)
+
+### 4. Export
+![Export](docs/images/4-export.png)
 
 ## Quick start
 
