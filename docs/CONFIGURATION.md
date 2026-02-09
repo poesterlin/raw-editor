@@ -15,6 +15,13 @@ Copy `.env.example` to `.env` and adjust values.
 - `HOST_DOMAIN`: Domain name for Traefik routing (if using Traefik)
 - `RAWTHERAPEE_VERSION`: RawTherapee release tag used when building the Docker image (defaults to latest)
 
+### Integrations
+
+- `IMMICH_BASE_URL`: Base URL of your Immich instance.
+- `IMMICH_API_KEY`: API Key for Immich.
+- `GOOGLE_CLIENT_ID`: OAuth 2.0 Client ID for Google Photos.
+- `GOOGLE_CLIENT_SECRET`: OAuth 2.0 Client Secret for Google Photos.
+
 ## Docker defaults
 
 When using `docker-compose.selfhost.yml`, the defaults are:
@@ -22,4 +29,4 @@ When using `docker-compose.selfhost.yml`, the defaults are:
 - `CLUT_DIR=/app/cluts`
 - `IMPORT_DIR=/app/import`
 - `EXPORT_DIR=/app/export`
-- `TMP_DIR=/app/tmp`
+- `DATA_DIR=/app/data` (optional, for token persistence)
