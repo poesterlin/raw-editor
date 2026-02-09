@@ -234,7 +234,7 @@
 		const totalFiles = files.length;
 		let uploadedCount = 0;
 
-		const batchSize = 1;
+		const batchSize = 5;
 		const fileArray = Array.from(files);
 
 		for (let i = 0; i < fileArray.length; i += batchSize) {
