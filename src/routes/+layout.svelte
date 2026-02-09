@@ -53,14 +53,14 @@
 		class="z-50 flex items-center justify-between border-b border-neutral-800/50 bg-neutral-950/80 px-3 py-3 backdrop-blur-md sm:px-6"
 	>
 		<!-- Brand -->
-		<div class="flex items-center gap-2 sm:gap-3">
+		<a href="/" class="flex items-center gap-2 sm:gap-3">
 			<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-100 sm:h-9 sm:w-9">
 				<IconCameraFilled size={20} class="text-neutral-950 sm:size-[22px]" />
 			</div>
 			<span class="hidden text-base font-bold tracking-tight text-neutral-100 sm:text-lg lg:block">
 				RAW<span class="font-light text-neutral-500">EDITOR</span>
 			</span>
-		</div>
+		</a>
 
 		<!-- Main Nav -->
 		<nav class="flex items-center rounded-full border border-neutral-800/50 bg-neutral-900/40 p-1 shadow-inner">

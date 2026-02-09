@@ -11,13 +11,15 @@
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
 	import Tooltip from '$lib/ui/Tooltip.svelte';
 	import LutPicker from '$lib/ui/LutPicker.svelte';
-	import { IconArchive, IconCheck, IconChevronLeft, IconChevronRight, IconDeviceFloppy, IconFidgetSpinner, IconRestore } from '$lib/ui/icons';
+	import { IconArchive, IconCheck, IconChevronLeft, IconChevronRight, IconDeviceFloppy, IconFidgetSpinner, IconRestore, IconFilter } from '$lib/ui/icons';
 	import { fade } from 'svelte/transition';
 	import Adjustments from './Adjustments.svelte';
 	import Snapshots from './Snapshots.svelte';
+	import FilterModal from '$lib/ui/FilterModal.svelte';
 
 	let { data } = $props();
 	let showLutPicker = $state(false);
+	let showFilterModal = $state(false);
 
 	let sampleImage = $state('');
 	let apiPath = $derived(`/api/images/${data.image.id}`);
@@ -179,7 +181,6 @@
 					showClipboard
 					showFlag
 					showLast
-					showFilter
 				/>
 			</div>
 		</div>
@@ -194,7 +195,6 @@
 					showClipboard
 					showFlag
 					showLast
-					showFilter
 				/>
 			</div>
 		</div>
@@ -289,6 +289,22 @@
 							<IconChevronRight size={20} />
 						</div>
 					{/if}
+
+					<div class="mx-2 h-4 w-px bg-neutral-800"></div>
+
+					<Tooltip text="Filter Gallery" position="top">
+						{@const filter = page.url.searchParams.get('filter')}
+						{@const hasFilter = filter !== null && filter !== 'none'}
+						<button
+							onclick={() => (showFilterModal = true)}
+							class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-neutral-800"
+							class:text-neutral-50={hasFilter}
+							class:bg-neutral-800={hasFilter}
+							aria-label="Filter Gallery"
+						>
+							<IconFilter size={20} />
+						</button>
+					</Tooltip>
 				</div>
 
 				{#if !data.image.isArchived}
@@ -309,6 +325,10 @@
 
 {#if showLutPicker}
 	<LutPicker luts={data.luts} onClose={() => (showLutPicker = false)} imageId={page.params.img!} />
+{/if}
+
+{#if showFilterModal}
+	<FilterModal onClose={() => (showFilterModal = false)} />
 {/if}
 
 {#if page.url.searchParams.has('snapshot')}

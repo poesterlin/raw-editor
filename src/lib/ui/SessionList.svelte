@@ -92,7 +92,7 @@
 {#snippet item({ item }: { item: Session })}
 	<section class="mx-4 mb-12">
 		<div class="sticky top-0 z-10 flex items-center justify-between bg-neutral-950/90 py-6 backdrop-blur-md">
-			<div class="flex items-center gap-6">
+			<div class="flex items-center gap-6 pl-3">
 				<div class="flex flex-col">
 					<h2 class="text-2xl font-bold tracking-tight text-neutral-100">{item.name}</h2>
 					<p class="text-xs font-medium tracking-widest uppercase text-neutral-500">{formatDate(item.startedAt)} • {item.imageCount} images</p>
@@ -170,7 +170,7 @@
 			</div>
 		</div>
 
-		<div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+		<div class="grid grid-cols-2 px-3 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
 			{#each item.images.filter((img) => !img.isArchived) as preview}
 				<a
 					href={`/${basePath}/${preview.id}`}

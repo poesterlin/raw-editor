@@ -5,7 +5,7 @@
 	import { edits } from '$lib/state/editing.svelte';
 	import {
 		IconAdjustmentsHorizontal,
-		IconCameraFilled,
+		IconGitBranch,
 		IconCheck,
 		IconClipboard,
 		IconCopy,
@@ -50,6 +50,7 @@
 	}
 
 	const tooltipPosition = $derived(isDesktop ? 'right' : 'top');
+	const iconSize = $derived(isDesktop ? 24 : 20);
 
 	const keyMap = $derived(
 		new Map<string, () => void>([
@@ -226,9 +227,9 @@
 			<a 
 				href="/editor/{img}/crop" 
 				aria-label="Crop"
-				class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+				class="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
 			>
-				<IconCrop size={20} />
+				<IconCrop size={iconSize} />
 			</a>
 		</Tooltip>
 	{/if}
@@ -237,9 +238,9 @@
 			<a 
 				href="/editor/{img}" 
 				aria-label="Edit"
-				class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+				class="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
 			>
-				<IconAdjustmentsHorizontal size={20} />
+				<IconAdjustmentsHorizontal size={iconSize} />
 			</a>
 		</Tooltip>
 	{/if}
@@ -248,16 +249,16 @@
 	{#if showFlag}
 		<Tooltip text={isFlagged ? "Remove Flag" : "Flag as Favorite"} position={tooltipPosition}>
 			<button 
-				class="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90" 
+				class="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90" 
 				class:text-yellow-500={isFlagged}
 				class:text-neutral-400={!isFlagged}
 				onclick={() => (showFlagModal = true)} 
 				aria-label="Flagged"
 			>
 				{#if isFlagged}
-					<IconFlagFilled size={20} />
+					<IconFlagFilled size={iconSize} />
 				{:else}
-					<IconFlag size={20} />
+					<IconFlag size={iconSize} />
 				{/if}
 			</button>
 		</Tooltip>
@@ -267,11 +268,11 @@
 	{#if showLast && edits.lastSavedPP3 && countPP3Properties(diffPP3(edits.lastSavedPP3, edits.pp3)) > 0}
 		<Tooltip text="Load Last Saved Version" position={tooltipPosition}>
 			<button 
-				class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+				class="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
 				onclick={() => edits.initialize(edits.lastSavedPP3, page.data.image)} 
 				aria-label="Load Last Version"
 			>
-				<IconHistory size={20} />
+				<IconHistory size={iconSize} />
 			</button>
 		</Tooltip>
 	{/if}
@@ -282,9 +283,9 @@
 			<a 
 				href="?snapshot" 
 				aria-label="Snapshots"
-				class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+				class="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
 			>
-				<IconCameraFilled size={20} />
+				<IconGitBranch size={iconSize} />
 			</a>
 		</Tooltip>
 	{/if}
@@ -297,11 +298,11 @@
 			<button 
 				class:bg-neutral-700={hasFilter}
 				class:text-neutral-100={hasFilter}
-				class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+				class="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
 				onclick={() => (showFilterModal = true)} 
 				aria-label="Filters"
 			>
-				<IconFilter size={20} />
+				<IconFilter size={iconSize} />
 			</button>
 		</Tooltip>
 	{/if}
@@ -312,14 +313,14 @@
 			<button 
 				onclick={copyConfig} 
 				aria-label="Copy edit config"
-				class="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90"
+				class="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90"
 				class:text-green-500={copiedConfig}
 				class:text-neutral-400={!copiedConfig}
 			>
 				{#if copiedConfig}
-					<IconCheck size={20} />
+					<IconCheck size={iconSize} />
 				{:else}
-					<IconCopy size={20} />
+					<IconCopy size={iconSize} />
 				{/if}
 			</button>
 		</Tooltip>
@@ -328,14 +329,14 @@
 				<button 
 					onclick={pasteConfig} 
 					aria-label="Paste edit config"
-					class="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90"
+					class="flex h-10 w-10 lg:h-12 lg:w-12 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90"
 					class:text-blue-500={pastedConfig}
 					class:text-neutral-400={!pastedConfig}
 				>
 					{#if pastedConfig}
-						<IconCheck size={20} />
+						<IconCheck size={iconSize} />
 					{:else}
-						<IconClipboard size={20} />
+						<IconClipboard size={iconSize} />
 					{/if}
 				</button>
 			</Tooltip>

@@ -4,18 +4,31 @@ import { desc, eq, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	const tags = await db.select({
-		name: tagTable.name,
-		id: tagTable.id,
-		images: sql<number>`jSON_AGG(DISTINCT ${imageTable.id})`.as<number[]>(),
-	})
+	const tags = await db
+		.select({
+			name: tagTable.name,
+			id: tagTable.id,
+			images: sql<number[]>`jSON_AGG(DISTINCT ${imageTable.id})`.as<number[]>()
+		})
 		.from(tagTable)
 		.innerJoin(imageToTagTable, eq(tagTable.id, imageToTagTable.tagId))
 		.innerJoin(imageTable, eq(imageToTagTable.imageId, imageTable.id))
 		.groupBy(tagTable.id)
 		.orderBy(desc(tagTable.name));
 
-	return { tags: tags.filter((tag) => tag.images.length > 0) };
+	const lastEditedImages = await db
+		.select({
+			id: imageTable.id
+		})
+		.from(imageTable)
+		.where(eq(imageTable.isArchived, false))
+		.orderBy(desc(imageTable.updatedAt))
+		.limit(20);
+
+	return {
+		tags: tags.filter((tag) => tag.images.length > 0),
+		lastEditedImages
+	};
 };
 
 

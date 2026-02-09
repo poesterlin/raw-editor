@@ -24,6 +24,7 @@ import IconHistory from '@tabler/icons-svelte/icons/history';
 import IconFilter from '@tabler/icons-svelte/icons/filter';
 import IconAdjustmentsFilled from '@tabler/icons-svelte/icons/adjustments-filled';
 import IconLayoutGrid from '@tabler/icons-svelte/icons/layout-grid';
+import IconGitBranch from '@tabler/icons-svelte/icons/git-branch';
 
 export {
 	IconBell,
@@ -36,6 +37,7 @@ export {
 	IconArrowForwardUp,
 	IconCameraFilled,
 	IconCameraPlus,
+	IconGitBranch,
 	IconCheck,
 	IconChevronLeft,
 	IconChevronRight,
