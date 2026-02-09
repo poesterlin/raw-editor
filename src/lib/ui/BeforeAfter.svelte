@@ -136,7 +136,7 @@
 </script>
 
 <div
-	class="container"
+	class="container group rounded-xl shadow-2xl overflow-hidden border border-neutral-800"
 	bind:this={containerEl}
 	onwheel={onWheel}
 	onpointerdown={onPointerDown}
@@ -149,13 +149,17 @@
 	<!-- Before -->
 	<div class="pane">
 		<img src={beforeImage} alt="Before" draggable="false" style:transform={`translate(${x}px, ${y}px) scale(${scale})`} />
-		<span>Before</span>
+		<div class="absolute top-4 left-4 z-10 rounded-full border border-neutral-700/50 bg-neutral-950/40 px-3 py-1 text-[10px] font-bold tracking-widest uppercase text-neutral-300 backdrop-blur-md transition-opacity group-hover:opacity-100 sm:opacity-0">
+			Original
+		</div>
 	</div>
 
 	<!-- After (clipped) -->
 	<div class="pane after-pane">
 		<img src={afterImage} alt="After" draggable="false" style:transform={`translate(${x}px, ${y}px) scale(${scale})`} />
-		<span>After</span>
+		<div class="absolute top-4 right-4 z-10 rounded-full border border-neutral-700/50 bg-neutral-100 px-3 py-1 text-[10px] font-bold tracking-widest uppercase text-neutral-950 backdrop-blur-md transition-opacity group-hover:opacity-100 sm:opacity-0">
+			Edited
+		</div>
 	</div>
 
 	<!-- Slider -->
@@ -168,19 +172,11 @@
 		onpointercancel={onSliderPointerUp}
 		onlostpointercapture={onSliderPointerUp}
 	>
-		<div class="scrubber">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				width="50"
-				height="50"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="white"
-				opacity="0"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 8l-4 4l4 4" /><path d="M17 8l4 4l-4 4" /><path d="M3 12l18 0" /></svg
-			>
+		<div class="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-xl shadow-lg transition-transform hover:scale-110">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+				<path d="m9 18-6-6 6-6"/>
+				<path d="m15 6 6 6-6 6"/>
+			</svg>
 		</div>
 	</div>
 </div>
@@ -190,10 +186,9 @@
 		position: relative;
 		width: 100%;
 		height: 100%;
-		overflow: hidden;
 		user-select: none;
 		touch-action: none;
-		background: black;
+		background: #050505;
 	}
 
 	.pane {
@@ -202,19 +197,6 @@
 		width: 100%;
 		height: 100%;
 		overflow: hidden;
-		background: black;
-
-		span {
-			/* z-index: 1; */
-			position: absolute;
-			top: 8px;
-			left: 8px;
-			color: var(--text-1);
-			font-size: 14px;
-			background: rgba(0, 0, 0, 0.5);
-			padding: 4px 8px;
-			border-radius: 4px;
-		}
 	}
 
 	.pane img {
@@ -228,50 +210,36 @@
 	/* Show only the right side of "after" based on --split */
 	.after-pane {
 		clip-path: inset(0 0 0 var(--split));
-
-		span {
-			right: 8px;
-			left: auto;
-		}
 	}
 
 	.slider {
 		position: absolute;
 		top: 0;
-		left: var(--split); /* Position by left, not translateX(% of 4px) */
+		left: var(--split);
 		transform: translateX(-50%);
-		width: 4px;
+		width: 2px;
 		height: 100%;
-		background: #fff;
-		opacity: 0.6;
+		background: rgba(255, 255, 255, 0.4);
 		cursor: ew-resize;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		box-shadow:
-			0 0 5px rgba(0, 0, 0, 0.5),
-			0 0 10px rgba(0, 0, 0, 0.3);
-		z-index: 5;
-		/* Make sure touch gestures are captured here too */
+		z-index: 20;
 		touch-action: none;
-		transition: opacity 0.2s ease;
+		transition: background 0.2s ease;
 
 		&::after {
 			position: absolute;
 			content: '';
 			top: 0;
-			left: var(--split);
+			left: 50%;
 			transform: translateX(-50%);
-			width: 44px;
+			width: 40px;
 			height: 100%;
 		}
 
-		&:hover svg {
-			opacity: 1;
-			transition: opacity 0.2s ease;
-		}
 		&:hover {
-			opacity: 1;
+			background: rgba(255, 255, 255, 0.8);
 		}
 	}
 </style>

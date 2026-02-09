@@ -89,85 +89,106 @@
 </script>
 
 {#snippet item({ item }: { item: Session })}
-	<section class="mx-4 pt-6">
-		<div class="sticky top-0 z-10 mb-2 flex items-center justify-between bg-neutral-950 py-4">
-			<div class="flex items-center gap-4">
-				<h2 class="text-xl font-semibold text-neutral-200 sm:text-2xl">{item.name}</h2>
-				<p class="rounded-full bg-neutral-200 px-2 text-neutral-900">{item.imageCount}</p>
-				{#if importJobStates.has(item.id)}
-					<span class="inline-flex items-center rounded-full bg-blue-900/50 px-2.5 py-1 text-xs font-medium text-blue-300">
-						<span class="me-2 h-2 w-2 animate-pulse rounded-full bg-blue-300"></span>
-						Processing...
-					</span>
-				{:else}
-					<button
-						aria-label="Reprocess Session Images"
-						onclick={() => importSession(item.id)}
-						title="Process Session Images"
-						class="text-neutral-400 transition-colors hover:text-neutral-100"
+	<section class="mx-4 mb-12">
+		<div class="sticky top-0 z-10 flex items-center justify-between bg-neutral-950/90 py-6 backdrop-blur-md">
+			<div class="flex items-center gap-6">
+				<div class="flex flex-col">
+					<h2 class="text-2xl font-bold tracking-tight text-neutral-100">{item.name}</h2>
+					<p class="text-xs font-medium tracking-widest uppercase text-neutral-500">{formatDate(item.startedAt)} • {item.imageCount} images</p>
+				</div>
+				
+				<div class="flex items-center gap-1 rounded-full border border-neutral-800 bg-neutral-900/50 p-1">
+					{#if importJobStates.has(item.id)}
+						<div class="flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold text-neutral-400">
+							<span class="flex h-2 w-2">
+								<span class="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-neutral-400 opacity-75"></span>
+								<span class="relative inline-flex h-2 w-2 rounded-full bg-neutral-500"></span>
+							</span>
+							Processing
+						</div>
+					{:else}
+						<button
+							aria-label="Reprocess Session Images"
+							onclick={() => importSession(item.id)}
+							title="Process Session Images"
+							class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
+						>
+							<IconTransferIn size={18}></IconTransferIn>
+						</button>
+					{/if}
+					
+					<button 
+						onclick={() => archiveSession(item.id)} 
+						aria-label="Archive Session" 
+						title="Archive Session" 
+						class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-red-400"
 					>
-						<IconTransferIn></IconTransferIn>
+						<IconArchive size={18}></IconArchive>
 					</button>
-				{/if}
-				<button onclick={() => archiveSession(item.id)} aria-label="Archive Session" title="Archive Session" class="text-neutral-400 transition-colors hover:text-neutral-100">
-					<IconArchive></IconArchive>
-				</button>
-				{#if basePath !== 'triage' && item.images.length > 0}
-					<a href={`/triage/${item.images[0].id}`} aria-label="Triage Session" title="Triage Session" class="text-neutral-400 transition-colors hover:text-neutral-100">
-						<IconLayoutGrid />
-					</a>
-				{/if}
-				<button
-					aria-label="Download Raw Files"
-					title="Download Raw Files"
-					class="text-neutral-400 transition-colors hover:text-neutral-100"
-					onclick={async () => {
-						const res = await fetch(`/api/sessions/${item.id}/download-raw`);
-						if (!res.ok) {
-							app.addToast('Failed to download raw files', 'error');
-							return;
-						}
 
-						const blob = await res.blob();
-						const url = URL.createObjectURL(blob);
-						const a = document.createElement('a');
-						a.href = url;
-						a.download = `${item.name}-raw.zip`;
-						document.body.appendChild(a);
-						a.click();
-						a.remove();
-						URL.revokeObjectURL(url);
-					}}
-				>
-					<IconDeviceFloppy />
-				</button>
+					{#if basePath !== 'triage' && item.images.length > 0}
+						<a 
+							href={`/triage/${item.images[0].id}`} 
+							aria-label="Triage Session" 
+							title="Triage Session" 
+							class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
+						>
+							<IconLayoutGrid size={18} />
+						</a>
+					{/if}
+
+					<button
+						aria-label="Download Raw Files"
+						title="Download Raw Files"
+						class="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-100"
+						onclick={async () => {
+							const res = await fetch(`/api/sessions/${item.id}/download-raw`);
+							if (!res.ok) {
+								app.addToast('Failed to download raw files', 'error');
+								return;
+							}
+
+							const blob = await res.blob();
+							const url = URL.createObjectURL(blob);
+							const a = document.createElement('a');
+							a.href = url;
+							a.download = `${item.name}-raw.zip`;
+							document.body.appendChild(a);
+							a.click();
+							a.remove();
+							URL.revokeObjectURL(url);
+						}}
+					>
+						<IconDeviceFloppy size={18} />
+					</button>
+				</div>
 			</div>
-			<p class="ml-4 flex-shrink-0 text-neutral-400">{formatDate(item.startedAt)}</p>
 		</div>
-		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+
+		<div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
 			{#each item.images.filter((img) => !img.isArchived) as preview}
 				<a
 					href={`/${basePath}/${preview.id}`}
-					class="group relative block aspect-[3/2] overflow-hidden rounded-lg bg-neutral-900 ring-1 ring-transparent transition hover:ring-neutral-700"
+					class="group relative block aspect-[3/2] overflow-hidden rounded-xl bg-neutral-900 shadow-lg ring-1 ring-neutral-800 transition-all hover:shadow-2xl hover:ring-neutral-600"
 				>
 					<img
 						src="/api/images/{preview.id}/preview?version={preview.version}"
 						alt=""
 						loading="lazy"
-						class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+						class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
 					/>
-					<!-- <div class="absolute top-2 right-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
-						{preview.stackChildren.length + 1}
-					</div> -->
+					
+					<div class="absolute inset-0 bg-linear-to-t from-neutral-950/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+
 					{#if preview.hasSnapshot}
-						<div class="absolute top-2 right-2 rounded bg-black/50 px-2 py-1 text-xs text-white">
-							<IconAdjustmentsFilled />
+						<div class="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-neutral-950/60 text-neutral-100 backdrop-blur-md border border-white/10">
+							<IconAdjustmentsFilled size={14} />
 						</div>
 					{/if}
 				</a>
 			{:else}
-				<div class="flex aspect-[3/2] items-center justify-center rounded-lg bg-neutral-900 text-neutral-500">
-					<span class="text-sm">No Images</span>
+				<div class="flex aspect-[3/2] items-center justify-center rounded-xl border-2 border-dashed border-neutral-800 bg-neutral-900/30 text-neutral-600">
+					<span class="text-xs font-bold uppercase tracking-widest">No Images</span>
 				</div>
 			{/each}
 		</div>
@@ -175,16 +196,12 @@
 {/snippet}
 
 {#snippet empty()}
-	<div class="flex h-full flex-col items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900 p-8 text-center">
-		<svg xmlns="http://www.w3.org/2000/svg" class="mb-6 h-20 w-20 text-neutral-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.158 0a.075.075 0 0 1 .075-.075h.009a.075.075 0 0 1 .075.075v.009a.075.075 0 0 1-.075.075h-.009a.075.075 0 0 1-.075-.075V8.25Z"
-			/>
-		</svg>
-		<h2 class="mb-2 text-2xl font-bold text-neutral-200">Your Gallery is Empty</h2>
-		<p class="max-w-md text-neutral-400">It looks like you haven't created any sessions yet. Start a new editing session to see your photos here.</p>
+	<div class="flex h-full flex-col items-center justify-center p-12 text-center">
+		<div class="mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-neutral-900 text-neutral-700 shadow-inner ring-1 ring-neutral-800">
+			<IconLayoutGrid size={48} />
+		</div>
+		<h2 class="mb-2 text-2xl font-bold tracking-tight text-neutral-100">Your Gallery is Empty</h2>
+		<p class="max-w-md text-sm text-neutral-500 leading-relaxed">It looks like you haven't created any sessions yet. Start a new editing session to see your photos here.</p>
 	</div>
 {/snippet}
 

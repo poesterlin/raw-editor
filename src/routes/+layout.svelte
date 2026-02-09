@@ -4,6 +4,17 @@
 	import { onNavigate } from '$app/navigation';
 	import { app } from '$lib/state/app.svelte';
 	import { edits } from '$lib/state/editing.svelte';
+	import {
+		IconCameraFilled,
+		IconCameraPlus,
+		IconLayoutGrid,
+		IconFlag,
+		IconAdjustmentsHorizontal,
+		IconArchive,
+		IconBell,
+		IconSettings,
+		IconUser
+	} from '$lib/ui/icons';
 	import '../app.css';
 
 	let { children } = $props();
@@ -14,7 +25,6 @@
 	let exporterActive = $derived(currentRoute?.startsWith('/exporter'));
 	let importerActive = $derived(currentRoute?.startsWith('/importer'));
 	let triageActive = $derived(currentRoute?.startsWith('/triage'));
-	let legalActive = $derived(currentRoute?.startsWith('/legal'));
 
 	$effect(() => {
 		edits.update(edits.pp3);
@@ -38,64 +48,97 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="grid h-screen grid-rows-[auto_1fr] bg-neutral-950 text-neutral-200">
-	<header class="border-b border-neutral-800 p-2">
-		<nav class="flex justify-center gap-2">
+<div class="grid h-screen grid-rows-[auto_1fr] bg-neutral-950 text-neutral-200 font-sans">
+	<header
+		class="z-50 flex items-center justify-between border-b border-neutral-800/50 bg-neutral-950/80 px-3 py-3 backdrop-blur-md sm:px-6"
+	>
+		<!-- Brand -->
+		<div class="flex items-center gap-2 sm:gap-3">
+			<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-100 sm:h-9 sm:w-9">
+				<IconCameraFilled size={20} class="text-neutral-950 sm:size-[22px]" />
+			</div>
+			<span class="hidden text-base font-bold tracking-tight text-neutral-100 sm:text-lg lg:block">
+				RAW<span class="font-light text-neutral-500">EDITOR</span>
+			</span>
+		</div>
+
+		<!-- Main Nav -->
+		<nav class="flex items-center rounded-full border border-neutral-800/50 bg-neutral-900/40 p-1 shadow-inner">
 			<a
 				href="/importer"
-				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
-				class:bg-neutral-800={importerActive}
-				class:text-neutral-50={importerActive}
-				class:font-semibold={importerActive}
+				class="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all sm:px-4"
+				class:bg-neutral-100={importerActive}
+				class:text-neutral-950={importerActive}
+				class:text-neutral-400={!importerActive}
+				class:hover:text-neutral-100={!importerActive}
 			>
-				Importer
+				<IconCameraPlus size={18} />
+				<span class="hidden md:block">Import</span>
 			</a>
 			<a
 				href="/gallery"
-				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
-				class:bg-neutral-800={galleryActive}
-				class:text-neutral-50={galleryActive}
-				class:font-semibold={galleryActive}
+				class="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all sm:px-4"
+				class:bg-neutral-100={galleryActive}
+				class:text-neutral-950={galleryActive}
+				class:text-neutral-400={!galleryActive}
+				class:hover:text-neutral-100={!galleryActive}
 			>
-				Gallery
+				<IconLayoutGrid size={18} />
+				<span class="hidden md:block">Gallery</span>
 			</a>
 			<a
 				href="/triage"
-				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
-				class:bg-neutral-800={triageActive}
-				class:text-neutral-50={triageActive}
-				class:font-semibold={triageActive}
+				class="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all sm:px-4"
+				class:bg-neutral-100={triageActive}
+				class:text-neutral-950={triageActive}
+				class:text-neutral-400={!triageActive}
+				class:hover:text-neutral-100={!triageActive}
 			>
-				Triage
+				<IconFlag size={18} />
+				<span class="hidden md:block">Triage</span>
 			</a>
 			<a
 				href="/editor"
-				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
-				class:bg-neutral-800={editorActive}
-				class:text-neutral-50={editorActive}
-				class:font-semibold={editorActive}
+				class="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all sm:px-4"
+				class:bg-neutral-100={editorActive}
+				class:text-neutral-950={editorActive}
+				class:text-neutral-400={!editorActive}
+				class:hover:text-neutral-100={!editorActive}
 			>
-				Editor
+				<IconAdjustmentsHorizontal size={18} />
+				<span class="hidden md:block">Editor</span>
 			</a>
 			<a
 				href="/exporter"
-				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
-				class:bg-neutral-800={exporterActive}
-				class:text-neutral-50={exporterActive}
-				class:font-semibold={exporterActive}
+				class="flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium transition-all sm:px-4"
+				class:bg-neutral-100={exporterActive}
+				class:text-neutral-950={exporterActive}
+				class:text-neutral-400={!exporterActive}
+				class:hover:text-neutral-100={!exporterActive}
 			>
-				Exporter
-			</a>
-			<a
-				href="/legal"
-				class="rounded-md px-4 py-2 text-neutral-300 transition-colors hover:bg-neutral-900 hover:text-neutral-50"
-				class:bg-neutral-800={legalActive}
-				class:text-neutral-50={legalActive}
-				class:font-semibold={legalActive}
-			>
-				Legal
+				<IconArchive size={18} />
+				<span class="hidden md:block">Export</span>
 			</a>
 		</nav>
+
+		<!-- Utilities -->
+		<div class="flex items-center gap-2">
+			<!-- <button
+				class="relative flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-neutral-900 hover:text-neutral-100 sm:h-9 sm:w-9"
+			>
+				<IconBell size={20} />
+				<span class="absolute top-1.5 right-1.5 flex h-2 w-2 sm:top-2 sm:right-2">
+					<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-neutral-400 opacity-75"
+					></span>
+					<span class="relative inline-flex h-2 w-2 rounded-full bg-neutral-500"></span>
+				</span>
+			</button> -->
+			<!-- <div
+				class="flex h-8 w-8 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900 text-neutral-400 transition-colors hover:border-neutral-700 hover:text-neutral-100 sm:h-9 sm:w-9"
+			>
+				<IconUser size={20} />
+			</div> -->
+		</div>
 	</header>
 	<main>
 		{@render children?.()}

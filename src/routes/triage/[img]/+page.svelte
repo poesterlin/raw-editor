@@ -79,73 +79,97 @@
 
 <svelte:window onkeyup={handleKeyUp} />
 
-<div class="triage-layout">
-	<div class="image-strip-container">
-		<ImageStrip images={data.sessionImages} currentImageId={data.image.id} />
-	</div>
+<div class="flex h-full flex-col overflow-hidden bg-neutral-950 font-sans lg:flex-row">
+	<!-- Image Strip (Left on Desktop, Bottom on Mobile) -->
+	<aside class="order-2 border-neutral-800 bg-neutral-950 lg:order-1 lg:w-[240px] lg:border-r border-t lg:border-t-0 flex-shrink-0">
+		<div class="h-full overflow-y-auto custom-scrollbar">
+			<ImageStrip images={data.sessionImages} currentImageId={data.image.id} />
+		</div>
+	</aside>
 
-	<div class="main-content relative">
-		<div class="image-preview">
-			<img src={`/api/images/${data.image.id}/preview?size=2048`} alt={`Image ${data.image.id}`} />
+	<!-- Main Preview Area -->
+	<main class="relative order-1 flex-1 overflow-hidden bg-neutral-900 lg:order-2">
+		<div class="flex h-full items-center justify-center p-4">
+			<img 
+				src={`/api/images/${data.image.id}/preview?size=2048`} 
+				alt={`Image ${data.image.id}`}
+				class="h-full w-full object-contain rounded-lg shadow-2xl transition-transform duration-500"
+				class:scale-95={isArchiving}
+				class:opacity-50={isArchiving}
+			/>
 		</div>
 
-		<!-- Left Controls -->
-		<div class="absolute top-1/2 left-4 flex -translate-y-1/2 flex-col items-center gap-12">
-			<button
-				onclick={restoreImage}
-				aria-label="Restore Image"
-				disabled={!data.image.isArchived}
-				class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
-			>
-				<IconRestore size={48} />
-			</button>
-			{#if data.previousImage}
-				<a
-					href={`/triage/${data.previousImage}`}
-					class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
-					title="Previous Image"
+		<!-- Left Side Controls -->
+		<div class="absolute inset-y-0 left-4 flex flex-col justify-center gap-8 pointer-events-none sm:left-8">
+			<div class="pointer-events-auto flex flex-col gap-4">
+				<button
+					onclick={restoreImage}
+					aria-label="Restore Image"
+					disabled={!data.image.isArchived}
+					class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all active:scale-90 disabled:opacity-50 sm:h-16 sm:w-14 shadow-2xl"
+					class:text-neutral-100={data.image.isArchived}
+					class:bg-neutral-800={data.image.isArchived}
+					class:hover:bg-neutral-100={data.image.isArchived}
+					class:hover:text-neutral-950={data.image.isArchived}
 				>
-					<IconChevronLeft size={48} />
+					<IconRestore size={28} />
+				</button>
+
+				{#if data.previousImage}
+					<a
+						href={`/triage/${data.previousImage}`}
+						class="flex h-24 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-100 hover:text-neutral-950 active:scale-90 sm:w-14 shadow-2xl"
+						title="Previous Image (Left Arrow)"
+					>
+						<IconChevronLeft size={32} />
+					</a>
+				{/if}
+
+				<a
+					href={`/editor/${data.image.id}`}
+					class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-100 text-neutral-950 transition-all hover:bg-neutral-200 active:scale-90 sm:h-16 sm:w-14 shadow-2xl"
+					title="Edit Image"
+				>
+					<IconAdjustmentsFilled size={28} />
 				</a>
-			{/if}
-			<a
-				href={`/editor/${data.image.id}`}
-				data-sveltekit-preload-data="hover"
-				class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
-				title="Edit Image"
-			>
-				<IconAdjustmentsFilled size={48} />
-			</a>
+			</div>
 		</div>
 
-		<!-- Right Controls -->
-		<div class="absolute top-1/2 right-4 flex -translate-y-1/2 flex-col items-center gap-12">
-			<button
-				onclick={archiveImage}
-				aria-label="Archive Image"
-				disabled={data.image.isArchived}
-				class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white disabled:cursor-not-allowed disabled:opacity-20"
-			>
-				<IconArchive size={48} />
-			</button>
-			{#if data.nextImage}
-				<a
-					href={`/triage/${data.nextImage}`}
-					data-sveltekit-preload-data="hover"
-					class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
-					title="Next Image"
+		<!-- Right Side Controls -->
+		<div class="absolute inset-y-0 right-4 flex flex-col justify-center gap-8 pointer-events-none sm:right-8">
+			<div class="pointer-events-auto flex flex-col gap-4">
+				<button
+					onclick={archiveImage}
+					aria-label="Archive Image"
+					disabled={data.image.isArchived}
+					class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-red-400 backdrop-blur-md transition-all active:scale-90 disabled:opacity-10 sm:h-16 sm:w-14 shadow-2xl"
+					class:hover:bg-red-500={!data.image.isArchived}
+					class:hover:text-white={!data.image.isArchived}
 				>
-					<IconChevronRight size={48} />
-				</a>
-			{/if}
-			<button
-				onclick={() => (showTagModal = true)}
-				class="rounded-full border border-white/20 bg-black/20 p-4 text-white/80 transition-colors hover:border-white/80 hover:bg-black/50 hover:text-white"
-			>
-				<IconFlag size={48} />
-			</button>
+					<IconArchive size={28} />
+				</button>
+
+				{#if data.nextImage}
+					<a
+						href={`/triage/${data.nextImage}`}
+						data-sveltekit-preload-data="hover"
+						class="flex h-24 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-100 hover:text-neutral-950 active:scale-90 sm:w-14 shadow-2xl"
+						title="Next Image (Right Arrow)"
+					>
+						<IconChevronRight size={32} />
+					</a>
+				{/if}
+
+				<button
+					onclick={() => (showTagModal = true)}
+					class="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-neutral-950/40 text-neutral-400 backdrop-blur-md transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90 sm:h-16 sm:w-14 shadow-2xl"
+					title="Tag Image (T)"
+				>
+					<IconFlag size={28} />
+				</button>
+			</div>
 		</div>
-	</div>
+	</main>
 </div>
 
 {#if showTagModal}
@@ -153,51 +177,17 @@
 {/if}
 
 <style>
-	:global(main) {
-		overflow: hidden;
-		padding-bottom: 0;
+	.custom-scrollbar::-webkit-scrollbar {
+		width: 4px;
 	}
-
-	.triage-layout {
-		display: grid;
-		grid-template-columns: 200px 1fr;
-		height: calc(100vh - 4rem);
-		overflow: hidden;
-		background: var(--bg-0, #0e0e0e);
-		color: var(--text-1, #e7e7e7);
+	.custom-scrollbar::-webkit-scrollbar-track {
+		background: transparent;
 	}
-
-	.image-strip-container {
-		border-right: 1px solid var(--border-1, #2a2a2a);
-		overflow-y: auto;
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		background: #262626;
+		border-radius: 10px;
 	}
-
-	.main-content {
-		display: grid;
-		grid-template-rows: 1fr auto;
-		overflow: hidden;
-	}
-
-	.image-preview {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		overflow: hidden;
-		padding: 1rem;
-	}
-
-	.image-preview img {
-		max-width: 100%;
-		max-height: 100%;
-		object-fit: contain;
-		border-radius: 0.25rem;
-	}
-
-	.controls {
-		padding: 1rem;
-		border-top: 1px solid var(--border-1, #2a2a2a);
-		background: var(--bg-2, #151515);
-		display: flex;
-		justify-content: center;
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: #404040;
 	}
 </style>

@@ -1,73 +1,92 @@
-<div class="container mx-auto flex h-full flex-col items-center justify-center p-8">
-	<div class="text-center">
-		<h1 class="mb-4 text-5xl font-bold text-neutral-100">Raw Editor</h1>
-		<p class="mb-16 max-w-2xl text-lg text-neutral-300">
-			A streamlined workflow for professional photo editing. Navigate through the process using the
-			links above.
+<script lang="ts">
+	import { IconCameraPlus, IconLayoutGrid, IconAdjustmentsHorizontal, IconArchive } from '$lib/ui/icons';
+</script>
+
+<div class="mx-auto flex max-w-7xl h-full flex-col items-center justify-center p-6 lg:p-12">
+	<div class="text-center mb-16 lg:mb-24">
+		<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900 border border-neutral-800 text-neutral-400 text-xs font-bold uppercase tracking-widest mb-6">
+			<span class="relative flex h-2 w-2">
+				<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-neutral-500 opacity-75"></span>
+				<span class="relative inline-flex h-2 w-2 rounded-full bg-neutral-400"></span>
+			</span>
+			Professional Workflow
+		</div>
+		<h1 class="mb-6 text-6xl lg:text-8xl font-black tracking-tighter text-neutral-100 italic">
+			RAW<span class="text-neutral-500 not-italic font-light">EDITOR</span>
+		</h1>
+		<p class="mx-auto max-w-2xl text-lg lg:text-xl text-neutral-400 font-medium leading-relaxed">
+			A streamlined, non-destructive workflow for professional photo editing. 
+			Harness the power of RawTherapee from any device.
 		</p>
 	</div>
 
-	<div
-		class="grid grid-cols-1 gap-x-4 gap-y-8 text-center md:grid-cols-2 md:text-left lg:grid-cols-4"
-	>
+	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 w-full">
 		<!-- Importer -->
-		<div class="flex flex-col items-center rounded-lg bg-neutral-900 p-6 shadow-lg md:items-start">
-			<h2 class="mb-2 text-2xl font-semibold text-neutral-50">1. Importer</h2>
-			<p class="mb-4 flex-grow text-neutral-400">
-				Start by importing your RAW files. The application watches a designated folder for new images
-				and adds them to your import queue.
+		<a href="/importer" class="group flex flex-col items-start rounded-3xl bg-neutral-900/40 border border-neutral-800 p-8 transition-all hover:bg-neutral-900 hover:border-neutral-700 hover:shadow-2xl">
+			<div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-800 text-neutral-400 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition-colors">
+				<IconCameraPlus size={32} />
+			</div>
+			<h2 class="mb-3 text-2xl font-bold text-neutral-100 tracking-tight">Importer</h2>
+			<p class="text-neutral-500 text-sm leading-relaxed mb-6">
+				Designate watch folders and ingest your RAW files directly into the processing queue.
 			</p>
-			<a
-				href="/importer"
-				class="mt-auto rounded-md bg-neutral-800 px-4 py-2 text-neutral-200 transition-colors hover:bg-neutral-700"
-			>
-				Go to Importer
-			</a>
-		</div>
+			<span class="mt-auto inline-flex items-center gap-2 text-sm font-bold text-neutral-100">
+				Get Started
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+				</svg>
+			</span>
+		</a>
 
 		<!-- Gallery -->
-		<div class="flex flex-col items-center rounded-lg bg-neutral-900 p-6 shadow-lg md:items-start">
-			<h2 class="mb-2 text-2xl font-semibold text-neutral-50">2. Gallery</h2>
-			<p class="mb-4 flex-grow text-neutral-400">
-				Browse your imported image sessions. The gallery provides a quick overview of your photos,
-				organized by import date.
+		<a href="/gallery" class="group flex flex-col items-start rounded-3xl bg-neutral-900/40 border border-neutral-800 p-8 transition-all hover:bg-neutral-900 hover:border-neutral-700 hover:shadow-2xl">
+			<div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-800 text-neutral-400 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition-colors">
+				<IconLayoutGrid size={32} />
+			</div>
+			<h2 class="mb-3 text-2xl font-bold text-neutral-100 tracking-tight">Gallery</h2>
+			<p class="text-neutral-500 text-sm leading-relaxed mb-6">
+				Browse sessions, manage metadata, and keep your growing collection organized.
 			</p>
-			<a
-				href="/gallery"
-				class="mt-auto rounded-md bg-neutral-800 px-4 py-2 text-neutral-200 transition-colors hover:bg-neutral-700"
-			>
-				Go to Gallery
-			</a>
-		</div>
+			<span class="mt-auto inline-flex items-center gap-2 text-sm font-bold text-neutral-100">
+				View Library
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+				</svg>
+			</span>
+		</a>
 
 		<!-- Editor -->
-		<div class="flex flex-col items-center rounded-lg bg-neutral-900 p-6 shadow-lg md:items-start">
-			<h2 class="mb-2 text-2xl font-semibold text-neutral-50">3. Editor</h2>
-			<p class="mb-4 flex-grow text-neutral-400">
-				The heart of the application. Make detailed adjustments to your images using a powerful,
-				non-destructive editor.
+		<a href="/editor" class="group flex flex-col items-start rounded-3xl bg-neutral-900/40 border border-neutral-800 p-8 transition-all hover:bg-neutral-900 hover:border-neutral-700 hover:shadow-2xl">
+			<div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-800 text-neutral-400 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition-colors">
+				<IconAdjustmentsHorizontal size={32} />
+			</div>
+			<h2 class="mb-3 text-2xl font-bold text-neutral-100 tracking-tight">Editor</h2>
+			<p class="text-neutral-500 text-sm leading-relaxed mb-6">
+				Precision adjustments with real-time feedback. Non-destructive editing at its best.
 			</p>
-			<a
-				href="/editor"
-				class="mt-auto rounded-md bg-neutral-800 px-4 py-2 text-neutral-200 transition-colors hover:bg-neutral-700"
-			>
-				Go to Editor
-			</a>
-		</div>
+			<span class="mt-auto inline-flex items-center gap-2 text-sm font-bold text-neutral-100">
+				Start Editing
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+				</svg>
+			</span>
+		</a>
 
 		<!-- Exporter -->
-		<div class="flex flex-col items-center rounded-lg bg-neutral-900 p-6 shadow-lg md:items-start">
-			<h2 class="mb-2 text-2xl font-semibold text-neutral-50">4. Exporter</h2>
-			<p class="mb-4 flex-grow text-neutral-400">
-				When you're done editing, export your images. The exporter shows you which sessions have
-				pending changes and lets you process them.
+		<a href="/exporter" class="group flex flex-col items-start rounded-3xl bg-neutral-900/40 border border-neutral-800 p-8 transition-all hover:bg-neutral-900 hover:border-neutral-700 hover:shadow-2xl">
+			<div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-800 text-neutral-400 group-hover:bg-neutral-100 group-hover:text-neutral-950 transition-colors">
+				<IconArchive size={32} />
+			</div>
+			<h2 class="mb-3 text-2xl font-bold text-neutral-100 tracking-tight">Exporter</h2>
+			<p class="text-neutral-500 text-sm leading-relaxed mb-6">
+				Finalize your vision. Batch export images to Google Photos, Immich, or local storage.
 			</p>
-			<a
-				href="/exporter"
-				class="mt-auto rounded-md bg-neutral-800 px-4 py-2 text-neutral-200 transition-colors hover:bg-neutral-700"
-			>
-				Go to Exporter
-			</a>
-		</div>
+			<span class="mt-auto inline-flex items-center gap-2 text-sm font-bold text-neutral-100">
+				Export Files
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+				</svg>
+			</span>
+		</a>
 	</div>
 </div>

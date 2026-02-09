@@ -20,6 +20,6 @@
 	});
 </script>
 
-<div class="h-[calc(100dvh-6rem)]">
+<div class="h-[calc(100dvh-4rem)]">
 	{@render children?.()}
 </div>

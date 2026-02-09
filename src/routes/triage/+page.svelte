@@ -1,29 +1,29 @@
 <script lang="ts">
+	import { IconFlag, IconLayoutGrid } from '$lib/ui/icons';
 </script>
 
-<!-- placeholder -->
-<div class="flex h-full flex-col items-center justify-center p-8 text-center">
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		class="mb-6 h-24 w-24 text-neutral-400"
-		viewBox="0 0 24 24"
-		stroke-width="1.5"
-		stroke="currentColor"
-		fill="none"
-		stroke-linecap="round"
-		stroke-linejoin="round"
+<div class="flex h-full flex-col items-center justify-center p-6 text-center lg:p-12 font-sans">
+	<div class="mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-neutral-900 text-neutral-500 shadow-inner ring-1 ring-neutral-800">
+		<IconFlag size={48} stroke-width={1.5} />
+	</div>
+	
+	<h1 class="mb-4 text-4xl font-black tracking-tight text-neutral-100 italic">
+		TRIAGE<span class="text-neutral-500 not-italic font-light">MODE</span>
+	</h1>
+	
+	<p class="mb-10 max-w-md text-lg font-medium leading-relaxed text-neutral-400">
+		Select a session from your gallery to begin the selection process. 
+		Cull and organize your best shots with speed.
+	</p>
+	
+	<a 
+		href="/gallery" 
+		class="group flex items-center gap-3 rounded-2xl bg-neutral-100 px-8 py-4 text-sm font-bold uppercase tracking-widest text-neutral-950 transition-all hover:bg-neutral-200 hover:scale-[1.02] active:scale-95 shadow-xl"
 	>
-		<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-		<path d="M15 8h.01" />
-		<path d="M12.5 21h-6.5a3 3 0 0 1 -3 -3v-12a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v6.5" />
-		<path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l3.5 3.5" />
-		<path d="M14 14l1 -1c.679 -.653 1.473 -.829 2.242 -.576" />
-		<path d="M19 16v3" />
-		<path d="M16 19h6" />
-	</svg>
-	<h1 class="mb-4 text-3xl font-bold text-neutral-50">Triage</h1>
-	<p class="mb-6 max-w-md text-lg text-neutral-400">Select a session from your gallery to begin. This is where your creative process starts.</p>
-	<a href="/gallery" class="rounded-lg border border-neutral-800 bg-neutral-900 px-6 py-3 font-semibold text-neutral-50 shadow-md transition-colors hover:bg-neutral-800">
+		<IconLayoutGrid size={20} />
 		Go to Gallery
+		<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+		</svg>
 	</a>
 </div>

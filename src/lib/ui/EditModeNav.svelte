@@ -3,23 +3,21 @@
 	import { page } from '$app/state';
 	import { countPP3Properties, diffPP3, parsePP3, stringifyPP3 } from '$lib/pp3-utils';
 	import { edits } from '$lib/state/editing.svelte';
-	import FlagModal from './FlagModal.svelte';
 	import {
 		IconAdjustmentsHorizontal,
-		IconArrowBackUp,
-		IconArrowForwardUp,
 		IconCameraFilled,
 		IconCheck,
 		IconClipboard,
 		IconCopy,
 		IconCrop,
+		IconFilter,
 		IconFlag,
 		IconHistory,
-		IconRestore,
-		IconFilter,
+		IconRestore
 	} from '$lib/ui/icons';
 	import { IconFlagFilled } from '@tabler/icons-svelte';
 	import FilterModal from './FilterModal.svelte';
+	import FlagModal from './FlagModal.svelte';
 
 	interface Props {
 		img: string;
@@ -200,81 +198,115 @@
 
 <svelte:window onfocus={() => checkClipboard()} onkeyup={handleKeyUp} />
 
-<nav>
-	<!-- {#if showUndoRedo}
-		<button disabled={!edits.canRedo} onclick={edits.redo} aria-label="Redo">
-			<IconArrowBackUp />
-		</button>
-		<button disabled={!edits.canUndo} onclick={edits.undo} aria-label="Undo">
-			<IconArrowForwardUp />
-		</button>
-	{/if} -->
+<nav class="flex flex-row lg:flex-col items-center gap-1 rounded-full border border-neutral-800/50 bg-neutral-950/40 p-1 backdrop-blur-xl shadow-2xl">
 	
 	{#if showReset && edits.canUndo}
-		<button class="reset-btn" onclick={() => {}} aria-label="Reset All">
-			<IconRestore />
+		<button 
+			class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90" 
+			onclick={() => {}} 
+			aria-label="Reset All"
+		>
+			<IconRestore size={20} />
 		</button>
 	{/if}
 
 	<!-- navigation -->
 	{#if showCrop}
-		<a href="/editor/{img}/crop" aria-label="Crop">
-			<IconCrop />
+		<a 
+			href="/editor/{img}/crop" 
+			aria-label="Crop"
+			class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+		>
+			<IconCrop size={20} />
 		</a>
 	{/if}
 	{#if showEdit}
-		<a href="/editor/{img}" aria-label="Edit">
-			<IconAdjustmentsHorizontal />
+		<a 
+			href="/editor/{img}" 
+			aria-label="Edit"
+			class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+		>
+			<IconAdjustmentsHorizontal size={20} />
 		</a>
 	{/if}
 
 	<!-- flag button -->
 	{#if showFlag}
-		<button class="border-2 border-yellow-400" onclick={() => (showFlagModal = true)} aria-label="Flagged">
+		<button 
+			class="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90" 
+			class:text-yellow-500={isFlagged}
+			class:text-neutral-400={!isFlagged}
+			onclick={() => (showFlagModal = true)} 
+			aria-label="Flagged"
+		>
 			{#if isFlagged}
-				<IconFlagFilled />
+				<IconFlagFilled size={20} />
 			{:else}
-				<IconFlag />
+				<IconFlag size={20} />
 			{/if}
 		</button>
 	{/if}
 
 	<!-- last version -->
 	{#if showLast && edits.lastSavedPP3 && countPP3Properties(diffPP3(edits.lastSavedPP3, edits.pp3)) > 0}
-		<button onclick={() => edits.initialize(edits.lastSavedPP3, page.data.image)} aria-label="Load Last Version">
-			<IconHistory />
+		<button 
+			class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+			onclick={() => edits.initialize(edits.lastSavedPP3, page.data.image)} 
+			aria-label="Load Last Version"
+		>
+			<IconHistory size={20} />
 		</button>
 	{/if}
 
 	<!-- version snapshots -->
 	{#if showSnapshots}
-		<a href="?snapshot" aria-label="Snapshots">
-			<IconCameraFilled />
+		<a 
+			href="?snapshot" 
+			aria-label="Snapshots"
+			class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+		>
+			<IconCameraFilled size={20} />
 		</a>
 	{/if}
 
 	<!-- filter button -->
 	{#if showFilter}
-		<button onclick={() => (showFilterModal = true)} aria-label="Filters">
-			<IconFilter />
+		<button 
+			class="flex h-10 w-10 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-800 hover:text-neutral-100 active:scale-90"
+			onclick={() => (showFilterModal = true)} 
+			aria-label="Filters"
+		>
+			<IconFilter size={20} />
 		</button>
 	{/if}
 
 	<!-- Copy / Paste config buttons -->
 	{#if showClipboard}
-		<button onclick={copyConfig} aria-label="Copy edit config">
+		<button 
+			onclick={copyConfig} 
+			aria-label="Copy edit config"
+			class="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90"
+			class:text-green-500={copiedConfig}
+			class:text-neutral-400={!copiedConfig}
+		>
 			{#if copiedConfig}
-				<IconCheck />
+				<IconCheck size={20} />
 			{:else}
-				<IconCopy />
+				<IconCopy size={20} />
 			{/if}
 		</button>
 		{#if hasClipboardContent}
-			<button onclick={pasteConfig} aria-label="Paste edit config">
+			<button 
+				onclick={pasteConfig} 
+				aria-label="Paste edit config"
+				class="flex h-10 w-10 items-center justify-center rounded-full transition-all hover:bg-neutral-800 active:scale-90"
+				class:text-blue-500={pastedConfig}
+				class:text-neutral-400={!pastedConfig}
+			>
 				{#if pastedConfig}
-					<IconCheck />
+					<IconCheck size={20} />
 				{:else}
-					<IconClipboard />
+					<IconClipboard size={20} />
 				{/if}
 			</button>
 		{/if}
@@ -288,51 +320,3 @@
 {#if showFilterModal}
     <FilterModal onClose={() => (showFilterModal = false)} />
 {/if}
-
-<style>
-	nav {
-		position: absolute;
-		inset: 0 auto 0 1rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		height: max-content;
-		background: rgba(0, 0, 0, 0.1);
-		backdrop-filter: blur(10px);
-		border-radius: 8px;
-		margin: auto;
-		padding: 0.4rem;
-		z-index: 100;
-		gap: 0.5rem;
-	}
-
-	a,
-	button {
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
-		backdrop-filter: blur(30px);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		padding: 0.5rem;
-		border-radius: 4px;
-		color: rgb(196, 196, 196);
-		font-size: 0.9rem;
-		min-width: 2.7rem;
-		text-align: center;
-
-		& > :global(svg) {
-			width: 2rem;
-			height: 2rem;
-		}
-	}
-
-	a:hover,
-	button:hover {
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-	}
-
-	button:disabled {
-		opacity: 0.8;
-		color: rgba(196, 196, 196, 0.5);
-		pointer-events: none;
-	}
-</style>

@@ -51,20 +51,31 @@ RUN apt-get update && \
         ca-certificates \
         libexpat1 \
         gawk \
+        jq \
         libimage-exiftool-perl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install rawtherapee from appimage
-RUN \
+RUN set -euo pipefail; \
   if [ "$RAWTHERAPEE_VERSION" = "latest" ]; then \
-    RAWTHERAPEE_VERSION=$(curl -sX GET "https://api.github.com/repos/rawtherapee/rawtherapee/releases/latest" \
-    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
-  fi && \
-  echo "$RAWTHERAPEE_VERSION" > /tmp/rawtherapee-version.txt && \
-  cd /tmp && \
-  curl -o /tmp/rawtherapee.app -L \
-    "https://github.com/rawtherapee/rawtherapee/releases/download/${RAWTHERAPEE_VERSION}/RawTherapee_${RAWTHERAPEE_VERSION}_release.AppImage" && \
+    RAWTHERAPEE_VERSION="$(curl -fsSL "https://api.github.com/repos/rawtherapee/rawtherapee/releases/latest" \
+      | jq -r '.tag_name // empty')"; \
+  fi; \
+  if [ -z "$RAWTHERAPEE_VERSION" ]; then \
+    echo "Failed to resolve RAWTHERAPEE_VERSION (GitHub API may be rate-limited)." >&2; \
+    exit 1; \
+  fi; \
+  echo "$RAWTHERAPEE_VERSION" > /tmp/rawtherapee-version.txt; \
+  cd /tmp; \
+  RAWTHERAPEE_URL="$(curl -fsSL "https://api.github.com/repos/rawtherapee/rawtherapee/releases/tags/${RAWTHERAPEE_VERSION}" \
+    | jq -r --arg name "RawTherapee_${RAWTHERAPEE_VERSION}_release.AppImage" \
+      '.assets[] | select(.name == $name) | .browser_download_url' | head -n1)"; \
+  if [ -z "$RAWTHERAPEE_URL" ]; then \
+    echo "Failed to locate AppImage asset for ${RAWTHERAPEE_VERSION}." >&2; \
+    exit 1; \
+  fi; \
+  curl -fSL -o /tmp/rawtherapee.app "$RAWTHERAPEE_URL"; \
   chmod +x /tmp/rawtherapee.app && \
   ./rawtherapee.app --appimage-extract && \
   mv squashfs-root /opt/rawtherapee && \

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { assert } from '$lib';
 	import BasePP3 from '$lib/assets/client.pp3?raw';
+	import { beforeNavigate, invalidateAll } from '$app/navigation';
 	import {
 		createInitialCrop,
 		getAutoFillScale,
@@ -17,7 +18,7 @@
 	import { edits } from '$lib/state/editing.svelte';
 	import Button from '$lib/ui/Button.svelte';
 	import EditModeNav from '$lib/ui/EditModeNav.svelte';
-	import { IconCheck, IconDeviceFloppy } from '$lib/ui/icons';
+	import { IconCheck, IconDeviceFloppy, IconRestore } from '$lib/ui/icons';
 	import Slider from '$lib/ui/Slider.svelte';
 	
 	let canvasEl = $state<HTMLCanvasElement>();
@@ -35,6 +36,13 @@
 	let lastY = 0;
 	let apiPath = $derived(`/api/images/${data.image.id}`);
 	let imageUrl = $derived(apiPath + `/edit?preview&config=${toBase64(excludePP3(edits.throttledPP3, ['Crop', 'Rotation']))}`);
+
+	// TODO: Configure autosave behavior in settings
+	beforeNavigate(() => {
+		if(edits.hasChanges) {
+			edits.snapshot();
+		}
+	});
 
 	$effect(() => {
 		const latestSnapshot = data.snapshots[0];
@@ -58,6 +66,7 @@
 
 	let moveCursor = $state(false);
 	let snapshotSaved = $state(false);
+	let resetSaved = $state(false);
 	let flashKey = $state<string>();
 	let flashTimer: number | null = null;
 	let imageInfo = $state<{ resolutionX: number; resolutionY: number }>();
@@ -160,6 +169,28 @@
 		setTimeout(() => {
 			snapshotSaved = false;
 		}, 2000);
+	}
+
+	async function reset() {
+		if (edits.hasChanges) {
+			await edits.snapshot();
+		}
+
+		const base = parsePP3(BasePP3);
+		if (edits.pp3) {
+			edits.pp3.Crop = base.Crop;
+			edits.pp3.Rotation = base.Rotation;
+		}
+		
+		await edits.snapshot();
+		resetSaved = true;
+		await invalidateAll();
+
+		setTimeout(() => {
+			resetSaved = false;
+		}, 2000);
+		
+		requestAnimationFrame(() => draw());
 	}
 
 	function move(event: PointerEvent) {
@@ -287,6 +318,10 @@
 			}, 220);
 			snapshot();
 		}
+		if (normalizedKey === 'r') {
+			event.preventDefault();
+			reset();
+		}
 	}
 
 </script>
@@ -295,33 +330,100 @@
 
 <img src={imageUrl} alt="" class="hidden" bind:this={imgEl} onload={draw} />
 
-<div class="relative flex h-full w-full items-center justify-center">
-	<canvas bind:this={canvasEl} onpointerdown={startMove} onpointermove={move} class:cursor-move={moveCursor} class="m-auto"></canvas>
-	{#if edits.currentImageId}
-		<EditModeNav showEdit img={edits.currentImageId} />
-	{/if}
+<div class="flex h-full flex-col overflow-hidden bg-neutral-950 text-neutral-200 lg:flex-row">
+	<!-- Image Preview Section -->
+	<div class="relative flex-1 overflow-hidden bg-neutral-900 shadow-inner">
+		<div class="flex h-full items-center justify-center p-2 sm:p-4">
+			<canvas bind:this={canvasEl} onpointerdown={startMove} onpointermove={move} class:cursor-move={moveCursor} class="m-auto"></canvas>
+		</div>
+		
+		<!-- Desktop Left Nav -->
+		<div class="absolute inset-y-0 left-4 hidden lg:flex flex-col justify-center pointer-events-none">
+			<div class="pointer-events-auto">
+				{#if edits.currentImageId}
+					<EditModeNav showEdit img={edits.currentImageId} />
+				{/if}
+			</div>
+		</div>
 
-	<div class="absolute bottom-4 right-4 w-xs flex flex-col items-end gap-4">
-		{#if edits.pp3?.Rotation?.Enabled}
-			<Slider
-			label="Rotate"
-			min={-45}
-			max={45}
-			step={0.1}
-			centered
-			resetValue={0}
-			bind:value={edits.pp3.Rotation.Degree as number}
-			onchange={(v) => (edits.pp3.Rotation.Degree = v)}
-			></Slider>
-		{/if}
-
-		<Button onclick={snapshot} flash={flashKey === 's'} class="w-full">
-			<span>Save Crop</span>
-			{#if snapshotSaved}
-				<IconCheck />
-			{:else}
-				<IconDeviceFloppy />
-			{/if}
-		</Button>
+		<!-- Mobile Bottom Nav -->
+		<div class="absolute bottom-4 left-0 right-0 flex justify-center lg:hidden pointer-events-none">
+			<div class="pointer-events-auto">
+				{#if edits.currentImageId}
+					<EditModeNav showEdit img={edits.currentImageId} />
+				{/if}
+			</div>
+		</div>
 	</div>
+
+	<!-- Controls Panel Section -->
+	<aside
+		class="flex w-full flex-col border-t border-neutral-800 bg-neutral-950 lg:h-full lg:w-[380px] lg:border-t-0 lg:border-l h-[35vh] lg:h-auto"
+	>
+		<!-- Panel Header -->
+		<div class="flex items-center justify-between border-b border-neutral-800 px-6 py-3 lg:py-4">
+			<div class="flex items-center gap-3">
+				<div class="h-2 w-2 rounded-full bg-neutral-500"></div>
+				<h2 class="text-xs font-bold tracking-widest uppercase text-neutral-400">Crop & Rotate</h2>
+			</div>
+		</div>
+
+		<!-- Scrollable Controls -->
+		<div class="flex-1 overflow-y-auto px-4 py-6 lg:px-6 custom-scrollbar">
+			{#if edits.pp3?.Rotation}
+				<div class="space-y-8">
+					<Slider
+						label="Rotate"
+						min={-45}
+						max={45}
+						step={0.1}
+						centered
+						resetValue={0}
+						bind:value={edits.pp3.Rotation.Degree as number}
+						onchange={(v) => {
+							edits.pp3.Rotation.Degree = v;
+							requestAnimationFrame(() => draw());
+						}}
+					/>
+
+					{#if imageInfo}
+						<div class="rounded-xl border border-neutral-800 bg-neutral-900/30 p-4">
+							<div class="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500 mb-2">Original Resolution</div>
+							<div class="text-sm font-medium text-neutral-300 tabular-nums">
+								{imageInfo.resolutionX} × {imageInfo.resolutionY}
+							</div>
+						</div>
+					{/if}
+				</div>
+			{/if}
+		</div>
+
+		<!-- Actions Footer -->
+		<div class="border-t border-neutral-800 bg-neutral-900/50 p-4 lg:p-6 backdrop-blur-sm">
+			<div class="grid grid-cols-2 gap-3">
+				<Button onclick={reset} flash={flashKey === 'r'} class="justify-center">
+					<span>Reset</span>
+					{#if resetSaved}
+						<IconCheck size={18} />
+					{:else}
+						<IconRestore size={18} />
+					{/if}
+				</Button>
+
+				<Button onclick={snapshot} flash={flashKey === 's'} class="w-full justify-center bg-neutral-100 hover:bg-neutral-200 border-none py-2.5">
+					<span>Save Crop</span>
+					{#if snapshotSaved}
+						<IconCheck size={18} />
+					{:else}
+						<div class="relative">
+							<IconDeviceFloppy size={16} />
+							{#if edits.hasChanges}
+								<span class="absolute -top-0.5 -right-0.5 block h-1.5 w-1.5 rounded-full bg-neutral-800"></span>
+							{/if}
+						</div>
+					{/if}
+				</Button>
+			</div>
+		</div>
+	</aside>
 </div>

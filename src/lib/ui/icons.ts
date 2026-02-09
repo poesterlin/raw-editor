@@ -1,3 +1,6 @@
+import IconBell from '@tabler/icons-svelte/icons/bell';
+import IconSettings from '@tabler/icons-svelte/icons/settings';
+import IconUser from '@tabler/icons-svelte/icons/user';
 import IconAdjustmentsHorizontal from '@tabler/icons-svelte/icons/adjustments-horizontal';
 import IconArchive from '@tabler/icons-svelte/icons/archive';
 import IconArrowBackUp from '@tabler/icons-svelte/icons/arrow-back-up';
@@ -23,6 +26,9 @@ import IconAdjustmentsFilled from '@tabler/icons-svelte/icons/adjustments-filled
 import IconLayoutGrid from '@tabler/icons-svelte/icons/layout-grid';
 
 export {
+	IconBell,
+	IconSettings,
+	IconUser,
 	IconAdjustmentsHorizontal,
 	IconAdjustmentsFilled,
 	IconArchive,

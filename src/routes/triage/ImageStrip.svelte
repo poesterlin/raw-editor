@@ -10,61 +10,58 @@
         const currentIndex = images.findIndex(img => img.id === currentImageId);
         if (currentIndex !== -1) {
             const element = imageElements[currentIndex];
-            element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
         }
     });
 </script>
 
-<div class="image-strip">
+<div class="flex flex-row lg:flex-col gap-3 p-4 overflow-x-auto lg:overflow-y-auto lg:overflow-x-hidden h-full scroll-smooth custom-scrollbar bg-neutral-950">
 	{#each images as image, i}
 		<a
             bind:this={imageElements[i]}
 			href={`/triage/${image.id}`}
-			class="thumbnail relative"
-			class:current={image.id === currentImageId}
+			class="relative block flex-shrink-0 w-32 lg:w-full aspect-[3/2] overflow-hidden rounded-lg transition-all duration-300 ring-2 ring-transparent group"
+			class:ring-neutral-100={image.id === currentImageId}
+            class:opacity-100={image.id === currentImageId}
+            class:opacity-60={image.id !== currentImageId && !image.isArchived}
+            class:hover:opacity-100={image.id !== currentImageId}
+            class:shadow-2xl={image.id === currentImageId}
 			aria-label={`View image ${image.id}`}
 			data-sveltekit-preload-data="hover"
 		>
-			<img src={`/api/images/${image.id}/preview`} alt={`Preview of image ${image.id}`} loading="lazy" />
+			<img 
+                src={`/api/images/${image.id}/preview`} 
+                alt={`Preview of image ${image.id}`} 
+                loading="lazy" 
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            
             {#if image.isArchived}
-                <div transition:fade class="absolute inset-0 flex items-center justify-center bg-black/50">
-                    <IconArchive />
+                <div transition:fade class="absolute inset-0 flex items-center justify-center bg-neutral-950/60 backdrop-blur-[2px]">
+                    <IconArchive size={20} class="text-neutral-400" />
                 </div>
+            {/if}
+
+            {#if image.id === currentImageId}
+                <div class="absolute inset-0 ring-1 ring-inset ring-white/20 rounded-lg"></div>
             {/if}
 		</a>
 	{/each}
 </div>
 
 <style>
-	.image-strip {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		padding: 1rem;
-		overflow-y: auto;
-		height: 100%;
-		background-color: var(--bg-1, #111);
+	.custom-scrollbar::-webkit-scrollbar {
+		width: 4px;
+        height: 4px;
 	}
-
-	.thumbnail {
-		display: block;
-		border: 2px solid transparent;
-		border-radius: 0.25rem;
-		transition: border-color 0.2s ease;
+	.custom-scrollbar::-webkit-scrollbar-track {
+		background: transparent;
 	}
-
-	.thumbnail:hover {
-		border-color: var(--border-2, #343434);
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		background: #262626;
+		border-radius: 10px;
 	}
-
-	.thumbnail.current {
-		border-color: var(--text-0, #fafafa);
-	}
-
-	img {
-		display: block;
-		width: 100%;
-		height: auto;
-		border-radius: 0.125rem;
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: #404040;
 	}
 </style>

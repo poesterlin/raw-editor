@@ -161,103 +161,149 @@
 
 <svelte:window onkeydown={handleKeyDown} />
 
-<div class="image-editor">
-	<div class="editor-layout">
-		<!-- Image Preview -->
-		<div class="image-preview">
-			<BeforeAfter {beforeImage} afterImage={sampleImage}  />
-			<EditModeNav img={page.params.img!} showCrop showSnapshots showReset showClipboard showFlag showLast showFilter />
+<div class="flex h-full flex-col overflow-hidden bg-neutral-950 text-neutral-200 lg:flex-row">
+	<!-- Image Preview Section -->
+	<div class="relative flex-1 overflow-hidden bg-neutral-900 shadow-inner">
+		<div class="flex h-full items-center justify-center p-2 sm:p-4">
+			<BeforeAfter {beforeImage} afterImage={sampleImage} />
+		</div>
+		
+		<!-- Desktop Left Nav -->
+		<div class="absolute inset-y-0 left-4 hidden z-30 lg:flex flex-col justify-center pointer-events-none">
+			<div class="pointer-events-auto">
+				<EditModeNav
+					img={page.params.img!}
+					showCrop
+					showSnapshots
+					showReset
+					showClipboard
+					showFlag
+					showLast
+					showFilter
+				/>
+			</div>
 		</div>
 
-		<!-- Controls Panel -->
-		<div class="controls-panel">
-			<div class="panel-header">
-				<h2 class="panel-title">Adjustments</h2>
-				{#if edits.isLoading}
-					<div in:fade={{ duration: 200, delay: 200 }}>
-						<IconFidgetSpinner class="animate-spin" size={24} />
-					</div>
-				{/if}
-			</div>
-
-			<div class="controls-sections">
-				{#if edits.pp3}
-					<Adjustments {data} bind:showLutPicker />
-				{/if}
-			</div>
-
-			<div class="flex flex-col justify-between gap-2 border-t border-neutral-800 p-4">
-				<div class="flex gap-2 w-full">
-					<Button onclick={reset} flash={flashKey === 'r'} class="flex-1">
-						<span>Reset</span>
-						{#if resetSaved}
-						<IconCheck />
-						{:else}
-						<div class="relative">
-							<IconRestore />
-						</div>
-						{/if}
-					</Button>
-
-					<Button onclick={snapshot} flash={flashKey === 's'} class="flex-1">
-						<span>Save Edits</span>
-						{#if snapshotSaved}
-						<IconCheck />
-						{:else}
-						<div class="relative">
-							<IconDeviceFloppy />
-							
-							{#if edits.hasChanges}
-							<span class="absolute -top-0.5 -right-1 block h-1.5 w-1.5 rounded-full bg-neutral-500"></span>
-							{/if}
-						</div>
-						{/if}
-					</Button>
-				</div>
-				{#if data.image.isArchived}
-					<Button aria-label="Restore Image" onclick={restoreImage} flash={flashKey === 'a'}>
-						<span>Restore Image</span>
-						<IconRestore />
-					</Button>
-				{:else}
-					<Button onclick={archiveImage} aria-label="Archive Image" flash={flashKey === 'a'}>
-						<span>Archive Image</span>
-						<IconArchive />
-					</Button>
-				{/if}
-				<div class="mt-2 flex flex-row justify-between gap-2">
-					{#if data.previousImage}
-						<a
-							href={`/editor/${data.previousImage}?filter=${page.url.searchParams.get('filter')}`}
-							class="p-4"
-							class:nav-flash={flashKey === 'ArrowLeft'}
-							title="Previous Image"
-						>
-							<IconChevronLeft />
-						</a>
-					{:else}
-						<span class="cursor-not-allowed p-4 opacity-50" class:nav-flash={flashKey === 'ArrowLeft'}>
-							<IconChevronLeft />
-						</span>
-					{/if}
-					{#if data.nextImage}
-						<a
-							href={`/editor/${data.nextImage}?filter=${page.url.searchParams.get('filter')}`}
-							class="p-4"
-							class:nav-flash={flashKey === 'ArrowRight'}
-							title="Next Image"
-						>
-							<IconChevronRight />
-						</a>
-					{:else}
-						<span class="cursor-not-allowed p-4 opacity-50" class:nav-flash={flashKey === 'ArrowRight'}>
-							<IconChevronRight />
-						</span>
-					{/if}
-				</div>
+		<!-- Mobile Bottom Nav -->
+		<div class="absolute bottom-4 left-0 right-0 z-40 flex justify-center lg:hidden pointer-events-none">
+			<div class="pointer-events-auto">
+				<EditModeNav
+					img={page.params.img!}
+					showCrop
+					showSnapshots
+					showReset
+					showClipboard
+					showFlag
+					showLast
+					showFilter
+				/>
 			</div>
 		</div>
 	</div>
+
+	<!-- Controls Panel Section -->
+	<aside
+		class="flex w-full flex-col border-t border-neutral-800 bg-neutral-950 transition-all duration-300 lg:h-full lg:w-[380px] lg:border-t-0 lg:border-l h-[45vh] lg:h-auto"
+	>
+		<!-- Panel Header -->
+		<div class="flex items-center justify-between border-b border-neutral-800 px-6 py-3 lg:py-4">
+			<div class="flex items-center gap-3">
+				<div class="h-2 w-2 rounded-full bg-neutral-500"></div>
+				<h2 class="text-xs font-bold tracking-widest uppercase text-neutral-400">Adjustments</h2>
+			</div>
+			{#if edits.isLoading}
+				<div in:fade={{ duration: 200, delay: 200 }}>
+					<IconFidgetSpinner class="animate-spin text-neutral-500" size={18} />
+				</div>
+			{/if}
+		</div>
+
+		<!-- Scrollable Controls -->
+		<div class="flex-1 overflow-y-auto px-4 py-4 lg:px-6 custom-scrollbar">
+			{#if edits.pp3}
+				<Adjustments {data} bind:showLutPicker />
+			{/if}
+		</div>
+
+		<!-- Actions Footer -->
+		<div class="border-t border-neutral-800 bg-neutral-900/50 p-4 lg:p-6 backdrop-blur-sm">
+			<div class="grid grid-cols-2 gap-2 lg:gap-3">
+				<Button onclick={reset} flash={flashKey === 'r'} class="justify-center py-2 lg:py-2.5">
+					<span class="text-xs lg:text-sm">Reset</span>
+					{#if resetSaved}
+						<IconCheck size={16} />
+					{:else}
+						<IconRestore size={16} />
+					{/if}
+				</Button>
+
+				<Button onclick={snapshot} flash={flashKey === 's'} class="justify-center bg-neutral-100 hover:bg-neutral-200 border-none py-2 lg:py-2.5">
+					<span class="text-xs lg:text-sm">Save Edits</span>
+					{#if snapshotSaved}
+						<IconCheck size={16} />
+					{:else}
+						<div class="relative">
+							<IconDeviceFloppy size={16} />
+							{#if edits.hasChanges}
+								<span class="absolute -top-0.5 -right-0.5 block h-1.5 w-1.5 rounded-full bg-neutral-800"></span>
+							{/if}
+						</div>
+					{/if}
+				</Button>
+			</div>
+
+			<!-- Navigation Controls -->
+			<div class="mt-4 flex items-center justify-between border-t border-neutral-800 pt-3 lg:mt-6 lg:pt-4">
+				<div class="flex items-center gap-4">
+					{#if data.previousImage}
+						<a
+							href={`/editor/${data.previousImage}?filter=${page.url.searchParams.get('filter')}`}
+							class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-neutral-800 hover:text-neutral-50"
+							class:nav-flash={flashKey === 'ArrowLeft'}
+							title="Previous Image"
+						>
+							<IconChevronLeft size={20} />
+						</a>
+					{:else}
+						<div class="flex h-9 w-9 items-center justify-center text-neutral-800">
+							<IconChevronLeft size={20} />
+						</div>
+					{/if}
+
+					<div class="text-[10px] font-bold text-neutral-600 uppercase tracking-[0.2em]">
+						Nav
+					</div>
+
+					{#if data.nextImage}
+						<a
+							href={`/editor/${data.nextImage}?filter=${page.url.searchParams.get('filter')}`}
+							class="flex h-9 w-9 items-center justify-center rounded-full transition-all hover:bg-neutral-800 hover:text-neutral-50"
+							class:nav-flash={flashKey === 'ArrowRight'}
+							title="Next Image"
+						>
+							<IconChevronRight size={20} />
+						</a>
+					{:else}
+						<div class="flex h-9 w-9 items-center justify-center text-neutral-800">
+							<IconChevronRight size={20} />
+						</div>
+					{/if}
+				</div>
+
+				{#if !data.image.isArchived}
+					<button onclick={archiveImage} class="flex h-9 items-center gap-2 px-3 text-xs font-bold uppercase tracking-widest text-neutral-500 hover:text-neutral-300">
+						<IconArchive size={16} />
+						<span>Archive</span>
+					</button>
+				{:else}
+					<button onclick={restoreImage} class="flex h-9 items-center gap-2 px-3 text-xs font-bold uppercase tracking-widest text-neutral-200">
+						<IconRestore size={16} />
+						<span>Restore</span>
+					</button>
+				{/if}
+			</div>
+		</div>
+	</aside>
 </div>
 
 {#if showLutPicker}
@@ -269,112 +315,29 @@
 {/if}
 
 <style>
-	/* Minimalist grayscale palette */
-	:root {
-		--bg-0: #0e0e0e;
-		--bg-1: #111111;
-		--bg-2: #151515;
-		--bg-3: #1e1e1e;
-		--bg-4: #262626;
-
-		--border-1: #2a2a2a;
-		--border-2: #343434;
-
-		--text-0: #fafafa;
-		--text-1: #e7e7e7;
-		--text-2: #cfcfcf;
-		--text-3: #b5b5b5;
-
-		--muted: #9a9a9a;
+	.custom-scrollbar::-webkit-scrollbar {
+		width: 4px;
 	}
-
-	.image-editor {
-		background: var(--bg-0);
-		color: var(--text-1);
-		overflow: hidden;
-		height: 100%;
+	.custom-scrollbar::-webkit-scrollbar-track {
+		background: transparent;
 	}
-
-	.editor-layout {
-		display: grid;
-		grid-template-columns: 1fr 350px;
-		height: 100%;
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		background: #262626;
+		border-radius: 10px;
 	}
-
-	/* Image Preview */
-	.image-preview {
-		background: var(--bg-1);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		position: relative;
-		overflow: hidden;
-		view-transition-name: 'image-preview';
-	}
-
-	/* Controls Panel */
-	.controls-panel {
-		background: var(--bg-2);
-		border-left: 1px solid var(--border-1);
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-		view-transition-name: 'adjustment-panel';
-	}
-
-	.panel-header {
-		padding: 1.25rem 1.5rem;
-		border-bottom: 1px solid var(--border-1);
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.panel-title {
-		margin: 0;
-		font-size: 1.125rem;
-		font-weight: 600;
-		color: var(--text-0);
-	}
-
-	.controls-sections {
-		flex: 1;
-		overflow-y: auto;
-		padding: 1rem 1.25rem 1.25rem;
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: #404040;
 	}
 
 	.nav-flash {
 		animation: navFlash 180ms ease-out;
-		border-radius: 999px;
-		box-shadow:
-			0 0 0 2px rgba(229, 229, 229, 0.35),
-			0 10px 24px rgba(10, 10, 10, 0.35);
-		filter: brightness(1.15);
+		background-color: rgba(255, 255, 255, 0.1);
+		transform: scale(1.1);
 	}
 
 	@keyframes navFlash {
-		0% {
-			filter: brightness(1.05);
-		}
-		45% {
-			filter: brightness(1.2);
-		}
-		100% {
-			filter: brightness(1);
-		}
-	}
-
-	/* Responsive */
-	@media (max-width: 1024px) {
-		.editor-layout {
-			grid-template-columns: 1fr;
-			grid-template-rows: 1fr auto;
-		}
-
-		.controls-panel {
-			max-height: 50vh;
-			border-left: none;
-			border-top: 1px solid var(--border-1);
-		}
+		0% { transform: scale(1); }
+		50% { transform: scale(1.2); background-color: rgba(255, 255, 255, 0.2); }
+		100% { transform: scale(1); }
 	}
 </style>
