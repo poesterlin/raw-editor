@@ -133,7 +133,7 @@ class EditingState {
 		if (!this.canUndo) return;
 		this.historyIndex--;
 		this.lastChangeKey = null;
-		this.pp3 = structuredClone(this.history[this.historyIndex]);
+		this.applyHistorySnapshot(this.history[this.historyIndex]);
 		this.throttledPP3 = this.pp3;
 		this.hasChanges = this.hasChangesFor(this.currentImageId!);
 	}
@@ -142,7 +142,7 @@ class EditingState {
 		if (!this.canRedo) return;
 		this.historyIndex++;
 		this.lastChangeKey = null;
-		this.pp3 = structuredClone(this.history[this.historyIndex]);
+		this.applyHistorySnapshot(this.history[this.historyIndex]);
 		this.throttledPP3 = this.pp3;
 		this.hasChanges = this.hasChangesFor(this.currentImageId!);
 	}
@@ -156,6 +156,31 @@ class EditingState {
 	private setBaseline(imageId: string, pp3: PP3) {
 		const snapshot = structuredClone($state.snapshot(pp3));
 		this.baselineByImageId = { ...this.baselineByImageId, [imageId]: snapshot };
+	}
+
+	private applyHistorySnapshot(snapshot: PP3) {
+		if (!this.pp3) {
+			this.pp3 = structuredClone(snapshot);
+			return;
+		}
+
+		let next: PP3 = {};
+		try {
+			// sometimes failes
+			next = structuredClone(snapshot);
+		} catch (error) {
+			next = JSON.parse(JSON.stringify(snapshot));
+		}
+
+		for (const section in this.pp3) {
+			if (!(section in next)) {
+				delete this.pp3[section];
+			}
+		}
+
+		for (const section in next) {
+			this.pp3[section] = next[section];
+		}
 	}
 }
 
