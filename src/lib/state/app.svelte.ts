@@ -10,7 +10,9 @@ class AppState {
     toasts = $state<Toast[]>([]);
 
     addToast(message: string, type: 'success' | 'error' | 'info') {
-        const toast = { id: crypto.randomUUID(), message, type };
+        // crypto.randomUUID() is not available in all contexts
+        const id = Math.random().toString(36).substring(2, 9);
+        const toast = { id, message, type };
         this.toasts.push(toast);
 
         setTimeout(() => {
