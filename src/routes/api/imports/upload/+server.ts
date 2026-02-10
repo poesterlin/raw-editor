@@ -1,12 +1,12 @@
-
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import * as path from 'path';
-import * as fs from 'fs/promises';
 import { db } from '$lib/server/db';
 import { importTable } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { ExifDate, ExifDateTime, exiftool } from 'exiftool-vendored';
+import { join } from 'path';
+import { access, mkdir, writeFile } from 'fs/promises';
+import { constants } from 'fs';
 
 const IMPORT_DIR = env.IMPORT_DIR;
 
@@ -30,6 +30,12 @@ export const POST: RequestHandler = async ({ request }) => {
 		error(500, 'IMPORT_DIR not configured');
 	}
 
+	try {
+		await access(IMPORT_DIR, constants.W_OK);
+	} catch {
+		error(500, `IMPORT_DIR is not writable: ${IMPORT_DIR}`);
+	}
+
 	const formData = await request.formData();
 	const files = formData.getAll('files') as File[];
 
@@ -42,7 +48,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const results = [];
 
 	for (const file of files) {
-		const filePath = path.join(IMPORT_DIR, file.name);
+		const filePath = join(IMPORT_DIR, file.name);
 		console.log(`[UPLOAD] Saving to ${filePath}`);
 		
 		try {
@@ -57,12 +63,9 @@ export const POST: RequestHandler = async ({ request }) => {
 				continue;
 			}
 
-			// Ensure IMPORT_DIR exists
-			await fs.mkdir(IMPORT_DIR, { recursive: true });
-
 			// Save file
 			const arrayBuffer = await file.arrayBuffer();
-			await fs.writeFile(filePath, Buffer.from(arrayBuffer));
+			await writeFile(filePath, Buffer.from(arrayBuffer));
 			console.log(`[UPLOAD] ${file.name} saved successfully`);
 
 			// Extract metadata
