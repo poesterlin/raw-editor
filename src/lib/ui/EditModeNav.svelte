@@ -188,6 +188,7 @@
 		// try to parse PP3 text and apply
 		try {
 			edits.pp3 = parsePP3(pp3Text);
+			edits.pushHistory();
 			pastedConfig = true;
 			setTimeout(() => (pastedConfig = false), 2000);
 		} catch {

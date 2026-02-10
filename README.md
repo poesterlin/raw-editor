@@ -91,7 +91,7 @@ services:
 ## Roadmap
 
 - [ ] User authentication
-- [ ] Undo/Redo functionality
+- [x] Undo/Redo functionality
 - [ ] Processing notifications
 - More editing tools
    - [ ] Black Point/White Point

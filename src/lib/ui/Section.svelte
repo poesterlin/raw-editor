@@ -28,6 +28,7 @@
 
 		enabled = value;
 		sectionState[enabledKey] = value;
+		edits.pushHistory();
 	}
 
 </script>

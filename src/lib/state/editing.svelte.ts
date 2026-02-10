@@ -14,6 +14,7 @@ class EditingState {
 
 	private history = $state<PP3[]>([]);
 	private historyIndex = $state(0);
+	private lastChangeKey: string | null = null;
 	private baselineByImageId = {} as Record<string, PP3>;
 
 
@@ -96,6 +97,53 @@ class EditingState {
 		}
 
 		edits.isFaulty = false;
+	}
+
+	pushHistory() {
+		const snapshot = structuredClone($state.snapshot(this.pp3));
+		const prev = this.history[this.historyIndex];
+
+		const diff = diffPP3(prev, snapshot);
+		const changedCount = countPP3Properties(diff);
+
+		if (changedCount === 0) return;
+
+		let changeKey: string | null = null;
+		if (changedCount === 1) {
+			for (const section in diff) {
+				for (const key in diff[section]) {
+					changeKey = `${section}.${key}`;
+				}
+			}
+		}
+
+		if (changeKey && changeKey === this.lastChangeKey) {
+			this.history[this.historyIndex] = snapshot;
+		} else {
+			this.history = this.history.slice(0, this.historyIndex + 1);
+			this.history.push(snapshot);
+			this.historyIndex = this.history.length - 1;
+		}
+
+		this.lastChangeKey = changeKey;
+	}
+
+	undo() {
+		if (!this.canUndo) return;
+		this.historyIndex--;
+		this.lastChangeKey = null;
+		this.pp3 = structuredClone(this.history[this.historyIndex]);
+		this.throttledPP3 = this.pp3;
+		this.hasChanges = this.hasChangesFor(this.currentImageId!);
+	}
+
+	redo() {
+		if (!this.canRedo) return;
+		this.historyIndex++;
+		this.lastChangeKey = null;
+		this.pp3 = structuredClone(this.history[this.historyIndex]);
+		this.throttledPP3 = this.pp3;
+		this.hasChanges = this.hasChangesFor(this.currentImageId!);
 	}
 
 	hasChangesFor(imageId: string) {
